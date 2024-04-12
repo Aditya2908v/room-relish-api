@@ -1,0 +1,76 @@
+type Hotel {
+    id: String!
+    hotelName: String!
+    hotelType: String!
+    location: Location!
+    rating: Float!
+    overallReview: String!
+    numReviews: Int!
+    priceStartingFrom: Int!
+    overview: String!
+    locationFeatures: [String!]!
+    amenities: [String!]!
+    images: [String!]!
+    rooms: [Room!]!
+    guestReviews: [GuestReview]!
+    totalRooms: Int!
+}
+
+type Location {
+    cityName: String!
+    latitude: Float!
+    longitude: Float!
+    address: String!
+}
+
+
+type Room {
+    id:String!
+    roomType: String!
+    roomSpecification: String!
+    roomRate: Int!
+    roomCount: Int!
+}
+
+
+type GuestReview {
+    id: String!
+    user: String
+    guestRating: Float!
+    comment: String!
+}
+
+type User {
+    id: String!
+    userName: String!
+    email: String
+    googleId: String
+    favouriteHotels: [String!]!
+    recentVisitsOfHotels: [String!]!
+    addedCards: [Card]
+    registeredAt: String!
+    dateOfBirth: String
+    address: String
+    phoneNumber: String
+    profilePicture: String
+    coverPicture: String
+}
+
+type Card {
+    id: ID
+    cardNumber: String
+    cardHolderName: String
+    expirationDate: String
+    cvv: String
+    cardName: String
+}
+
+type Query {
+    #hotel queries
+    hotels: [Hotel!]!
+    hotel(id: ID!): Hotel
+    search(cityName : String!):[Hotel!]!
+    #user queries
+    users:[User!]!
+    user(id:ID!): User
+}
