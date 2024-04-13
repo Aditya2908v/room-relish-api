@@ -14,7 +14,7 @@ import java.util.Date;
 public class CustomerProfile {
     private String id;
     private String username;
-    //profile picture
+    private String profilePicture;
     private String email;
     private String phoneNumber;
     private String address;

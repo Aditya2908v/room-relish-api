@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.carddetails.dto.*;
 import org.example.carddetails.models.Customer;
-import org.example.carddetails.repository.CustomerRepository;
+import org.example.carddetails.models.Hotel;
 import org.example.carddetails.services.AuthService;
 import org.example.carddetails.services.CustomerService;
 import org.example.carddetails.services.JwtService;
@@ -14,6 +14,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,7 +27,6 @@ public class CustomerController {
     private final CustomerService customerService;
     private final AuthService authService;
     private final JwtService jwtService;
-    private final CustomerRepository customerRepository;
 
     @GetMapping("/hello")
     public String hello() {
@@ -92,7 +92,7 @@ public class CustomerController {
         }
     }
 
-
+    // add new card details to the added cards field
     @PostMapping("/addCard")
     public ResponseEntity<?> addCardToUser(@RequestBody CardDTO cardDTO, HttpServletRequest request) {
         try {
@@ -168,18 +168,83 @@ public class CustomerController {
         }
     }
     //get profile picture
+    @GetMapping("/profilePicture")
+    public ResponseEntity<?> getProfilePicture(HttpServletRequest request) {
+        try{
+            String userEmail = extractUserEmailFromRequest(request);
+            String profilePicture = customerService.getProfilePicture(userEmail);
+            return ResponseEntity.ok().body(profilePicture);
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
     // add or update profile or cover picture
-    // logout controller
+    @PostMapping("/addProfilePicture")
+    public ResponseEntity<?> addOrUpdateProfilePhoto(@RequestParam("file") MultipartFile file, @RequestParam String type, HttpServletRequest request) {
+        try{
+            String userEmail = extractUserEmailFromRequest(request);
+            String fileName = file.getOriginalFilename();
+            if(fileName == null || fileName.isEmpty()){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid image format");
+            }
+            boolean success = customerService.uploadImage(userEmail, type, fileName);
+            if(success){
+                return ResponseEntity.ok("Image uploaded successfully");
+            }else{
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request");
+            }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
     // to view list of favourite hotels
-    // to add a hotel to favourite hotels
+    @GetMapping("/favouriteHotels")
+    public ResponseEntity<?> getFavouriteHotels(HttpServletRequest request) {
+        try{
+            String userEmail = extractUserEmailFromRequest(request);
+            List<Hotel> favouriteHotels = customerService.getFavouriteHotels(userEmail);
+            if(favouriteHotels.isEmpty())
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hotels not found");
+            else return ResponseEntity.ok(favouriteHotels);
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
+    // to add a hotel to favourite hotels if it is present in hotel collection
+    @PostMapping("/favouriteHotels/add")
+    public ResponseEntity<?> addFavouriteHotel(@RequestParam String hotelId,HttpServletRequest request) {
+        try{
+            String userEmail = extractUserEmailFromRequest(request);
+            customerService.addFavouriteHotel(userEmail, hotelId);
+            return ResponseEntity.ok().body("Favourite Hotel added successfully");
+        }catch (Exception exception){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+        }
+    }
     // to remove a hotel from favourite hotels
+    @DeleteMapping("/favouriteHotels/delete")
+    public ResponseEntity<?> deleteFavouriteHotel(@RequestParam String hotelId,HttpServletRequest request) {
+        try{
+            String userEmail = extractUserEmailFromRequest(request);
+            customerService.deleteFavouriteHotel(userEmail, hotelId);
+            return ResponseEntity.ok().body("Favourite Hotel deleted successfully");
+        }catch (Exception exception){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+        }
+    }
     // recent searches
-    // fetch user details by ID along with decrypted card details
-    // function to add new card details to the added cards field
-    // recent searches
+    @GetMapping("/recent")
+    public ResponseEntity<?> getRecentHotels(HttpServletRequest request) {
+        try{
+            String userEmail = extractUserEmailFromRequest(request);
+            List<Hotel> recentHotels = customerService.findRecentHotels(userEmail);
+            return ResponseEntity.ok().body(recentHotels);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
-
-
+    //TODO fetch user details by ID along with decrypted card details
 
 
     //utility function to get JWT token form the request
