@@ -10,5 +10,5 @@ import org.example.carddetails.models.Customer;
 @AllArgsConstructor
 public class NavbarResponse {
     private boolean success;
-    private Customer info;
+    private CustomerProfile info;
 }

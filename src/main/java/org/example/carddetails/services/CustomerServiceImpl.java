@@ -2,6 +2,7 @@ package org.example.carddetails.services;
 
 import lombok.RequiredArgsConstructor;
 import org.example.carddetails.dto.CardDTO;
+import org.example.carddetails.dto.CustomerProfile;
 import org.example.carddetails.dto.UpdateCustomerDTO;
 import org.example.carddetails.models.Card;
 import org.example.carddetails.models.Customer;
@@ -79,5 +80,28 @@ public class CustomerServiceImpl implements CustomerService{
         }catch (Exception ex){
             return false;
         }
+    }
+
+    @Override
+    public CustomerProfile getProfileInfo(String userEmail, String detailsFor) {
+        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);
+        if(customer == null) {
+            throw new IllegalArgumentException("Customer not found");
+        }
+        CustomerProfile customerProfile = new CustomerProfile();
+        if(detailsFor != null && detailsFor.equals("navbar")) {
+            customerProfile.setId(customer.getId());
+            customerProfile.setUsername(customer.getUsername());
+            //customerProfile.setProfilePicture(customer.getProfilePicture());
+        }else {
+            customerProfile.setId(customer.getId());
+            customerProfile.setUsername(customer.getUsername());
+            customerProfile.setEmail(customer.getEmail());
+            customerProfile.setPhoneNumber(customer.getPhoneNumber());
+            customerProfile.setPassword(customer.getPassword());
+            customerProfile.setDob(customer.getDateOfBirth());
+            customerProfile.setAddress(customer.getAddress());
+        }
+        return customerProfile;
     }
 }

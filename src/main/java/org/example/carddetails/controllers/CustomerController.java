@@ -92,20 +92,6 @@ public class CustomerController {
         }
     }
 
-    //specifically for navbar/ to check weather the user is logged in
-    @GetMapping("/navbar")
-    public ResponseEntity<?> getNavbarDetails(HttpServletRequest request) {
-        try {
-            String userEmail = extractUserEmailFromRequest(request);
-            Customer customer = customerRepository.findByEmail(userEmail).orElse(null);
-            if (customer == null) {
-                return ResponseEntity.badRequest().body("Customer not found");
-            }
-            return ResponseEntity.ok().body(new NavbarResponse(true, customer));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
 
     @PostMapping("/addCard")
     public ResponseEntity<?> addCardToUser(@RequestBody CardDTO cardDTO, HttpServletRequest request) {
@@ -150,8 +136,37 @@ public class CustomerController {
         }
 
     }
+    //specifically for navbar/ to check weather the user is logged in
+    @GetMapping("/navbar")
+    public ResponseEntity<?> getNavbarDetails(HttpServletRequest request) {
+        try {
+            String userEmail = extractUserEmailFromRequest(request);
+            if (userEmail == null || userEmail.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+            }
+            CustomerProfile customerProfile = customerService.getProfileInfo(userEmail, "navbar");
+            if (customerProfile == null) {
+                return ResponseEntity.badRequest().body("Customer not found");
+            }
+            return ResponseEntity.ok().body(new NavbarResponse(true, customerProfile));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request");
+        }
+    }
     //get profile details for profile page
-
+    @GetMapping("/profile-details")
+    public ResponseEntity<?> getProfileDetails(HttpServletRequest request) {
+        try{
+            String userEmail = extractUserEmailFromRequest(request);
+            CustomerProfile customerProfile = customerService.getProfileInfo(userEmail, "profile");
+            if (customerProfile == null) {
+                return ResponseEntity.badRequest().body("Customer not found");
+            }
+            return ResponseEntity.ok().body(customerProfile);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
     //get profile picture
     // add or update profile or cover picture
     // logout controller

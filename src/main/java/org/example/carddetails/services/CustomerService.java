@@ -1,6 +1,7 @@
 package org.example.carddetails.services;
 
 import org.example.carddetails.dto.CardDTO;
+import org.example.carddetails.dto.CustomerProfile;
 import org.example.carddetails.dto.UpdateCustomerDTO;
 import org.example.carddetails.models.Customer;
 
@@ -12,4 +13,6 @@ public interface CustomerService {
     List<Customer> getAllCustomers();
 
     boolean updateCustomer(String userEmail, UpdateCustomerDTO updateCustomerDTO);
+
+    CustomerProfile getProfileInfo(String userEmail, String navbar);
 }
