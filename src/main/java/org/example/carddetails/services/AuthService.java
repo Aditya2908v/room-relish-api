@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -45,10 +46,11 @@ public class AuthService {
                 .token(jwtToken)
                 .build();
     }
-    
-    public AuthResponse authenticate(LoginRequest loginRequest){
+
+    public AuthResponse authenticate(LoginRequest loginRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        var user = customerRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+        var userOptional = customerRepository.findByEmail(loginRequest.getEmail());
+        var user = userOptional.orElseThrow(() -> new NoSuchElementException("User not found"));
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);

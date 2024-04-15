@@ -244,6 +244,8 @@ public class CustomerController {
         }
     }
 
+    //TODO after user searches a hotel add it to recent searches
+
     //TODO fetch user details by ID along with decrypted card details
 
 

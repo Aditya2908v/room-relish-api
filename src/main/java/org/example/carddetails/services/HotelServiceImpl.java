@@ -11,8 +11,6 @@ import org.example.carddetails.models.Room;
 import org.example.carddetails.repository.HotelRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

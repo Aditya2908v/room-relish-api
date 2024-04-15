@@ -41,6 +41,7 @@ public class HotelController {
     }
 
     //search hotel
+    //TODO update search functionality based on checkIn, checkOut, price range and amenities
     @Operation(
             description = "Search Hotels",
             summary = "Search hotels by city name and/or rating",
