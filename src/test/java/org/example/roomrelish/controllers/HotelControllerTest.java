@@ -45,7 +45,7 @@ public class HotelControllerTest {
 
         //Act
         when(hotelService.findHotels("Chennai", 4)).thenReturn(mockHotels);
-        ResponseEntity<?> response = hotelController.searchHotels("Chennai",4);
+        ResponseEntity<?> response = hotelControllerche.searchHotels("Chennai",4);
 
         //Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
