@@ -5,13 +5,12 @@ package org.example.carddetails.services;
 import org.example.carddetails.dto.HotelDTO;
 import org.example.carddetails.dto.ReviewDTO;
 import org.example.carddetails.dto.RoomDTO;
-import org.example.carddetails.dto.SearchCriteria;
 import org.example.carddetails.models.GuestReview;
 import org.example.carddetails.models.Hotel;
 import org.example.carddetails.models.Room;
+import org.reactivestreams.Publisher;
 
 
-import java.util.Date;
 import java.util.List;
 
 public interface HotelService {

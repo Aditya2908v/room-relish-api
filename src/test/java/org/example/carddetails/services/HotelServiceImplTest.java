@@ -1,6 +1,7 @@
 package org.example.carddetails.services;
 
 import org.example.carddetails.dto.HotelDTO;
+import org.example.carddetails.dto.ReviewDTO;
 import org.example.carddetails.models.GuestReview;
 import org.example.carddetails.models.Hotel;
 import org.example.carddetails.models.Location;
@@ -130,6 +131,17 @@ public class HotelServiceImplTest {
     }
 
     @Test
+    void testDeleteReview_WithValidId(){
+        String id="1";
+        String reviewId="reviewId";
+        Hotel expectedHotel = createSampleHotel();
+        expectedHotel.setGuestReviews(new ArrayList<>());
+        when(hotelRepository.findById("1")).thenReturn(Optional.of(expectedHotel));
+        hotelService.deleteReview(id, reviewId);
+        verify(hotelRepository, times(1)).findById(id);
+    }
+
+    @Test
     void testDeleteHotel_WithNullId(){
         String id="1";
         when(hotelRepository.findById("1")).thenReturn(Optional.empty());
@@ -157,6 +169,50 @@ public class HotelServiceImplTest {
         when(hotelRepository.findById("1")).thenReturn(Optional.empty());
         Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService.getReviews("1"));
     }
+
+    @Test
+    void testAddReview_WithValidId(){
+        //Arrange
+        String id="1";
+        ReviewDTO reviewDTO = new ReviewDTO();
+        Hotel hotel =  createSampleHotel();
+        hotel.setId(id);
+        hotel.setGuestReviews(new ArrayList<>());
+        when(hotelRepository.findById("1")).thenReturn(Optional.of(hotel));
+
+        //Act
+        GuestReview addedReview = hotelService.addReview(id, reviewDTO);
+
+        //Assert
+        Assertions.assertNotNull(addedReview);
+    }
+
+    @Test
+    void testFindHotels_Success(){
+        String cityName = "Chennai";
+        int rating = 4;
+        List<Hotel> expectedHotels = List.of(
+                new Hotel(),
+                new Hotel()
+        );
+        when(hotelRepository.findByLocationCityNameAndRatingGreaterThanEqual(cityName, rating)).thenReturn(expectedHotels);
+
+        List<Hotel> actualHotels = hotelService.findHotels(cityName,rating);
+        Assertions.assertNotNull(actualHotels);
+
+    }
+
+    @Test
+    void testFindHotels_WithNullCityName(){
+        String cityName = "Chennai";
+        int rating = 4;
+        when(hotelRepository.findByLocationCityNameAndRatingGreaterThanEqual(cityName, rating)).thenReturn(null);
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService.findHotels(cityName,rating));
+        Assertions.assertEquals("An error occurred while searching for hotels.", exception.getMessage());
+    }
+
+
+
 
     // Helper method to create a sample Hotel object
     private Hotel createSampleHotel() {

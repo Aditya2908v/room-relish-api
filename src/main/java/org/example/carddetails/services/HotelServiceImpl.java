@@ -9,6 +9,7 @@ import org.example.carddetails.models.GuestReview;
 import org.example.carddetails.models.Hotel;
 import org.example.carddetails.models.Room;
 import org.example.carddetails.repository.HotelRepository;
+import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -89,13 +90,20 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public void deleteReview(String hotelId, String reviewId) {
-        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+
         List<GuestReview> guestReviews = hotel.getGuestReviews();
-        boolean removed = guestReviews.removeIf(review -> review.get_id().equals(reviewId));
-        if (!removed) {
-            throw new IllegalArgumentException("Review not found");
+        Optional<GuestReview> reviewToRemove = guestReviews.stream()
+                .filter(review -> review.get_id().equals(reviewId))
+                .findFirst();
+
+        if (reviewToRemove.isPresent()) {
+            guestReviews.remove(reviewToRemove.get());
+            hotelRepository.save(hotel);
+        } else {
+            // Review not found, do nothing or log a message
         }
-        hotelRepository.save(hotel);
     }
 
     @Override
@@ -117,11 +125,16 @@ public class HotelServiceImpl implements HotelService {
 
     public List<Hotel> findHotels(String cityName, Integer rating) {
         try {
-            return hotelRepository.findByLocationCityNameAndRatingGreaterThanEqual(cityName, rating);
+            List<Hotel> hotels = hotelRepository.findByLocationCityNameAndRatingGreaterThanEqual(cityName, rating);
+            if (hotels == null) {
+                throw new IllegalArgumentException("Invalid City Name");
+            }
+            return hotels;
         } catch (Exception e) {
             throw new IllegalArgumentException("An error occurred while searching for hotels.", e);
         }
     }
+
 
     //util function
     public Hotel setHotel(Hotel hotel,HotelDTO hotelDTO){
