@@ -5,9 +5,10 @@ import org.example.carddetails.models.Payment;
 import org.example.carddetails.services.PaymentServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/v1/payment")
@@ -18,10 +19,10 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
     //Confirm booking of the room
-    @PostMapping("/pay")
-    public ResponseEntity<?> confirmBooking(@RequestBody Booking booking){
+    @PostMapping("/pay/{_bookingId}")
+    public ResponseEntity<?> confirmBooking(@PathVariable String _bookingId){
         try{
-            Payment paymentDetails = paymentService.confirmBook(booking);
+            Payment paymentDetails = paymentService.confirmBook(_bookingId);
             return ResponseEntity.ok(paymentDetails);
         }
         catch(IllegalArgumentException e){
@@ -29,4 +30,12 @@ public class PaymentController {
         }
     }
 
+    @GetMapping("/myBookings")
+    public ResponseEntity<?> myBookings(@RequestParam String _userId) {
+        try {
+            return ResponseEntity.ok(paymentService.getMyBookings(_userId));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("No bookings found");
+        }
+    }
 }

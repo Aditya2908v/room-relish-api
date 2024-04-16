@@ -5,12 +5,16 @@ import org.example.carddetails.models.Payment;
 import org.example.carddetails.repository.BookingRepository;
 import org.example.carddetails.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PaymentServiceImpl {
+public class PaymentServiceImpl implements PaymentService{
     @Autowired
     private final BookingRepository bookingRepository;
     @Autowired
@@ -20,20 +24,21 @@ public class PaymentServiceImpl {
         this.bookingRepository = bookingRepository;
         this.paymentRepository = paymentRepository;
     }
-
-    public Payment confirmBook(Booking booking){
-        Optional<Booking> bookingOptional = bookingRepository.findById(booking.getId());
-        if(bookingOptional.isEmpty()){
+    @Override
+    public Payment confirmBook(String _bookingId){
+        Optional<Payment> paymentOptional = paymentRepository.findBy_bookingId(_bookingId);
+        if(paymentOptional.isEmpty()){
             throw new IllegalArgumentException();
         }
-        Payment currentPayment = new Payment();
-        currentPayment.set_bookingId(booking.getId());
-        currentPayment.set_hotelId(booking.get_hotelId());
-        currentPayment.set_roomId(booking.get_roomId());
-        currentPayment.set_userId(booking.get_userId());
-        currentPayment.setNumOfDays(booking.getNumOfDays());
-        currentPayment.setNumOfRooms(booking.getNumOfRooms());
+        Payment currentPayment = paymentOptional.get();
         currentPayment.setPaymentStatus(true);
         return paymentRepository.save(currentPayment);
     }
+
+    @Override
+    public List<Payment> getMyBookings(String _userId){
+        List<Payment> paymentList = paymentRepository.findAllBy_userId(_userId);
+        return paymentList;
+    }
+
 }

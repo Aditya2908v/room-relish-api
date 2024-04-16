@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/api/v1/booking/bookingDetails").hasAuthority("USER")
                         //Payment Controller
                         .requestMatchers(HttpMethod.POST,"api/v1/payment/pay").hasAuthority("USER")
+                        .requestMatchers(HttpMethod.GET,"api/v1/payment/myBookings").hasAuthority("USER")
                         .anyRequest().authenticated());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
