@@ -75,7 +75,7 @@ public class HotelController {
             @RequestParam(required = false) List<String> amenitiesRequired
     ){
         try {
-            List<Hotel> hotels = hotelService.findHotels(cityName, checkInDate, checkOutDate, countOfRooms, priceRangeMax, priceRangeMin, rating, amenitiesRequired);
+            List<Hotel> hotels = hotelService.findHotels(cityName,rating);
             if (hotels.isEmpty()) {
                 return ResponseEntity.noContent().build();
             }

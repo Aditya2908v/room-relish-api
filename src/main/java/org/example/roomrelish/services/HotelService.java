@@ -11,6 +11,7 @@ import org.example.roomrelish.models.Room;
 import org.reactivestreams.Publisher;
 
 
+import java.util.Date;
 import java.util.List;
 
 public interface HotelService {
@@ -24,5 +25,5 @@ public interface HotelService {
     void deleteHotel(String id);
     Room addRoom(String id, RoomDTO roomDTO);
 
-    List<Hotel> findHotels(String cityName, Date checkInDate, Date checkOutdate, Integer countOfRooms, Integer priceRangeMax, Integer priceRangeMin, Integer rating, List<String> amenitiesRequired);
+    List<Hotel> findHotels(String cityName,Integer rating);
 }
