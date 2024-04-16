@@ -1,0 +1,105 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > HotelService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.carddetails.services</a>
+</div>
+
+<h1>Coverage Summary for Class: HotelService (org.example.carddetails.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">HotelService$MockitoMock$UMIrocKI</td>
+  </tr>
+  <tr>
+    <td class="name">HotelService$MockitoMock$UMIrocKI$auxiliary$x6xL7AKF</td>
+  </tr>
+  <tr>
+    <td class="name">HotelService$MockitoMock$UMIrocKI$auxiliary$XqNfLddH</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.carddetails.services;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;import org.example.carddetails.dto.HotelDTO;
+&nbsp;import org.example.carddetails.dto.ReviewDTO;
+&nbsp;import org.example.carddetails.dto.RoomDTO;
+&nbsp;import org.example.carddetails.models.GuestReview;
+&nbsp;import org.example.carddetails.models.Hotel;
+&nbsp;import org.example.carddetails.models.Room;
+&nbsp;import org.reactivestreams.Publisher;
+&nbsp;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public interface HotelService {
+&nbsp;    List&lt;Hotel&gt; getAllHotels();
+&nbsp;    Hotel findHotelById(String id);
+&nbsp;    Hotel createHotel(HotelDTO hotelDTO);
+&nbsp;    void deleteReview(String hotelId, String reviewId);
+&nbsp;    Hotel updateHotel(String id,HotelDTO hotelDTO);
+&nbsp;    List&lt;GuestReview&gt; getReviews(String id);
+&nbsp;    GuestReview addReview(String id, ReviewDTO reviewDTO);
+&nbsp;    void deleteHotel(String id);
+&nbsp;    Room addRoom(String id, RoomDTO roomDTO);
+&nbsp;
+&nbsp;    List&lt;Hotel&gt; findHotels(String cityName,Integer rating);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-16 16:18</div>
+</div>
+</body>
+</html>

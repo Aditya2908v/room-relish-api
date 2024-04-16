@@ -1,0 +1,317 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > CustomerServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.carddetails.services</a>
+</div>
+
+<h1>Coverage Summary for Class: CustomerServiceImpl (org.example.carddetails.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CustomerServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/50)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/102)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.carddetails.services;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.example.carddetails.dto.CardDTO;
+&nbsp;import org.example.carddetails.dto.CustomerProfile;
+&nbsp;import org.example.carddetails.dto.UpdateCustomerDTO;
+&nbsp;import org.example.carddetails.models.Card;
+&nbsp;import org.example.carddetails.models.Customer;
+&nbsp;import org.example.carddetails.models.Hotel;
+&nbsp;import org.example.carddetails.repository.CustomerRepository;
+&nbsp;import org.example.carddetails.repository.HotelRepository;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+<b class="nc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class CustomerServiceImpl implements CustomerService {
+&nbsp;    private final CustomerRepository customerRepository;
+&nbsp;    private final PasswordEncoder passwordEncoder;
+&nbsp;    private final HotelRepository hotelRepository;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Customer&gt; getAllCustomers() {
+<b class="nc">&nbsp;        return customerRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //TODO add code to encrypt the card details before storing
+&nbsp;    @Override
+&nbsp;    public void addCardToUser(CardDTO cardDTO, String userEmail) {
+<b class="nc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="nc">&nbsp;        if (customer == null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Customer not found&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        Card card = new Card();</b>
+<b class="nc">&nbsp;        card.setCardNumber(cardDTO.getCardNumber());</b>
+<b class="nc">&nbsp;        card.setCardHolder(cardDTO.getCardHolder());</b>
+<b class="nc">&nbsp;        card.setExpirationDate(cardDTO.getExpirationDate());</b>
+<b class="nc">&nbsp;        card.setCvv(cardDTO.getCvv());</b>
+<b class="nc">&nbsp;        card.setCardName(cardDTO.getCardName());</b>
+<b class="nc">&nbsp;        List&lt;Card&gt; cards = customer.getAddedCards();</b>
+<b class="nc">&nbsp;        if (cards == null) {</b>
+<b class="nc">&nbsp;            cards = new ArrayList&lt;&gt;();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        cards.add(card);</b>
+<b class="nc">&nbsp;        customer.setAddedCards(cards);</b>
+<b class="nc">&nbsp;        customerRepository.save(customer);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean updateCustomer(String userEmail, UpdateCustomerDTO updateCustomerDTO) {
+&nbsp;        try {
+<b class="nc">&nbsp;            Optional&lt;Customer&gt; optionalCustomer = customerRepository.findByEmail(userEmail);</b>
+<b class="nc">&nbsp;            if (optionalCustomer.isEmpty()) {</b>
+<b class="nc">&nbsp;                return false;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            Customer customer = optionalCustomer.get();</b>
+&nbsp;
+&nbsp;            //check if the email is being updated and if it&#39;s unique
+<b class="nc">&nbsp;            if (updateCustomerDTO.getEmail() != null &amp;&amp; !updateCustomerDTO.getEmail().equals(customer.getEmail())) {</b>
+<b class="nc">&nbsp;                Optional&lt;Customer&gt; existingCustomer = customerRepository.findByEmail(updateCustomerDTO.getEmail());</b>
+<b class="nc">&nbsp;                if (existingCustomer.isPresent() &amp;&amp; !existingCustomer.get().getId().equals(customer.getId())) {</b>
+<b class="nc">&nbsp;                    return false; // email already in user</b>
+&nbsp;                }
+<b class="nc">&nbsp;                customer.setEmail(updateCustomerDTO.getEmail());</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            //check if phone number is being updated and if it&#39;s unique
+<b class="nc">&nbsp;            if (updateCustomerDTO.getPhoneNumber() != null &amp;&amp; !updateCustomerDTO.getPhoneNumber().equals(customer.getPhoneNumber())) {</b>
+<b class="nc">&nbsp;                Optional&lt;Customer&gt; existingUserWithPhoneNumber = customerRepository.findByPhoneNumber(updateCustomerDTO.getPhoneNumber());</b>
+<b class="nc">&nbsp;                if (existingUserWithPhoneNumber.isPresent() &amp;&amp; !existingUserWithPhoneNumber.get().getId().equals(customer.getId())) {</b>
+<b class="nc">&nbsp;                    return false; // phone number is already in use</b>
+&nbsp;                }
+<b class="nc">&nbsp;                customer.setPhoneNumber(updateCustomerDTO.getPhoneNumber());</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (updateCustomerDTO.getPassword() != null &amp;&amp; !updateCustomerDTO.getPassword().equals(customer.getPassword())) {</b>
+<b class="nc">&nbsp;                customer.setPassword(passwordEncoder.encode(updateCustomerDTO.getPassword()));</b>
+&nbsp;            }
+<b class="nc">&nbsp;            customerRepository.save(customer);</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="nc">&nbsp;        } catch (Exception ex) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public CustomerProfile getProfileInfo(String userEmail, String detailsFor) {
+<b class="nc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="nc">&nbsp;        if (customer == null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Customer not found&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        CustomerProfile customerProfile = new CustomerProfile();</b>
+<b class="nc">&nbsp;        if (detailsFor != null &amp;&amp; detailsFor.equals(&quot;navbar&quot;)) {</b>
+<b class="nc">&nbsp;            customerProfile.setId(customer.getId());</b>
+<b class="nc">&nbsp;            customerProfile.setUsername(customer.getUsername());</b>
+<b class="nc">&nbsp;            customerProfile.setProfilePicture(customer.getProfilePicture());</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            customerProfile.setId(customer.getId());</b>
+<b class="nc">&nbsp;            customerProfile.setUsername(customer.getUsername());</b>
+<b class="nc">&nbsp;            customerProfile.setEmail(customer.getEmail());</b>
+<b class="nc">&nbsp;            customerProfile.setPhoneNumber(customer.getPhoneNumber());</b>
+<b class="nc">&nbsp;            customerProfile.setPassword(customer.getPassword());</b>
+<b class="nc">&nbsp;            customerProfile.setDob(customer.getDateOfBirth());</b>
+<b class="nc">&nbsp;            customerProfile.setAddress(customer.getAddress());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return customerProfile;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String getProfilePicture(String userEmail) {
+<b class="nc">&nbsp;        Optional&lt;Customer&gt; customer = customerRepository.findByEmail(userEmail);</b>
+<b class="nc">&nbsp;        return customer.map(Customer::getProfilePicture).orElse(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //TODO change the file path correctly
+&nbsp;    @Override
+&nbsp;    public boolean uploadImage(String userEmail, String type, String fileName) {
+&nbsp;        try {
+<b class="nc">&nbsp;            Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="nc">&nbsp;            if (customer == null) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Customer not found&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (type.equals(&quot;profile&quot;)) {</b>
+<b class="nc">&nbsp;                customer.setProfilePicture(&quot;http://localhost:8081/profiles/&quot; + fileName);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                customer.setCoverPicture(&quot;http://localhost:8081/profiles/&quot; + fileName);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            customerRepository.save(customer);</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Hotel&gt; getFavouriteHotels(String userEmail) {
+&nbsp;        try {
+<b class="nc">&nbsp;            Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="nc">&nbsp;            if (customer == null) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;Customer not found&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            List&lt;String&gt; hotelIds = customer.getFavouriteHotels();</b>
+<b class="nc">&nbsp;            return hotelIds.stream()</b>
+<b class="nc">&nbsp;                    .map(hotelRepository::findById)</b>
+<b class="nc">&nbsp;                    .filter(Optional::isPresent)</b>
+<b class="nc">&nbsp;                    .map(Optional::get)</b>
+<b class="nc">&nbsp;                    .collect(Collectors.toList());</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void addFavouriteHotel(String userEmail, String hotelId) {
+<b class="nc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="nc">&nbsp;        if (customer == null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Customer not found&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        List&lt;String&gt; favouriteHotelIds = customer.getFavouriteHotels();</b>
+<b class="nc">&nbsp;        if (!favouriteHotelIds.contains(hotelId)) {</b>
+<b class="nc">&nbsp;            favouriteHotelIds.add(hotelId);</b>
+<b class="nc">&nbsp;            customer.setFavouriteHotels(favouriteHotelIds);</b>
+<b class="nc">&nbsp;            customerRepository.save(customer);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteFavouriteHotel(String userEmail, String hotelId) {
+<b class="nc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="nc">&nbsp;        if (customer == null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Customer not found&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        List&lt;String&gt; favouriteHotelIds = customer.getFavouriteHotels();</b>
+<b class="nc">&nbsp;        if (!favouriteHotelIds.isEmpty() &amp;&amp; favouriteHotelIds.contains(hotelId)) {</b>
+<b class="nc">&nbsp;            favouriteHotelIds.remove(hotelId);</b>
+<b class="nc">&nbsp;            customer.setFavouriteHotels(favouriteHotelIds);</b>
+<b class="nc">&nbsp;            customerRepository.save(customer);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Hotel&gt; findRecentHotels(String userEmail) {
+<b class="nc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="nc">&nbsp;        if (customer == null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Customer not found&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        List&lt;String&gt; recentHotelIds = customer.getRecentVisitsOfHotels();</b>
+<b class="nc">&nbsp;        Collections.reverse(recentHotelIds);</b>
+<b class="nc">&nbsp;        return recentHotelIds.stream()</b>
+<b class="nc">&nbsp;                .map(hotelRepository::findById)</b>
+<b class="nc">&nbsp;                .filter(Optional::isPresent)</b>
+<b class="nc">&nbsp;                .map(Optional::get)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-16 16:18</div>
+</div>
+</body>
+</html>

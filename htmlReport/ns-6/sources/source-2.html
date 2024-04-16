@@ -1,0 +1,172 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > BookingServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.carddetails.services</a>
+</div>
+
+<h1>Coverage Summary for Class: BookingServiceImpl (org.example.carddetails.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BookingServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    54.2%
+  </span>
+  <span class="absValue">
+    (13/24)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.carddetails.services;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.example.carddetails.dto.BookingDetailsDTO;
+&nbsp;import org.example.carddetails.models.Booking;
+&nbsp;import org.example.carddetails.models.Hotel;
+&nbsp;import org.example.carddetails.models.Room;
+&nbsp;import org.example.carddetails.repository.BookingRepository;
+&nbsp;import org.example.carddetails.repository.HotelRepository;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class BookingServiceImpl {
+&nbsp;
+&nbsp;    private final HotelRepository hotelRepository;
+&nbsp;    private final BookingRepository bookingRepository;
+&nbsp;
+&nbsp;    public Booking bookRoom(BookingDetailsDTO bookingDetailsDTO) {
+<b class="fc">&nbsp;        Optional&lt;Hotel&gt; hotelOptional = hotelRepository.findById(bookingDetailsDTO.get_hotelId());</b>
+<b class="fc">&nbsp;        if (hotelOptional.isEmpty()) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Hotel Not Found&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        Hotel currentHotel = hotelOptional.get();</b>
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;Room&gt; optionalRoom = currentHotel.getRooms().stream()</b>
+<b class="fc">&nbsp;                .filter(room -&gt; room.getId().equals(bookingDetailsDTO.get_roomId()))</b>
+<b class="fc">&nbsp;                .findFirst();</b>
+<b class="fc">&nbsp;        if (optionalRoom.isEmpty()) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Room not found&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        Room currentRoom = optionalRoom.get();</b>
+&nbsp;
+<b class="pc">&nbsp;        if (currentRoom.getRoomCount() &lt; bookingDetailsDTO.getCustomerRoomCount()) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;No available rooms&quot;);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Decrease available room count
+<b class="nc">&nbsp;        currentRoom.setRoomCount(currentRoom.getRoomCount() - bookingDetailsDTO.getCustomerRoomCount());</b>
+<b class="nc">&nbsp;        hotelRepository.save(currentHotel);</b>
+&nbsp;
+&nbsp;        // Create booking
+<b class="nc">&nbsp;        Booking booking = new Booking();</b>
+<b class="nc">&nbsp;        booking.set_userId(bookingDetailsDTO.get_customerId());</b>
+<b class="nc">&nbsp;        booking.set_hotelId(bookingDetailsDTO.get_hotelId());</b>
+<b class="nc">&nbsp;        booking.set_roomId(bookingDetailsDTO.get_roomId());</b>
+<b class="nc">&nbsp;        booking.setNumOfRooms(bookingDetailsDTO.getCustomerRoomCount());</b>
+<b class="nc">&nbsp;        booking.setNumOfDays(bookingDetailsDTO.getCustomerDayCount());</b>
+<b class="nc">&nbsp;        booking.setTotalAmount(bookingDetailsDTO.getCustomerRoomCount() * bookingDetailsDTO.getCustomerDayCount() * currentRoom.getRoomRate());</b>
+<b class="nc">&nbsp;        booking.setGstOfTotalAmount((booking.getTotalAmount() * 12) / 100);</b>
+&nbsp;
+&nbsp;        // Save booking
+<b class="nc">&nbsp;        return bookingRepository.save(booking);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-16 16:18</div>
+</div>
+</body>
+</html>
