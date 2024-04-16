@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.carddetails.services</a>
+    <a href="../index.html">org.example.roomrelish.services</a>
 </div>
 
-<h1>Coverage Summary for Class: PaymentServiceImpl (org.example.carddetails.services)</h1>
+<h1>Coverage Summary for Class: PaymentServiceImpl (org.example.roomrelish.services)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -34,6 +34,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 <th class="coverageStat 
 ">
   Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
 </th>
 <th class="coverageStat 
 ">
@@ -55,7 +59,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/3)
+    (0/2)
   </span>
 </td>
 <td class="coverageStat">
@@ -63,7 +67,15 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/11)
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
   </span>
 </td>
 </tr>
@@ -75,23 +87,19 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.carddetails.services;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
 &nbsp;
-&nbsp;import org.example.carddetails.models.Booking;
-&nbsp;import org.example.carddetails.models.Payment;
-&nbsp;import org.example.carddetails.repository.BookingRepository;
-&nbsp;import org.example.carddetails.repository.PaymentRepository;
+&nbsp;import org.example.roomrelish.models.Booking;
+&nbsp;import org.example.roomrelish.models.Payment;
+&nbsp;import org.example.roomrelish.repository.BookingRepository;
+&nbsp;import org.example.roomrelish.repository.PaymentRepository;
 &nbsp;import org.springframework.beans.factory.annotation.Autowired;
-&nbsp;import org.springframework.security.core.parameters.P;
 &nbsp;import org.springframework.stereotype.Service;
-&nbsp;import org.springframework.web.bind.annotation.RequestBody;
-&nbsp;import org.springframework.web.bind.annotation.RequestParam;
 &nbsp;
-&nbsp;import java.util.List;
 &nbsp;import java.util.Optional;
 &nbsp;
 &nbsp;@Service
-&nbsp;public class PaymentServiceImpl implements PaymentService{
+&nbsp;public class PaymentServiceImpl {
 &nbsp;    @Autowired
 &nbsp;    private final BookingRepository bookingRepository;
 &nbsp;    @Autowired
@@ -101,23 +109,22 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        this.bookingRepository = bookingRepository;</b>
 <b class="nc">&nbsp;        this.paymentRepository = paymentRepository;</b>
 &nbsp;    }
-&nbsp;    @Override
-&nbsp;    public Payment confirmBook(String _bookingId){
-<b class="nc">&nbsp;        Optional&lt;Payment&gt; paymentOptional = paymentRepository.findBy_bookingId(_bookingId);</b>
-<b class="nc">&nbsp;        if(paymentOptional.isEmpty()){</b>
+&nbsp;
+&nbsp;    public Payment confirmBook(Booking booking){
+<b class="nc">&nbsp;        Optional&lt;Booking&gt; bookingOptional = bookingRepository.findById(booking.getId());</b>
+<b class="nc">&nbsp;        if(bookingOptional.isEmpty()){</b>
 <b class="nc">&nbsp;            throw new IllegalArgumentException();</b>
 &nbsp;        }
-<b class="nc">&nbsp;        Payment currentPayment = paymentOptional.get();</b>
+<b class="nc">&nbsp;        Payment currentPayment = new Payment();</b>
+<b class="nc">&nbsp;        currentPayment.set_bookingId(booking.getId());</b>
+<b class="nc">&nbsp;        currentPayment.set_hotelId(booking.get_hotelId());</b>
+<b class="nc">&nbsp;        currentPayment.set_roomId(booking.get_roomId());</b>
+<b class="nc">&nbsp;        currentPayment.set_userId(booking.get_userId());</b>
+<b class="nc">&nbsp;        currentPayment.setNumOfDays(booking.getNumOfDays());</b>
+<b class="nc">&nbsp;        currentPayment.setNumOfRooms(booking.getNumOfRooms());</b>
 <b class="nc">&nbsp;        currentPayment.setPaymentStatus(true);</b>
 <b class="nc">&nbsp;        return paymentRepository.save(currentPayment);</b>
 &nbsp;    }
-&nbsp;
-&nbsp;    @Override
-&nbsp;    public List&lt;Payment&gt; getMyBookings(String _userId){
-<b class="nc">&nbsp;        List&lt;Payment&gt; paymentList = paymentRepository.findAllBy_userId(_userId);</b>
-<b class="nc">&nbsp;        return paymentList;</b>
-&nbsp;    }
-&nbsp;
 &nbsp;}
 </code>
 </pre>
@@ -142,7 +149,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-16 17:11</div>
+    <div style="float:right;">generated on 2024-04-16 16:50</div>
 </div>
 </body>
 </html>

@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.carddetails.services</a>
+    <a href="../index.html">org.example.roomrelish.services</a>
 </div>
 
-<h1>Coverage Summary for Class: HotelServiceImpl (org.example.carddetails.services)</h1>
+<h1>Coverage Summary for Class: HotelServiceImpl (org.example.roomrelish.services)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -34,6 +34,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 <th class="coverageStat 
 ">
   Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
 </th>
 <th class="coverageStat 
 ">
@@ -52,18 +56,26 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    66.7%
+    91.7%
   </span>
   <span class="absValue">
-    (8/12)
+    (11/12)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    49.3%
+    81.2%
   </span>
   <span class="absValue">
-    (35/71)
+    (13/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    79.5%
+  </span>
+  <span class="absValue">
+    (58/73)
   </span>
 </td>
 </tr>
@@ -75,24 +87,22 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.carddetails.services;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
 &nbsp;
 &nbsp;import lombok.RequiredArgsConstructor;
 &nbsp;import org.bson.types.ObjectId;
-&nbsp;import org.example.carddetails.dto.HotelDTO;
-&nbsp;import org.example.carddetails.dto.ReviewDTO;
-&nbsp;import org.example.carddetails.dto.RoomDTO;
-&nbsp;import org.example.carddetails.models.GuestReview;
-&nbsp;import org.example.carddetails.models.Hotel;
-&nbsp;import org.example.carddetails.models.Room;
-&nbsp;import org.example.carddetails.repository.HotelRepository;
+&nbsp;import org.example.roomrelish.dto.HotelDTO;
+&nbsp;import org.example.roomrelish.dto.ReviewDTO;
+&nbsp;import org.example.roomrelish.dto.RoomDTO;
+&nbsp;import org.example.roomrelish.models.GuestReview;
+&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.models.Room;
+&nbsp;import org.example.roomrelish.repository.HotelRepository;
+&nbsp;import org.reactivestreams.Publisher;
 &nbsp;import org.springframework.stereotype.Service;
 &nbsp;
-&nbsp;import java.util.Arrays;
-&nbsp;import java.util.Date;
 &nbsp;import java.util.List;
 &nbsp;import java.util.Optional;
-&nbsp;import java.util.stream.Collectors;
 &nbsp;
 &nbsp;@Service
 <b class="fc">&nbsp;@RequiredArgsConstructor</b>
@@ -155,27 +165,34 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    @Override
 &nbsp;    public GuestReview addReview(String id, ReviewDTO reviewDTO) {
-<b class="nc">&nbsp;        Hotel hotel = hotelRepository.findById(id)</b>
-<b class="nc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Hotel not found&quot;));</b>
-<b class="nc">&nbsp;        GuestReview guestReview = new GuestReview();</b>
-<b class="nc">&nbsp;        guestReview.setUser(reviewDTO.getUserid());</b>
-<b class="nc">&nbsp;        guestReview.setGuestRating(reviewDTO.getRating());</b>
-<b class="nc">&nbsp;        guestReview.setComment(reviewDTO.getComment());</b>
-<b class="nc">&nbsp;        List&lt;GuestReview&gt; guestReviews = hotel.getGuestReviews();</b>
-<b class="nc">&nbsp;        guestReviews.add(guestReview);</b>
-<b class="nc">&nbsp;        hotelRepository.save(hotel);</b>
-<b class="nc">&nbsp;        return guestReview;</b>
+<b class="fc">&nbsp;        Hotel hotel = hotelRepository.findById(id)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Hotel not found&quot;));</b>
+<b class="fc">&nbsp;        GuestReview guestReview = new GuestReview();</b>
+<b class="fc">&nbsp;        guestReview.setUser(reviewDTO.getUserid());</b>
+<b class="fc">&nbsp;        guestReview.setGuestRating(reviewDTO.getRating());</b>
+<b class="fc">&nbsp;        guestReview.setComment(reviewDTO.getComment());</b>
+<b class="fc">&nbsp;        List&lt;GuestReview&gt; guestReviews = hotel.getGuestReviews();</b>
+<b class="fc">&nbsp;        guestReviews.add(guestReview);</b>
+<b class="fc">&nbsp;        hotelRepository.save(hotel);</b>
+<b class="fc">&nbsp;        return guestReview;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    @Override
 &nbsp;    public void deleteReview(String hotelId, String reviewId) {
-<b class="nc">&nbsp;        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -&gt; new IllegalArgumentException(&quot;Hotel not found&quot;));</b>
-<b class="nc">&nbsp;        List&lt;GuestReview&gt; guestReviews = hotel.getGuestReviews();</b>
-<b class="nc">&nbsp;        boolean removed = guestReviews.removeIf(review -&gt; review.get_id().equals(reviewId));</b>
-<b class="nc">&nbsp;        if (!removed) {</b>
-<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Review not found&quot;);</b>
+<b class="fc">&nbsp;        Hotel hotel = hotelRepository.findById(hotelId)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Hotel not found&quot;));</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;GuestReview&gt; guestReviews = hotel.getGuestReviews();</b>
+<b class="fc">&nbsp;        Optional&lt;GuestReview&gt; reviewToRemove = guestReviews.stream()</b>
+<b class="fc">&nbsp;                .filter(review -&gt; review.get_id().equals(reviewId))</b>
+<b class="fc">&nbsp;                .findFirst();</b>
+&nbsp;
+<b class="pc">&nbsp;        if (reviewToRemove.isPresent()) {</b>
+<b class="nc">&nbsp;            guestReviews.remove(reviewToRemove.get());</b>
+<b class="nc">&nbsp;            hotelRepository.save(hotel);</b>
+&nbsp;        } else {
+&nbsp;            // Review not found, do nothing or log a message
 &nbsp;        }
-<b class="nc">&nbsp;        hotelRepository.save(hotel);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    @Override
@@ -195,20 +212,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        return room;</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public List&lt;Hotel&gt; findHotels(String cityName, Date checkInDate, Date checkOutdate, Integer countOfRooms, Integer priceRangeMax, Integer priceRangeMin, Integer rating, List&lt;String&gt; amenitiesRequired) {
+&nbsp;    public List&lt;Hotel&gt; findHotels(String cityName, Integer rating) {
 &nbsp;        try {
-<b class="nc">&nbsp;            List&lt;Hotel&gt; filteredHotels = hotelRepository.findByLocationCityName(cityName);</b>
-<b class="nc">&nbsp;            if(amenitiesRequired!=null){</b>
-<b class="nc">&nbsp;                filteredHotels = filteredHotels.stream().filter(hotel -&gt; hotel.getAmenities().containsAll(amenitiesRequired)).collect(Collectors.toList());</b>
+<b class="fc">&nbsp;            List&lt;Hotel&gt; hotels = hotelRepository.findByLocationCityNameAndRatingGreaterThanEqual(cityName, rating);</b>
+<b class="fc">&nbsp;            if (hotels == null) {</b>
+<b class="fc">&nbsp;                throw new IllegalArgumentException(&quot;Invalid City Name&quot;);</b>
 &nbsp;            }
-<b class="nc">&nbsp;            if((priceRangeMax!=null)&amp;&amp;(priceRangeMin!=null)){</b>
-&nbsp;                //filteredHotels=filteredHotels.stream().filter(hotel -&gt; hotel);
-&nbsp;            }
-<b class="nc">&nbsp;            return filteredHotels;</b>
-<b class="nc">&nbsp;        } catch (Exception e) {</b>
-<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;An error occurred while searching for hotels.&quot;, e);</b>
+<b class="fc">&nbsp;            return hotels;</b>
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;An error occurred while searching for hotels.&quot;, e);</b>
 &nbsp;        }
 &nbsp;    }
+&nbsp;
 &nbsp;
 &nbsp;    //util function
 &nbsp;    public Hotel setHotel(Hotel hotel,HotelDTO hotelDTO){
@@ -250,7 +265,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-16 17:11</div>
+    <div style="float:right;">generated on 2024-04-16 16:50</div>
 </div>
 </body>
 </html>

@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.carddetails.services</a>
+    <a href="../index.html">org.example.roomrelish.services</a>
 </div>
 
-<h1>Coverage Summary for Class: PaymentService (org.example.carddetails.services)</h1>
+<h1>Coverage Summary for Class: PaymentService (org.example.roomrelish.services)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -39,17 +39,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.carddetails.services;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
 &nbsp;
-&nbsp;import org.example.carddetails.models.Booking;
-&nbsp;import org.example.carddetails.models.Payment;
-&nbsp;
-&nbsp;import java.util.List;
+&nbsp;import org.example.roomrelish.models.Booking;
+&nbsp;import org.example.roomrelish.models.Payment;
 &nbsp;
 &nbsp;public interface PaymentService {
-&nbsp;    Payment confirmBook(String _bookingId);
-&nbsp;
-&nbsp;    List&lt;Payment&gt; getMyBookings(String _userId);
+&nbsp;    Payment confirmBook(Booking booking);
 &nbsp;}
 </code>
 </pre>
@@ -74,7 +70,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-16 17:11</div>
+    <div style="float:right;">generated on 2024-04-16 16:50</div>
 </div>
 </body>
 </html>

@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.carddetails.services</a>
+    <a href="../index.html">org.example.roomrelish.services</a>
 </div>
 
-<h1>Coverage Summary for Class: AuthService (org.example.carddetails.services)</h1>
+<h1>Coverage Summary for Class: AuthService (org.example.roomrelish.services)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -34,6 +34,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 <th class="coverageStat 
 ">
   Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
 </th>
 <th class="coverageStat 
 ">
@@ -63,7 +67,15 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/40)
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/39)
   </span>
 </td>
 </tr>
@@ -75,18 +87,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.carddetails.services;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
 &nbsp;
 &nbsp;import lombok.RequiredArgsConstructor;
-&nbsp;import org.example.carddetails.dto.AuthResponse;
-&nbsp;import org.example.carddetails.dto.LoginRequest;
-&nbsp;import org.example.carddetails.dto.RegisterRequest;
-&nbsp;import org.example.carddetails.models.Customer;
-&nbsp;import org.example.carddetails.models.Role;
-&nbsp;import org.example.carddetails.models.Token;
-&nbsp;import org.example.carddetails.models.TokenType;
-&nbsp;import org.example.carddetails.repository.CustomerRepository;
-&nbsp;import org.example.carddetails.repository.TokenRepository;
+&nbsp;import org.example.roomrelish.dto.AuthResponse;
+&nbsp;import org.example.roomrelish.dto.LoginRequest;
+&nbsp;import org.example.roomrelish.dto.RegisterRequest;
+&nbsp;import org.example.roomrelish.models.Customer;
+&nbsp;import org.example.roomrelish.models.Role;
+&nbsp;import org.example.roomrelish.models.Token;
+&nbsp;import org.example.roomrelish.models.TokenType;
+&nbsp;import org.example.roomrelish.repository.CustomerRepository;
+&nbsp;import org.example.roomrelish.repository.TokenRepository;
 &nbsp;import org.springframework.security.authentication.AuthenticationManager;
 &nbsp;import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 &nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
@@ -144,7 +156,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        for(Token token : validUserTokens){</b>
 <b class="nc">&nbsp;            token.setExpired(true);</b>
 <b class="nc">&nbsp;            token.setRevoked(true);</b>
-<b class="nc">&nbsp;        }</b>
+&nbsp;        }
 <b class="nc">&nbsp;        tokenRepository.saveAll(validUserTokens);</b>
 &nbsp;    }
 &nbsp;
@@ -182,7 +194,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-16 17:11</div>
+    <div style="float:right;">generated on 2024-04-16 16:50</div>
 </div>
 </body>
 </html>

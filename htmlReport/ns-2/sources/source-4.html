@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.carddetails.config</a>
+    <a href="../index.html">org.example.roomrelish.config</a>
 </div>
 
-<h1>Coverage Summary for Class: SecurityConfig (org.example.carddetails.config)</h1>
+<h1>Coverage Summary for Class: SecurityConfig (org.example.roomrelish.config)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -63,7 +63,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/28)
+    (0/27)
   </span>
 </td>
 </tr>
@@ -75,7 +75,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.carddetails.config;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.config;
 &nbsp;
 &nbsp;import lombok.RequiredArgsConstructor;
 &nbsp;import org.springframework.context.annotation.Bean;
@@ -127,7 +127,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;                        .requestMatchers(HttpMethod.POST,&quot;/api/v1/booking/bookingDetails&quot;).hasAuthority(&quot;USER&quot;)</b>
 &nbsp;                        //Payment Controller
 <b class="nc">&nbsp;                        .requestMatchers(HttpMethod.POST,&quot;api/v1/payment/pay&quot;).hasAuthority(&quot;USER&quot;)</b>
-<b class="nc">&nbsp;                        .requestMatchers(HttpMethod.GET,&quot;api/v1/payment/myBookings&quot;).hasAuthority(&quot;USER&quot;)</b>
 <b class="nc">&nbsp;                        .anyRequest().authenticated());</b>
 <b class="nc">&nbsp;        http.sessionManagement(session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</b>
 <b class="nc">&nbsp;                .authenticationProvider(authenticationProvider)</b>
@@ -164,7 +163,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-16 17:11</div>
+    <div style="float:right;">generated on 2024-04-16 16:50</div>
 </div>
 </body>
 </html>
