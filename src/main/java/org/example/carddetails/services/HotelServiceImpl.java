@@ -42,27 +42,27 @@ public class HotelServiceImpl implements HotelService {
         return hotelRepository.save(setHotel(hotel,hotelDTO));
     }
 
-
     @Override
-    public void deleteReview(String hotelId, String reviewId) {
-        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
-        List<GuestReview> guestReviews = hotel.getGuestReviews();
-        boolean removed = guestReviews.removeIf(review -> review.get_id().equals(reviewId));
-        if (!removed) {
-            throw new IllegalArgumentException("Review not found");
+    public Hotel updateHotel(String id, HotelDTO hotelDTO) {
+        if (hotelDTO == null) {
+            throw new IllegalArgumentException("Hotel not found");
         }
-        hotelRepository.save(hotel);
+
+        Hotel hotel = hotelRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+
+        setHotel(hotel, hotelDTO);
+
+        return hotelRepository.save(hotel);
     }
 
+
     @Override
-    public Hotel updateHotel(String id,HotelDTO hotelDTO) {
+    public void deleteHotel(String id) {
         Hotel hotel = hotelRepository.findById(id).orElse(null);
-        if(hotelDTO != null && hotel !=null){
-            hotelRepository.save(setHotel(hotel, hotelDTO));
-        }else{
-            throw new IllegalArgumentException("Invalid hotel details");
-        }
-        return hotel;
+        if(hotel == null)
+            throw new IllegalArgumentException("Hotel not found");
+        hotelRepository.delete(hotel);
     }
 
     @Override
@@ -88,11 +88,14 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public void deleteHotel(String id) {
-        Hotel hotel = hotelRepository.findById(id).orElse(null);
-        if(hotel == null)
-            throw new IllegalArgumentException("Hotel not found");
-        hotelRepository.delete(hotel);
+    public void deleteReview(String hotelId, String reviewId) {
+        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+        List<GuestReview> guestReviews = hotel.getGuestReviews();
+        boolean removed = guestReviews.removeIf(review -> review.get_id().equals(reviewId));
+        if (!removed) {
+            throw new IllegalArgumentException("Review not found");
+        }
+        hotelRepository.save(hotel);
     }
 
     @Override
