@@ -20,4 +20,5 @@ public interface HotelRepository extends MongoRepository<Hotel, String> {
             String location_cityName, double rating);
 
 
+    List<Hotel> findByLocationCityName(String cityName);
 }

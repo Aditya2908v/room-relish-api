@@ -11,8 +11,11 @@ import org.example.carddetails.models.Room;
 import org.example.carddetails.repository.HotelRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -115,9 +118,16 @@ public class HotelServiceImpl implements HotelService {
         return room;
     }
 
-    public List<Hotel> findHotels(String cityName, Integer rating) {
+    public List<Hotel> findHotels(String cityName, Date checkInDate, Date checkOutdate, Integer countOfRooms, Integer priceRangeMax, Integer priceRangeMin, Integer rating, List<String> amenitiesRequired) {
         try {
-            return hotelRepository.findByLocationCityNameAndRatingGreaterThanEqual(cityName, rating);
+            List<Hotel> filteredHotels = hotelRepository.findByLocationCityName(cityName);
+            if(amenitiesRequired!=null){
+                filteredHotels = filteredHotels.stream().filter(hotel -> hotel.getAmenities().containsAll(amenitiesRequired)).collect(Collectors.toList());
+            }
+            if((priceRangeMax!=null)&&(priceRangeMin!=null)){
+                //filteredHotels=filteredHotels.stream().filter(hotel -> hotel);
+            }
+            return filteredHotels;
         } catch (Exception e) {
             throw new IllegalArgumentException("An error occurred while searching for hotels.", e);
         }

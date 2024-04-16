@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -42,6 +43,8 @@ public class HotelController {
 
     //search hotel
     //TODO update search functionality based on checkIn, checkOut, price range and amenities
+
+
     @Operation(
             description = "Search Hotels",
             summary = "Search hotels by city name and/or rating",
@@ -62,11 +65,17 @@ public class HotelController {
     )
     @GetMapping("/search")
     public ResponseEntity<?> searchHotels(
-            @RequestParam(required = false) String cityName,
-            @RequestParam(required = false) Integer rating
+            @RequestParam String cityName,
+            @RequestParam Date checkInDate,
+            @RequestParam Date checkOutDate,
+            @RequestParam int countOfRooms,
+            @RequestParam(required = false) Integer priceRangeMin,
+            @RequestParam(required = false) Integer priceRangeMax,
+            @RequestParam(required = false) Integer rating,
+            @RequestParam(required = false) List<String> amenitiesRequired
     ){
         try {
-            List<Hotel> hotels = hotelService.findHotels(cityName, rating);
+            List<Hotel> hotels = hotelService.findHotels(cityName, checkInDate, checkOutDate, countOfRooms, priceRangeMax, priceRangeMin, rating, amenitiesRequired);
             if (hotels.isEmpty()) {
                 return ResponseEntity.noContent().build();
             }

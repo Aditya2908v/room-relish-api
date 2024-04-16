@@ -25,5 +25,5 @@ public interface HotelService {
     void deleteHotel(String id);
     Room addRoom(String id, RoomDTO roomDTO);
 
-    List<Hotel> findHotels(String cityName,Integer rating);
+    List<Hotel> findHotels(String cityName, Date checkInDate, Date checkOutdate, Integer countOfRooms, Integer priceRangeMax, Integer priceRangeMin, Integer rating, List<String> amenitiesRequired);
 }
