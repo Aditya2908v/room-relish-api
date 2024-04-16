@@ -46,7 +46,10 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/swagger-resources/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
-
+                        //Booking Controller
+                        .requestMatchers(HttpMethod.POST,"/api/v1/booking/bookingDetails").hasAuthority("USER")
+                        //Payment Controller
+                        .requestMatchers(HttpMethod.POST,"api/v1/payment/pay").hasAuthority("USER")
                         .anyRequest().authenticated());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
