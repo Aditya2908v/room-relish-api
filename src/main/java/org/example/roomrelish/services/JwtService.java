@@ -47,7 +47,7 @@ public class JwtService {
         Step 4 : Parse the JWT token and verify its signature
         Step 5 : Extract and return the claims (payload) from the token
      */
-    private Claims extractClaims(String jwtToken) {
+    Claims extractClaims(String jwtToken) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
@@ -98,12 +98,12 @@ public class JwtService {
     /*
         if the expiration time is before the current time, it returns 'true'
      */
-    private boolean isTokenExpired(String token) {
+    boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
     // Method to extract expiration time from JWT token
-    private Date extractExpiration(String token) {
+    Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
@@ -111,7 +111,7 @@ public class JwtService {
     /*
         generated a signing key using HMAC SHA algorithm.
      */
-    private Key getSignInKey() {
+    Key getSignInKey() {
         byte[] keyBytes = SECRET_KEY.getBytes();
         return Keys.hmacShaKeyFor(keyBytes);
     }

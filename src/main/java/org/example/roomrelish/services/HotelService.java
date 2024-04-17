@@ -8,12 +8,11 @@ import org.example.roomrelish.dto.RoomDTO;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.models.Room;
-import org.reactivestreams.Publisher;
+import org.jetbrains.annotations.TestOnly;
 
-
-import java.util.Date;
 import java.util.List;
 
+@TestOnly
 public interface HotelService {
     List<Hotel> getAllHotels();
     Hotel findHotelById(String id);

@@ -5,9 +5,11 @@ import org.example.roomrelish.dto.CustomerProfile;
 import org.example.roomrelish.dto.UpdateCustomerDTO;
 import org.example.roomrelish.models.Customer;
 import org.example.roomrelish.models.Hotel;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
 
+@TestOnly
 public interface CustomerService {
     void addCardToUser(CardDTO cardDTO,String userEmail);
 

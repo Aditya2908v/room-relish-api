@@ -48,34 +48,34 @@ Current scope:     <a href="../../index.html">all classes</a>
   <td class="name">CustomerController</td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    100%
   </span>
   <span class="absValue">
-    (0/1)
+    (1/1)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    35.3%
   </span>
   <span class="absValue">
-    (0/17)
+    (6/17)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    4.5%
   </span>
   <span class="absValue">
-    (0/22)
+    (1/22)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    0%
+    20.7%
   </span>
   <span class="absValue">
-    (0/82)
+    (17/82)
   </span>
 </td>
 </tr>
@@ -99,38 +99,40 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import org.example.roomrelish.services.AuthService;
 &nbsp;import org.example.roomrelish.services.CustomerService;
 &nbsp;import org.example.roomrelish.services.JwtService;
+&nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;import org.springframework.graphql.data.method.annotation.QueryMapping;
 &nbsp;import org.springframework.http.HttpStatus;
 &nbsp;import org.springframework.http.ResponseEntity;
 &nbsp;import org.springframework.web.bind.annotation.*;
 &nbsp;import org.springframework.web.multipart.MultipartFile;
-&nbsp;
 &nbsp;import java.util.List;
-&nbsp;
 &nbsp;
 &nbsp;@RestController
 &nbsp;@RequestMapping(&quot;/api/v1/customer&quot;)
-<b class="nc">&nbsp;@RequiredArgsConstructor</b>
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
 &nbsp;public class CustomerController {
 &nbsp;
 &nbsp;    private final CustomerService customerService;
 &nbsp;    private final AuthService authService;
 &nbsp;    private final JwtService jwtService;
 &nbsp;
+&nbsp;    //demo end point to test the authentication.
 &nbsp;    @GetMapping(&quot;/hello&quot;)
+&nbsp;    @TestOnly
 &nbsp;    public String hello() {
 <b class="nc">&nbsp;        return &quot;Hello World&quot;;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    @QueryMapping(&quot;users&quot;)
+&nbsp;    @TestOnly
 &nbsp;    public List&lt;Customer&gt; getAllCustomers_GraphQL() {
 <b class="nc">&nbsp;        return customerService.getAllCustomers();</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    @GetMapping(&quot;/customers&quot;)
-&nbsp;    public ResponseEntity&lt;List&lt;Customer&gt;&gt; getAllCustomers(){
-<b class="nc">&nbsp;        List&lt;Customer&gt; customers = customerService.getAllCustomers();</b>
-<b class="nc">&nbsp;        return ResponseEntity.ok(customers);</b>
+&nbsp;    public ResponseEntity&lt;?&gt; getAllCustomers(){
+<b class="fc">&nbsp;        List&lt;Customer&gt; customers = customerService.getAllCustomers();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(customers);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    @Operation(
@@ -150,10 +152,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    @PostMapping(&quot;/register&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; registerCustomer(@RequestBody RegisterRequest request) {
 &nbsp;        try{
-<b class="nc">&nbsp;            AuthResponse response = authService.registerCustomer(request);</b>
-<b class="nc">&nbsp;            return ResponseEntity.ok(response);</b>
-<b class="nc">&nbsp;        }catch (Exception ex){</b>
-<b class="nc">&nbsp;            return ResponseEntity.badRequest().body(ex.getMessage());</b>
+<b class="fc">&nbsp;            AuthResponse response = authService.registerCustomer(request);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(response);</b>
+<b class="fc">&nbsp;        }catch (Exception ex){</b>
+<b class="fc">&nbsp;            return ResponseEntity.badRequest().body(ex.getMessage());</b>
 &nbsp;        }
 &nbsp;    }
 &nbsp;
@@ -174,13 +176,14 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    @PostMapping(&quot;/login&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; loginUser(@RequestBody LoginRequest loginRequest){
 &nbsp;        try{
-<b class="nc">&nbsp;            AuthResponse response = authService.authenticate(loginRequest);</b>
-<b class="nc">&nbsp;            return ResponseEntity.ok(response);</b>
-<b class="nc">&nbsp;        }catch (Exception ex){</b>
-<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());</b>
+<b class="fc">&nbsp;            AuthResponse response = authService.authenticate(loginRequest);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(response);</b>
+<b class="fc">&nbsp;        }catch (Exception ex){</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());</b>
 &nbsp;        }
 &nbsp;    }
 &nbsp;
+&nbsp;    @TestOnly
 &nbsp;    // add new card details to the added cards field
 &nbsp;    @PostMapping(&quot;/addCard&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; addCardToUser(@RequestBody CardDTO cardDTO, HttpServletRequest request) {
@@ -212,6 +215,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;                    )
 &nbsp;            }
 &nbsp;    )
+&nbsp;    @TestOnly
 &nbsp;    @PutMapping(&quot;/update&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; updateUser(@RequestBody UpdateCustomerDTO updateCustomerDTO, HttpServletRequest request) {
 &nbsp;        try{
@@ -226,6 +230,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    }
 &nbsp;    //specifically for navbar/ to check weather the user is logged in
+&nbsp;    @TestOnly
 &nbsp;    @GetMapping(&quot;/navbar&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; getNavbarDetails(HttpServletRequest request) {
 &nbsp;        try {
@@ -243,6 +248,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        }
 &nbsp;    }
 &nbsp;    //get profile details for profile page
+&nbsp;    @TestOnly
 &nbsp;    @GetMapping(&quot;/profile-details&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; getProfileDetails(HttpServletRequest request) {
 &nbsp;        try{
@@ -257,6 +263,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        }
 &nbsp;    }
 &nbsp;    //get profile picture
+&nbsp;    @TestOnly
 &nbsp;    @GetMapping(&quot;/profilePicture&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; getProfilePicture(HttpServletRequest request) {
 &nbsp;        try{
@@ -268,6 +275,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        }
 &nbsp;    }
 &nbsp;    // add or update profile or cover picture
+&nbsp;    @TestOnly
 &nbsp;    @PostMapping(&quot;/addProfilePicture&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; addOrUpdateProfilePhoto(@RequestParam(&quot;file&quot;) MultipartFile file, @RequestParam String type, HttpServletRequest request) {
 &nbsp;        try{
@@ -287,6 +295,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        }
 &nbsp;    }
 &nbsp;    // to view list of favourite hotels
+&nbsp;    @TestOnly
 &nbsp;    @GetMapping(&quot;/favouriteHotels&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; getFavouriteHotels(HttpServletRequest request) {
 &nbsp;        try{
@@ -300,6 +309,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        }
 &nbsp;    }
 &nbsp;    // to add a hotel to favourite hotels if it is present in hotel collection
+&nbsp;    @TestOnly
 &nbsp;    @PostMapping(&quot;/favouriteHotels/add&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; addFavouriteHotel(@RequestParam String hotelId,HttpServletRequest request) {
 &nbsp;        try{
@@ -311,6 +321,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        }
 &nbsp;    }
 &nbsp;    // to remove a hotel from favourite hotels
+&nbsp;    @TestOnly
 &nbsp;    @DeleteMapping(&quot;/favouriteHotels/delete&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; deleteFavouriteHotel(@RequestParam String hotelId,HttpServletRequest request) {
 &nbsp;        try{
@@ -325,24 +336,23 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    @GetMapping(&quot;/recent&quot;)
 &nbsp;    public ResponseEntity&lt;?&gt; getRecentHotels(HttpServletRequest request) {
 &nbsp;        try{
-<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="fc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
 <b class="nc">&nbsp;            List&lt;Hotel&gt; recentHotels = customerService.findRecentHotels(userEmail);</b>
 <b class="nc">&nbsp;            return ResponseEntity.ok().body(recentHotels);</b>
-<b class="nc">&nbsp;        }catch (Exception e){</b>
-<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());</b>
+<b class="fc">&nbsp;        }catch (Exception e){</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());</b>
 &nbsp;        }
 &nbsp;    }
 &nbsp;
 &nbsp;    //TODO after user searches a hotel add it to recent searches
 &nbsp;
 &nbsp;    //TODO fetch user details by ID along with decrypted card details
-&nbsp;
-&nbsp;
+&nbsp;    @TestOnly
 &nbsp;    //utility function to get JWT token form the request
-&nbsp;    private String extractUserEmailFromRequest(HttpServletRequest request) {
-<b class="nc">&nbsp;        final String authHeader = request.getHeader(&quot;Authorization&quot;);</b>
-<b class="nc">&nbsp;        if (authHeader == null || !authHeader.startsWith(&quot;Bearer &quot;)) {</b>
-<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Unauthorized&quot;);</b>
+&nbsp;    public String extractUserEmailFromRequest(HttpServletRequest request) {
+<b class="fc">&nbsp;        final String authHeader = request.getHeader(&quot;Authorization&quot;);</b>
+<b class="pc">&nbsp;        if (authHeader == null || !authHeader.startsWith(&quot;Bearer &quot;)) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Unauthorized&quot;);</b>
 &nbsp;        }
 <b class="nc">&nbsp;        final String jwtToken = authHeader.substring(7);</b>
 <b class="nc">&nbsp;        return jwtService.extractUsername(jwtToken);</b>
@@ -371,7 +381,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-16 17:55</div>
+    <div style="float:right;">generated on 2024-04-17 14:54</div>
 </div>
 </body>
 </html>

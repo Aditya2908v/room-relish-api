@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > CustomerRepository</title>
+  <title>Coverage Report > BookingRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,7 +22,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">org.example.roomrelish.repository</a>
 </div>
 
-<h1>Coverage Summary for Class: CustomerRepository (org.example.roomrelish.repository)</h1>
+<h1>Coverage Summary for Class: BookingRepository (org.example.roomrelish.repository)</h1>
 
 <table class="coverageStats">
 
@@ -30,13 +30,13 @@ Current scope:     <a href="../../index.html">all classes</a>
   <th class="name">Class</th>
 </tr>
   <tr>
-    <td class="name">CustomerRepository$MockitoMock$Zu9YDrjr</td>
+    <td class="name">BookingRepository$MockitoMock$Xjj1qbgw</td>
   </tr>
   <tr>
-    <td class="name">CustomerRepository$MockitoMock$Zu9YDrjr$auxiliary$6qmF8aYt</td>
+    <td class="name">BookingRepository$MockitoMock$Xjj1qbgw$auxiliary$DR5ekstv</td>
   </tr>
   <tr>
-    <td class="name">CustomerRepository$MockitoMock$Zu9YDrjr$auxiliary$70SaOi64</td>
+    <td class="name">BookingRepository$MockitoMock$Xjj1qbgw$auxiliary$xyFG8Z6I</td>
   </tr>
 <tr>
   <td class="name"><strong>Total</strong></td>
@@ -50,16 +50,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.repository;
 &nbsp;
-&nbsp;import org.example.roomrelish.models.Customer;
+&nbsp;import org.example.roomrelish.models.Booking;
 &nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;import org.springframework.data.mongodb.repository.MongoRepository;
-&nbsp;
-&nbsp;import java.util.Optional;
-&nbsp;
-&nbsp;public interface CustomerRepository extends MongoRepository&lt;Customer, String&gt; {
-&nbsp;    Optional&lt;Customer&gt; findByEmail(String email);
-&nbsp;
-&nbsp;    Optional&lt;Customer&gt; findByPhoneNumber(String phoneNumber);
+&nbsp;@TestOnly
+&nbsp;public interface BookingRepository extends MongoRepository&lt;Booking, String&gt; {
 &nbsp;}
 </code>
 </pre>
@@ -84,7 +79,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 12:42</div>
+    <div style="float:right;">generated on 2024-04-17 16:12</div>
 </div>
 </body>
 </html>

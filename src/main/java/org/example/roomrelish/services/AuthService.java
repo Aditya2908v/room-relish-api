@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-@TestOnly
 public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
