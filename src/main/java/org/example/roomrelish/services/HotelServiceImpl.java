@@ -8,6 +8,7 @@ import org.example.roomrelish.dto.RoomDTO;
 import org.example.roomrelish.dto.SearchDTO;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
+import org.example.roomrelish.models.Location;
 import org.example.roomrelish.models.Room;
 import org.example.roomrelish.repository.HotelRepository;
 import org.reactivestreams.Publisher;
