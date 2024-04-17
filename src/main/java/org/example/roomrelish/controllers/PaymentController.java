@@ -1,17 +1,16 @@
 package org.example.roomrelish.controllers;
 
-import org.example.roomrelish.models.Booking;
 import org.example.roomrelish.models.Payment;
 import org.example.roomrelish.services.PaymentServiceImpl;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("/api/v1/payment")
+@TestOnly
 public class PaymentController {
     private final PaymentServiceImpl paymentService;
 

@@ -93,12 +93,14 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import jakarta.servlet.http.HttpServletResponse;
 &nbsp;import lombok.RequiredArgsConstructor;
 &nbsp;import org.example.roomrelish.repository.TokenRepository;
+&nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;import org.springframework.security.core.Authentication;
 &nbsp;import org.springframework.security.web.authentication.logout.LogoutHandler;
 &nbsp;import org.springframework.stereotype.Service;
 &nbsp;
 &nbsp;@Service
 <b class="nc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;@TestOnly
 &nbsp;public class LogoutService implements LogoutHandler{
 &nbsp;    private final TokenRepository tokenRepository;
 &nbsp;
@@ -145,7 +147,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-16 17:55</div>
+    <div style="float:right;">generated on 2024-04-17 14:54</div>
 </div>
 </body>
 </html>
