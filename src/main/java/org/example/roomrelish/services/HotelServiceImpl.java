@@ -163,7 +163,11 @@ public class HotelServiceImpl implements HotelService {
         hotel.setAmenities(hotelDTO.getAmenities());
         hotel.setImages(hotelDTO.getImages());
         hotel.setRooms(hotelDTO.getRooms());
-        hotel.setTotalRooms(hotelDTO.getTotalRooms());
+        int totalRooms=0;
+        for(Room room:hotelDTO.getRooms()){
+            totalRooms+=room.getRoomCount();
+        }
+        hotel.setTotalRooms(totalRooms);
         return hotel;
     }
 

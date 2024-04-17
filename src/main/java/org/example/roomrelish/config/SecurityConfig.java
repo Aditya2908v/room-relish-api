@@ -39,7 +39,6 @@ public class SecurityConfig {
 
                         //Hotel Controller
                         .requestMatchers(HttpMethod.GET, "/api/v1/hotels/search").permitAll()
-
                         //graphql
                         .requestMatchers("/graphql").permitAll()
                         .requestMatchers("/graphiql").permitAll()

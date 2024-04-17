@@ -12,6 +12,7 @@ import org.example.roomrelish.dto.SearchDTO;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.models.Room;
+import org.example.roomrelish.repository.HotelRepository;
 import org.example.roomrelish.services.HotelService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -149,6 +150,7 @@ public class HotelController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 }
 

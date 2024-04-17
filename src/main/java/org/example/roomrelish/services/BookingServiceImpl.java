@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.roomrelish.dto.BookingDetailsDTO;
 import org.example.roomrelish.models.Booking;
 import org.example.roomrelish.models.Hotel;
+import org.example.roomrelish.models.Payment;
 import org.example.roomrelish.models.Room;
 import org.example.roomrelish.repository.BookingRepository;
 import org.example.roomrelish.repository.HotelRepository;
+import org.example.roomrelish.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ public class BookingServiceImpl {
 
     private final HotelRepository hotelRepository;
     private final BookingRepository bookingRepository;
+    private final PaymentRepository paymentRepository;
 
     public Booking bookRoom(BookingDetailsDTO bookingDetailsDTO) {
         Optional<Hotel> hotelOptional = hotelRepository.findById(bookingDetailsDTO.get_hotelId());
@@ -49,8 +52,19 @@ public class BookingServiceImpl {
         booking.setNumOfDays(bookingDetailsDTO.getCustomerDayCount());
         booking.setTotalAmount(bookingDetailsDTO.getCustomerRoomCount() * bookingDetailsDTO.getCustomerDayCount() * currentRoom.getRoomRate());
         booking.setGstOfTotalAmount((booking.getTotalAmount() * 12) / 100);
-
+        Payment payment = new Payment();
         // Save booking
-        return bookingRepository.save(booking);
+        Booking booking1 = bookingRepository.save(booking);
+        //Save in payment and set payment status false
+        payment.set_bookingId(booking1.getId());
+        payment.set_roomId(booking1.get_roomId());
+        payment.set_hotelId(booking.get_hotelId());
+        payment.set_userId(booking.get_userId());
+        payment.setNumOfDays(booking.getNumOfDays());
+        payment.setNumOfRooms(booking.getNumOfRooms());
+        payment.setPaymentStatus(false);
+        paymentRepository.save(payment);
+        return booking1;
+
     }
 }
