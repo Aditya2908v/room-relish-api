@@ -177,5 +177,7 @@ public class HotelControllerTest {
         Assertions.assertNull(response.getBody());
     }
 
+    //TODO test search endpoint
+
 
 }

@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > HotelRepository</title>
+  <title>Coverage Report > CustomerRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,7 +22,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">org.example.roomrelish.repository</a>
 </div>
 
-<h1>Coverage Summary for Class: HotelRepository (org.example.roomrelish.repository)</h1>
+<h1>Coverage Summary for Class: CustomerRepository (org.example.roomrelish.repository)</h1>
 
 <table class="coverageStats">
 
@@ -30,13 +30,13 @@ Current scope:     <a href="../../index.html">all classes</a>
   <th class="name">Class</th>
 </tr>
   <tr>
-    <td class="name">HotelRepository$MockitoMock$VK51QSId</td>
+    <td class="name">CustomerRepository$MockitoMock$H4jepp8c</td>
   </tr>
   <tr>
-    <td class="name">HotelRepository$MockitoMock$VK51QSId$auxiliary$MRtwfrTJ</td>
+    <td class="name">CustomerRepository$MockitoMock$H4jepp8c$auxiliary$9hdK83dk</td>
   </tr>
   <tr>
-    <td class="name">HotelRepository$MockitoMock$VK51QSId$auxiliary$TVDzJ7aP</td>
+    <td class="name">CustomerRepository$MockitoMock$H4jepp8c$auxiliary$QZ8WFV2F</td>
   </tr>
 <tr>
   <td class="name"><strong>Total</strong></td>
@@ -50,27 +50,16 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.repository;
 &nbsp;
-&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.models.Customer;
 &nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;import org.springframework.data.mongodb.repository.MongoRepository;
 &nbsp;
-&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
 &nbsp;
+&nbsp;public interface CustomerRepository extends MongoRepository&lt;Customer, String&gt; {
+&nbsp;    Optional&lt;Customer&gt; findByEmail(String email);
 &nbsp;
-&nbsp;public interface HotelRepository extends MongoRepository&lt;Hotel, String&gt; {
-&nbsp;    /*@Query(&quot;{ &quot; +
-&nbsp;            &quot;&#39;location.cityName&#39;: { $regex: ?0, $options: &#39;i&#39; }, &quot; + // City name
-&nbsp;            &quot;&#39;availability.rooms&#39;: { $gte: ?1 }, &quot; + // Rooms
-&nbsp;            &quot;&#39;rating&#39;: { $gte: ?2 }, &quot; + // Rating
-&nbsp;            &quot;&#39;amenities&#39;: { $all: ?3 } &quot; + // Amenities
-&nbsp;            &quot;}&quot;)*/
-&nbsp;    //@Query(&quot;{ &#39;location.cityName&#39;: { $regex: ?0, $options: &#39;i&#39; }, &#39;availability.rooms&#39;: { $gte: ?1 } }&quot;)
-&nbsp;    //List&lt;Hotel&gt; findByLocationCityName(String cityName);
-&nbsp;    List&lt;Hotel&gt; findByLocationCityNameAndRatingGreaterThanEqual(
-&nbsp;            String location_cityName, double rating);
-&nbsp;
-&nbsp;
-&nbsp;    List&lt;Hotel&gt; findByLocationCityName(String cityName);
+&nbsp;    Optional&lt;Customer&gt; findByPhoneNumber(String phoneNumber);
 &nbsp;}
 </code>
 </pre>
@@ -95,7 +84,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 16:12</div>
+    <div style="float:right;">generated on 2024-04-17 16:59</div>
 </div>
 </body>
 </html>

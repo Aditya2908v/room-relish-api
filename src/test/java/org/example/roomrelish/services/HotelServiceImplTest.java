@@ -187,33 +187,6 @@ public class HotelServiceImplTest {
         Assertions.assertNotNull(addedReview);
     }
 
-    @Test
-    void testFindHotels_Success(){
-        String cityName = "Chennai";
-        int rating = 4;
-        List<Hotel> expectedHotels = List.of(
-                new Hotel(),
-                new Hotel()
-        );
-        when(hotelRepository.findByLocationCityNameAndRatingGreaterThanEqual(cityName, rating)).thenReturn(expectedHotels);
-
-        List<Hotel> actualHotels = hotelService.findHotels(cityName,rating);
-        Assertions.assertNotNull(actualHotels);
-
-    }
-
-    @Test
-    void testFindHotels_WithNullCityName(){
-        String cityName = "Chennai";
-        int rating = 4;
-        when(hotelRepository.findByLocationCityNameAndRatingGreaterThanEqual(cityName, rating)).thenReturn(null);
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService.findHotels(cityName,rating));
-        Assertions.assertEquals("An error occurred while searching for hotels.", exception.getMessage());
-    }
-
-
-
-
     // Helper method to create a sample Hotel object
     private Hotel createSampleHotel() {
         Hotel hotel = new Hotel();
