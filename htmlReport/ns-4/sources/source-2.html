@@ -72,10 +72,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    54.2%
+    38.2%
   </span>
   <span class="absValue">
-    (13/24)
+    (13/34)
   </span>
 </td>
 </tr>
@@ -93,9 +93,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import org.example.roomrelish.dto.BookingDetailsDTO;
 &nbsp;import org.example.roomrelish.models.Booking;
 &nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.models.Payment;
 &nbsp;import org.example.roomrelish.models.Room;
 &nbsp;import org.example.roomrelish.repository.BookingRepository;
 &nbsp;import org.example.roomrelish.repository.HotelRepository;
+&nbsp;import org.example.roomrelish.repository.PaymentRepository;
 &nbsp;import org.springframework.stereotype.Service;
 &nbsp;import java.util.Optional;
 &nbsp;
@@ -105,6 +107,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    private final HotelRepository hotelRepository;
 &nbsp;    private final BookingRepository bookingRepository;
+&nbsp;    private final PaymentRepository paymentRepository;
 &nbsp;
 &nbsp;    public Booking bookRoom(BookingDetailsDTO bookingDetailsDTO) {
 <b class="fc">&nbsp;        Optional&lt;Hotel&gt; hotelOptional = hotelRepository.findById(bookingDetailsDTO.get_hotelId());</b>
@@ -138,9 +141,20 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;        booking.setNumOfDays(bookingDetailsDTO.getCustomerDayCount());</b>
 <b class="nc">&nbsp;        booking.setTotalAmount(bookingDetailsDTO.getCustomerRoomCount() * bookingDetailsDTO.getCustomerDayCount() * currentRoom.getRoomRate());</b>
 <b class="nc">&nbsp;        booking.setGstOfTotalAmount((booking.getTotalAmount() * 12) / 100);</b>
-&nbsp;
+<b class="nc">&nbsp;        Payment payment = new Payment();</b>
 &nbsp;        // Save booking
-<b class="nc">&nbsp;        return bookingRepository.save(booking);</b>
+<b class="nc">&nbsp;        Booking booking1 = bookingRepository.save(booking);</b>
+&nbsp;        //Save in payment and set payment status false
+<b class="nc">&nbsp;        payment.set_bookingId(booking1.getId());</b>
+<b class="nc">&nbsp;        payment.set_roomId(booking1.get_roomId());</b>
+<b class="nc">&nbsp;        payment.set_hotelId(booking.get_hotelId());</b>
+<b class="nc">&nbsp;        payment.set_userId(booking.get_userId());</b>
+<b class="nc">&nbsp;        payment.setNumOfDays(booking.getNumOfDays());</b>
+<b class="nc">&nbsp;        payment.setNumOfRooms(booking.getNumOfRooms());</b>
+<b class="nc">&nbsp;        payment.setPaymentStatus(false);</b>
+<b class="nc">&nbsp;        paymentRepository.save(payment);</b>
+<b class="nc">&nbsp;        return booking1;</b>
+&nbsp;
 &nbsp;    }
 &nbsp;}
 </code>
@@ -166,7 +180,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 16:12</div>
+    <div style="float:right;">generated on 2024-04-17 16:59</div>
 </div>
 </body>
 </html>
