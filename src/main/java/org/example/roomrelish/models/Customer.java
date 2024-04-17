@@ -1,6 +1,7 @@
 package org.example.roomrelish.models;
 
 
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+@TestOnly
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

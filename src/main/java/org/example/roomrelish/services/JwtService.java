@@ -1,5 +1,6 @@
 package org.example.roomrelish.services;
 
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@TestOnly
 public class JwtService {
 
     // Secret key used for signing and validating JWT tokens

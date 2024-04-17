@@ -6,12 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.roomrelish.models.Location;
 import org.example.roomrelish.models.Room;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@TestOnly
 public class HotelDTO {
     private String hotelName;
     private String hotelType;

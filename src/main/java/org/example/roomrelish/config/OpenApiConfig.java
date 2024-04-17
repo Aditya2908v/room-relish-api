@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
+import org.jetbrains.annotations.TestOnly;
 
+@TestOnly
 @OpenAPIDefinition(
         info = @Info(
                 title = "Room Relish Api",

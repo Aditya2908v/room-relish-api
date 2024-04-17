@@ -177,12 +177,13 @@ public class CustomerServiceImpl implements CustomerService {
             throw new IllegalArgumentException("Customer not found");
         }
         List<String> favouriteHotelIds = customer.getFavouriteHotels();
-        if (!favouriteHotelIds.isEmpty() && favouriteHotelIds.contains(hotelId)) {
+        if (favouriteHotelIds != null && !favouriteHotelIds.isEmpty() && favouriteHotelIds.contains(hotelId)) {
             favouriteHotelIds.remove(hotelId);
             customer.setFavouriteHotels(favouriteHotelIds);
             customerRepository.save(customer);
         }
     }
+
 
     @Override
     public List<Hotel> findRecentHotels(String userEmail) {

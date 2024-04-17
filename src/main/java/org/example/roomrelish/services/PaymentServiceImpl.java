@@ -1,5 +1,6 @@
 package org.example.roomrelish.services;
 
+import lombok.RequiredArgsConstructor;
 import org.example.roomrelish.models.Booking;
 import org.example.roomrelish.models.Payment;
 import org.example.roomrelish.repository.BookingRepository;
@@ -14,16 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService{
-    @Autowired
     private final BookingRepository bookingRepository;
-    @Autowired
     private final PaymentRepository paymentRepository;
 
-    public PaymentServiceImpl(BookingRepository bookingRepository, PaymentRepository paymentRepository) {
-        this.bookingRepository = bookingRepository;
-        this.paymentRepository = paymentRepository;
-    }
     @Override
     public Payment confirmBook(String _bookingId){
         Optional<Payment> paymentOptional = paymentRepository.findBy_bookingId(_bookingId);

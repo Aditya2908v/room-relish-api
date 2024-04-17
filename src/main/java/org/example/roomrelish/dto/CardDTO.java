@@ -5,10 +5,12 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.TestOnly;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TestOnly
 public class CardDTO {
     @NotEmpty(message = "Card number must not be empty")
     @Pattern(regexp = "^[0-9]{16}$", message = "Card number must be 16 digits")
