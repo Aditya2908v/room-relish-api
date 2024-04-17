@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/customer/profile-details").hasAuthority("USER")
 
                         //Hotel Controller
-                        .requestMatchers(HttpMethod.GET, "/api/v1/hotels/search/**").hasAuthority("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/hotels/search").permitAll()
 
                         //graphql
                         .requestMatchers("/graphql").permitAll()

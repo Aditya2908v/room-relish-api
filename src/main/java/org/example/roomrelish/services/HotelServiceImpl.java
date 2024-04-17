@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.example.roomrelish.dto.HotelDTO;
 import org.example.roomrelish.dto.ReviewDTO;
 import org.example.roomrelish.dto.RoomDTO;
+import org.example.roomrelish.dto.SearchDTO;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.models.Room;
@@ -12,8 +13,8 @@ import org.example.roomrelish.repository.HotelRepository;
 import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -123,13 +124,28 @@ public class HotelServiceImpl implements HotelService {
         return room;
     }
 
-    public List<Hotel> findHotels(String cityName, Integer rating) {
+    public List<Hotel> findHotels(SearchDTO searchDTO) {
         try {
-            List<Hotel> hotels = hotelRepository.findByLocationCityNameAndRatingGreaterThanEqual(cityName, rating);
-            if (hotels == null) {
-                throw new IllegalArgumentException("Invalid City Name");
+            List<Hotel> filteredHotels = hotelRepository.findByLocationCityName(searchDTO.getCityName());
+           // System.out.println(searchDTO.getRating()+" "+searchDTO.getCityName()+" "+ searchDTO.getPriceRangeMax()+" "+ searchDTO.getPriceRangeMin()+" "+ searchDTO.getCountOfRooms());
+            if(searchDTO.getAmenities()!=null){
+                filteredHotels = filteredHotels.stream().filter(hotel->hotel.getAmenities().containsAll(searchDTO.getAmenities())).collect(Collectors.toList());
             }
-            return hotels;
+            if((searchDTO.getPriceRangeMax()!=0)&&(searchDTO.getPriceRangeMin()!=0)){
+                Map<Hotel, List<Room>> hotelRoomMap = filteredHotels.stream()
+                        .flatMap(hotel -> hotel.getRooms().stream()
+                                .filter(room -> room.getRoomRate() <= searchDTO.getPriceRangeMax() && room.getRoomRate() >= searchDTO.getPriceRangeMin())
+                                .map(room -> Map.entry(hotel, room)))
+                        .collect(Collectors.groupingBy(Map.Entry::getKey,
+                                Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
+                filteredHotels = new ArrayList<>(hotelRoomMap.keySet());
+
+            }
+            if(searchDTO.getRating()>0){
+               // System.out.println("Inside rating filter");
+                filteredHotels=filteredHotels.stream().filter(hotel -> hotel.getRating()>searchDTO.getRating()).collect(Collectors.toList());
+            }
+            return filteredHotels;
         } catch (Exception e) {
             throw new IllegalArgumentException("An error occurred while searching for hotels.", e);
         }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.roomrelish.dto.HotelDTO;
 import org.example.roomrelish.dto.ReviewDTO;
 import org.example.roomrelish.dto.RoomDTO;
+import org.example.roomrelish.dto.SearchDTO;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.models.Room;
@@ -64,18 +65,10 @@ public class HotelController {
             }
     )
     @GetMapping("/search")
-    public ResponseEntity<?> searchHotels(
-            @RequestParam String cityName,
-            @RequestParam Date checkInDate,
-            @RequestParam Date checkOutDate,
-            @RequestParam int countOfRooms,
-            @RequestParam(required = false) Integer priceRangeMin,
-            @RequestParam(required = false) Integer priceRangeMax,
-            @RequestParam(required = false) Integer rating,
-            @RequestParam(required = false) List<String> amenitiesRequired
-    ){
+    public ResponseEntity<?> searchHotels(@RequestBody SearchDTO searchDTO){
+       // System.out.println("Inside search end api");
         try {
-            List<Hotel> hotels = hotelService.findHotels(cityName,rating);
+            List<Hotel> hotels = hotelService.findHotels(searchDTO);
             if (hotels.isEmpty()) {
                 return ResponseEntity.noContent().build();
             }
