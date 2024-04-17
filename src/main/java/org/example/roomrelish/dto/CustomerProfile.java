@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TestOnly
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerProfile {
     private String id;

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/booking")
 public class BookingController {
 
-    @Autowired
     private final BookingServiceImpl bookingService;
 
     @PostMapping("/bookingDetails")

@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > CustomerRepository</title>
+  <title>Coverage Report > HotelRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,16 +22,25 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">org.example.roomrelish.repository</a>
 </div>
 
-<h1>Coverage Summary for Class: CustomerRepository (org.example.roomrelish.repository)</h1>
+<h1>Coverage Summary for Class: HotelRepository (org.example.roomrelish.repository)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
 </tr>
+  <tr>
+    <td class="name">HotelRepository$MockitoMock$dc1wuWOu</td>
+  </tr>
+  <tr>
+    <td class="name">HotelRepository$MockitoMock$dc1wuWOu$auxiliary$T1oFxLrM</td>
+  </tr>
+  <tr>
+    <td class="name">HotelRepository$MockitoMock$dc1wuWOu$auxiliary$zTE9WSUw</td>
+  </tr>
 <tr>
-  <td class="name">CustomerRepository</td>
+  <td class="name"><strong>Total</strong></td>
 </tr>
-
 </table>
 
 <br/>
@@ -41,15 +50,25 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.repository;
 &nbsp;
-&nbsp;import org.example.roomrelish.models.Customer;
+&nbsp;import org.example.roomrelish.models.Hotel;
 &nbsp;import org.springframework.data.mongodb.repository.MongoRepository;
 &nbsp;
-&nbsp;import java.util.Optional;
+&nbsp;import java.util.List;
 &nbsp;
-&nbsp;public interface CustomerRepository extends MongoRepository&lt;Customer, String&gt; {
-&nbsp;    Optional&lt;Customer&gt; findByEmail(String email);
+&nbsp;public interface HotelRepository extends MongoRepository&lt;Hotel, String&gt; {
+&nbsp;    /*@Query(&quot;{ &quot; +
+&nbsp;            &quot;&#39;location.cityName&#39;: { $regex: ?0, $options: &#39;i&#39; }, &quot; + // City name
+&nbsp;            &quot;&#39;availability.rooms&#39;: { $gte: ?1 }, &quot; + // Rooms
+&nbsp;            &quot;&#39;rating&#39;: { $gte: ?2 }, &quot; + // Rating
+&nbsp;            &quot;&#39;amenities&#39;: { $all: ?3 } &quot; + // Amenities
+&nbsp;            &quot;}&quot;)*/
+&nbsp;    //@Query(&quot;{ &#39;location.cityName&#39;: { $regex: ?0, $options: &#39;i&#39; }, &#39;availability.rooms&#39;: { $gte: ?1 } }&quot;)
+&nbsp;    //List&lt;Hotel&gt; findByLocationCityName(String cityName);
+&nbsp;    List&lt;Hotel&gt; findByLocationCityNameAndRatingGreaterThanEqual(
+&nbsp;            String location_cityName, double rating);
 &nbsp;
-&nbsp;    Optional&lt;Customer&gt; findByPhoneNumber(String phoneNumber);
+&nbsp;
+&nbsp;    List&lt;Hotel&gt; findByLocationCityName(String cityName);
 &nbsp;}
 </code>
 </pre>
@@ -74,7 +93,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-16 16:50</div>
+    <div style="float:right;">generated on 2024-04-16 17:55</div>
 </div>
 </body>
 </html>

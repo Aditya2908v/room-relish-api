@@ -10,14 +10,13 @@ import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.services.AuthService;
 import org.example.roomrelish.services.CustomerService;
 import org.example.roomrelish.services.JwtService;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/v1/customer")
@@ -28,18 +27,21 @@ public class CustomerController {
     private final AuthService authService;
     private final JwtService jwtService;
 
+    //demo end point to test the authentication.
     @GetMapping("/hello")
+    @TestOnly
     public String hello() {
         return "Hello World";
     }
 
     @QueryMapping("users")
+    @TestOnly
     public List<Customer> getAllCustomers_GraphQL() {
         return customerService.getAllCustomers();
     }
 
     @GetMapping("/customers")
-    public ResponseEntity<List<Customer>> getAllCustomers(){
+    public ResponseEntity<?> getAllCustomers(){
         List<Customer> customers = customerService.getAllCustomers();
         return ResponseEntity.ok(customers);
     }
@@ -92,6 +94,7 @@ public class CustomerController {
         }
     }
 
+    @TestOnly
     // add new card details to the added cards field
     @PostMapping("/addCard")
     public ResponseEntity<?> addCardToUser(@RequestBody CardDTO cardDTO, HttpServletRequest request) {
@@ -123,6 +126,7 @@ public class CustomerController {
                     )
             }
     )
+    @TestOnly
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody UpdateCustomerDTO updateCustomerDTO, HttpServletRequest request) {
         try{
@@ -137,6 +141,7 @@ public class CustomerController {
 
     }
     //specifically for navbar/ to check weather the user is logged in
+    @TestOnly
     @GetMapping("/navbar")
     public ResponseEntity<?> getNavbarDetails(HttpServletRequest request) {
         try {
@@ -154,6 +159,7 @@ public class CustomerController {
         }
     }
     //get profile details for profile page
+    @TestOnly
     @GetMapping("/profile-details")
     public ResponseEntity<?> getProfileDetails(HttpServletRequest request) {
         try{
@@ -168,6 +174,7 @@ public class CustomerController {
         }
     }
     //get profile picture
+    @TestOnly
     @GetMapping("/profilePicture")
     public ResponseEntity<?> getProfilePicture(HttpServletRequest request) {
         try{
@@ -179,6 +186,7 @@ public class CustomerController {
         }
     }
     // add or update profile or cover picture
+    @TestOnly
     @PostMapping("/addProfilePicture")
     public ResponseEntity<?> addOrUpdateProfilePhoto(@RequestParam("file") MultipartFile file, @RequestParam String type, HttpServletRequest request) {
         try{
@@ -198,6 +206,7 @@ public class CustomerController {
         }
     }
     // to view list of favourite hotels
+    @TestOnly
     @GetMapping("/favouriteHotels")
     public ResponseEntity<?> getFavouriteHotels(HttpServletRequest request) {
         try{
@@ -211,6 +220,7 @@ public class CustomerController {
         }
     }
     // to add a hotel to favourite hotels if it is present in hotel collection
+    @TestOnly
     @PostMapping("/favouriteHotels/add")
     public ResponseEntity<?> addFavouriteHotel(@RequestParam String hotelId,HttpServletRequest request) {
         try{
@@ -222,6 +232,7 @@ public class CustomerController {
         }
     }
     // to remove a hotel from favourite hotels
+    @TestOnly
     @DeleteMapping("/favouriteHotels/delete")
     public ResponseEntity<?> deleteFavouriteHotel(@RequestParam String hotelId,HttpServletRequest request) {
         try{
@@ -247,10 +258,9 @@ public class CustomerController {
     //TODO after user searches a hotel add it to recent searches
 
     //TODO fetch user details by ID along with decrypted card details
-
-
+    @TestOnly
     //utility function to get JWT token form the request
-    private String extractUserEmailFromRequest(HttpServletRequest request) {
+    public String extractUserEmailFromRequest(HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new IllegalArgumentException("Unauthorized");

@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > CustomerService</title>
+  <title>Coverage Report > PaymentService</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,14 +22,14 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">org.example.roomrelish.services</a>
 </div>
 
-<h1>Coverage Summary for Class: CustomerService (org.example.roomrelish.services)</h1>
+<h1>Coverage Summary for Class: PaymentService (org.example.roomrelish.services)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">CustomerService</td>
+  <td class="name">PaymentService</td>
 </tr>
 
 </table>
@@ -41,34 +41,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
 &nbsp;
-&nbsp;import org.example.roomrelish.dto.CardDTO;
-&nbsp;import org.example.roomrelish.dto.CustomerProfile;
-&nbsp;import org.example.roomrelish.dto.UpdateCustomerDTO;
-&nbsp;import org.example.roomrelish.models.Customer;
-&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.models.Booking;
+&nbsp;import org.example.roomrelish.models.Payment;
 &nbsp;
 &nbsp;import java.util.List;
 &nbsp;
-&nbsp;public interface CustomerService {
-&nbsp;    void addCardToUser(CardDTO cardDTO,String userEmail);
+&nbsp;public interface PaymentService {
+&nbsp;    Payment confirmBook(String _bookingId);
+&nbsp;    List&lt;Payment&gt; getMyBookings(String _userId);
 &nbsp;
-&nbsp;    List&lt;Customer&gt; getAllCustomers();
-&nbsp;
-&nbsp;    boolean updateCustomer(String userEmail, UpdateCustomerDTO updateCustomerDTO);
-&nbsp;
-&nbsp;    CustomerProfile getProfileInfo(String userEmail, String navbar);
-&nbsp;
-&nbsp;    String getProfilePicture(String userEmail);
-&nbsp;
-&nbsp;    boolean uploadImage(String userEmail, String type, String fileName);
-&nbsp;
-&nbsp;    List&lt;Hotel&gt; getFavouriteHotels(String userEmail);
-&nbsp;
-&nbsp;    void addFavouriteHotel(String userEmail, String hotelId);
-&nbsp;
-&nbsp;    void deleteFavouriteHotel(String userEmail, String hotelId);
-&nbsp;
-&nbsp;    List&lt;Hotel&gt; findRecentHotels(String userEmail);
 &nbsp;}
 </code>
 </pre>
@@ -93,7 +74,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-16 16:50</div>
+    <div style="float:right;">generated on 2024-04-16 17:55</div>
 </div>
 </body>
 </html>

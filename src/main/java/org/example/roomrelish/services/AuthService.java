@@ -10,6 +10,7 @@ import org.example.roomrelish.models.Token;
 import org.example.roomrelish.models.TokenType;
 import org.example.roomrelish.repository.CustomerRepository;
 import org.example.roomrelish.repository.TokenRepository;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@TestOnly
 public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
