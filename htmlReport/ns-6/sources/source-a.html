@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > PaymentService</title>
+  <title>Coverage Report > HotelService</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,16 +22,25 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">org.example.roomrelish.services</a>
 </div>
 
-<h1>Coverage Summary for Class: PaymentService (org.example.roomrelish.services)</h1>
+<h1>Coverage Summary for Class: HotelService (org.example.roomrelish.services)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
 </tr>
+  <tr>
+    <td class="name">HotelService$MockitoMock$Y9Xwol9t</td>
+  </tr>
+  <tr>
+    <td class="name">HotelService$MockitoMock$Y9Xwol9t$auxiliary$0OCBDzkc</td>
+  </tr>
+  <tr>
+    <td class="name">HotelService$MockitoMock$Y9Xwol9t$auxiliary$NZRvGRu8</td>
+  </tr>
 <tr>
-  <td class="name">PaymentService</td>
+  <td class="name"><strong>Total</strong></td>
 </tr>
-
 </table>
 
 <br/>
@@ -41,15 +50,32 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
 &nbsp;
-&nbsp;import org.example.roomrelish.models.Booking;
-&nbsp;import org.example.roomrelish.models.Payment;
+&nbsp;
+&nbsp;
+&nbsp;import org.example.roomrelish.dto.HotelDTO;
+&nbsp;import org.example.roomrelish.dto.ReviewDTO;
+&nbsp;import org.example.roomrelish.dto.RoomDTO;
+&nbsp;import org.example.roomrelish.dto.SearchDTO;
+&nbsp;import org.example.roomrelish.models.GuestReview;
+&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.models.Room;
+&nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;
 &nbsp;import java.util.List;
 &nbsp;
-&nbsp;public interface PaymentService {
-&nbsp;    Payment confirmBook(String _bookingId);
-&nbsp;    List&lt;Payment&gt; getMyBookings(String _userId);
+&nbsp;@TestOnly
+&nbsp;public interface HotelService {
+&nbsp;    List&lt;Hotel&gt; getAllHotels();
+&nbsp;    Hotel findHotelById(String id);
+&nbsp;    Hotel createHotel(HotelDTO hotelDTO);
+&nbsp;    void deleteReview(String hotelId, String reviewId);
+&nbsp;    Hotel updateHotel(String id,HotelDTO hotelDTO);
+&nbsp;    List&lt;GuestReview&gt; getReviews(String id);
+&nbsp;    GuestReview addReview(String id, ReviewDTO reviewDTO);
+&nbsp;    void deleteHotel(String id);
+&nbsp;    Room addRoom(String id, RoomDTO roomDTO);
 &nbsp;
+&nbsp;    List&lt;Hotel&gt; findHotels(SearchDTO searchDTO);
 &nbsp;}
 </code>
 </pre>
@@ -74,7 +100,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 14:54</div>
+    <div style="float:right;">generated on 2024-04-18 11:09</div>
 </div>
 </body>
 </html>

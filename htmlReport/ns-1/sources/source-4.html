@@ -77,18 +77,17 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.controllers;
 &nbsp;
-&nbsp;import org.example.roomrelish.models.Booking;
 &nbsp;import org.example.roomrelish.models.Payment;
 &nbsp;import org.example.roomrelish.services.PaymentServiceImpl;
+&nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;import org.springframework.http.ResponseEntity;
 &nbsp;import org.springframework.stereotype.Controller;
 &nbsp;import org.springframework.web.bind.annotation.*;
 &nbsp;
-&nbsp;import java.util.ArrayList;
-&nbsp;import java.util.List;
 &nbsp;
 &nbsp;@Controller
 &nbsp;@RequestMapping(&quot;/api/v1/payment&quot;)
+&nbsp;@TestOnly
 &nbsp;public class PaymentController {
 &nbsp;    private final PaymentServiceImpl paymentService;
 &nbsp;
@@ -139,7 +138,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 16:07</div>
+    <div style="float:right;">generated on 2024-04-17 17:40</div>
 </div>
 </body>
 </html>

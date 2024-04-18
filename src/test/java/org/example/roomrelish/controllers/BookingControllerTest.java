@@ -3,6 +3,7 @@ package org.example.roomrelish.controllers;
 import org.example.roomrelish.dto.BookingDetailsDTO;
 import org.example.roomrelish.models.Booking;
 import org.example.roomrelish.services.BookingService;
+import org.example.roomrelish.services.BookingServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 public class BookingControllerTest {
     @Mock
-    private BookingService bookingService;
+    private BookingServiceImpl bookingServiceImpl;
 
     @InjectMocks
     private BookingController bookingController;
@@ -25,16 +26,28 @@ public class BookingControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    public void testBookingDetails(){
+ @Test
+    public void testBookingDetails_success(){
         Booking booking = new Booking();
         BookingDetailsDTO bookingDetailsDTO = new BookingDetailsDTO();
-        when(bookingService.bookRoom(bookingDetailsDTO)).thenReturn(booking);
+        when(bookingServiceImpl.bookRoom(bookingDetailsDTO)).thenReturn(booking);
 
         ResponseEntity<?> response = bookingController.bookingDetails(bookingDetailsDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(booking,response.getBody());
+    }
+
+    @Test
+    public void testBookingDetails_Exception(){
+        BookingDetailsDTO bookingDetailsDTO = new BookingDetailsDTO();
+        String errorMessage = "Hotel not found";
+        doThrow(new IllegalArgumentException(errorMessage)).when(bookingServiceImpl).bookRoom(bookingDetailsDTO);
+
+        ResponseEntity<?> response = bookingController.bookingDetails(bookingDetailsDTO);
+
+        assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
+        assertEquals(errorMessage,response.getBody());
     }
 
 }

@@ -37,10 +37,6 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 <th class="coverageStat 
 ">
-  Branch, %
-</th>
-<th class="coverageStat 
-">
   Line, %
 </th>
 </tr>
@@ -60,14 +56,6 @@ Current scope:     <a href="../../index.html">all classes</a>
   </span>
   <span class="absValue">
     (8/11)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    0%
-  </span>
-  <span class="absValue">
-    (0/2)
   </span>
 </td>
 <td class="coverageStat">
@@ -97,9 +85,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import org.example.roomrelish.dto.HotelDTO;
 &nbsp;import org.example.roomrelish.dto.ReviewDTO;
 &nbsp;import org.example.roomrelish.dto.RoomDTO;
+&nbsp;import org.example.roomrelish.dto.SearchDTO;
 &nbsp;import org.example.roomrelish.models.GuestReview;
 &nbsp;import org.example.roomrelish.models.Hotel;
 &nbsp;import org.example.roomrelish.models.Room;
+&nbsp;import org.example.roomrelish.repository.HotelRepository;
 &nbsp;import org.example.roomrelish.services.HotelService;
 &nbsp;import org.springframework.graphql.data.method.annotation.Argument;
 &nbsp;import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -153,18 +143,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;            }
 &nbsp;    )
 &nbsp;    @GetMapping(&quot;/search&quot;)
-&nbsp;    public ResponseEntity&lt;?&gt; searchHotels(
-&nbsp;            @RequestParam String cityName,
-&nbsp;            @RequestParam Date checkInDate,
-&nbsp;            @RequestParam Date checkOutDate,
-&nbsp;            @RequestParam int countOfRooms,
-&nbsp;            @RequestParam(required = false) Integer priceRangeMin,
-&nbsp;            @RequestParam(required = false) Integer priceRangeMax,
-&nbsp;            @RequestParam(required = false) Integer rating,
-&nbsp;            @RequestParam(required = false) List&lt;String&gt; amenitiesRequired
-&nbsp;    ){
+&nbsp;    public ResponseEntity&lt;?&gt; searchHotels(@RequestBody SearchDTO searchDTO){
+&nbsp;       // System.out.println(&quot;Inside search end api&quot;);
 &nbsp;        try {
-<b class="nc">&nbsp;            List&lt;Hotel&gt; hotels = hotelService.findHotels(cityName,rating);</b>
+<b class="nc">&nbsp;            List&lt;Hotel&gt; hotels = hotelService.findHotels(searchDTO);</b>
 <b class="nc">&nbsp;            if (hotels.isEmpty()) {</b>
 <b class="nc">&nbsp;                return ResponseEntity.noContent().build();</b>
 &nbsp;            }
@@ -246,6 +228,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        }
 &nbsp;    }
 &nbsp;
+&nbsp;
 &nbsp;}
 &nbsp;
 </code>
@@ -271,7 +254,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 14:54</div>
+    <div style="float:right;">generated on 2024-04-18 11:09</div>
 </div>
 </body>
 </html>

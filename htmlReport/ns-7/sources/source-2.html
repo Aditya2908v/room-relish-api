@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > PaymentRepository</title>
+  <title>Coverage Report > TokenRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,16 +22,25 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">org.example.roomrelish.repository</a>
 </div>
 
-<h1>Coverage Summary for Class: PaymentRepository (org.example.roomrelish.repository)</h1>
+<h1>Coverage Summary for Class: TokenRepository (org.example.roomrelish.repository)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
 </tr>
+  <tr>
+    <td class="name">TokenRepository$MockitoMock$ucILhEp6</td>
+  </tr>
+  <tr>
+    <td class="name">TokenRepository$MockitoMock$ucILhEp6$auxiliary$aUFGVtU0</td>
+  </tr>
+  <tr>
+    <td class="name">TokenRepository$MockitoMock$ucILhEp6$auxiliary$OzKDDRpl</td>
+  </tr>
 <tr>
-  <td class="name">PaymentRepository</td>
+  <td class="name"><strong>Total</strong></td>
 </tr>
-
 </table>
 
 <br/>
@@ -41,18 +50,16 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.repository;
 &nbsp;
-&nbsp;import org.example.roomrelish.models.Payment;
+&nbsp;import org.example.roomrelish.models.Token;
 &nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;import org.springframework.data.mongodb.repository.MongoRepository;
-&nbsp;import org.springframework.data.repository.CrudRepository;
-&nbsp;import org.springframework.stereotype.Repository;
 &nbsp;
 &nbsp;import java.util.List;
 &nbsp;import java.util.Optional;
-&nbsp;@Repository
-&nbsp;public interface PaymentRepository extends CrudRepository&lt;Payment, String&gt; {
-&nbsp;    List&lt;Payment&gt; findAllBy_userId(String _userId);
-&nbsp;    Optional&lt;Payment&gt; findBy_bookingId(String _bookingId);
+&nbsp;
+&nbsp;public interface TokenRepository extends MongoRepository&lt;Token, String&gt; {
+&nbsp;    List&lt;Token&gt; findAllByCustomerIdAndExpiredIsFalseAndRevokedIsFalse(String customerId);
+&nbsp;    Optional&lt;Token&gt; findByToken(String token);
 &nbsp;}
 </code>
 </pre>
@@ -77,7 +84,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 14:54</div>
+    <div style="float:right;">generated on 2024-04-18 11:09</div>
 </div>
 </body>
 </html>
