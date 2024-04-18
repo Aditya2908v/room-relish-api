@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > BookingService</title>
+  <title>Coverage Report > PaymentService</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,14 +22,14 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">org.example.roomrelish.services</a>
 </div>
 
-<h1>Coverage Summary for Class: BookingService (org.example.roomrelish.services)</h1>
+<h1>Coverage Summary for Class: PaymentService (org.example.roomrelish.services)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">BookingService</td>
+  <td class="name">PaymentService</td>
 </tr>
 
 </table>
@@ -41,13 +41,14 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
 &nbsp;
-&nbsp;import org.example.roomrelish.dto.BookingDetailsDTO;
-&nbsp;import org.example.roomrelish.models.Booking;
+&nbsp;import org.example.roomrelish.models.Payment;
 &nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;
+&nbsp;import java.util.List;
 &nbsp;@TestOnly
-&nbsp;public interface BookingService {
-&nbsp;    Booking bookRoom(BookingDetailsDTO bookingDetailsDTO);
+&nbsp;public interface PaymentService {
+&nbsp;    Payment confirmBook(String _bookingId);
+&nbsp;    List&lt;Payment&gt; getMyBookings(String _userId);
 &nbsp;
 &nbsp;}
 </code>
@@ -73,7 +74,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 11:09</div>
+    <div style="float:right;">generated on 2024-04-18 12:00</div>
 </div>
 </body>
 </html>
