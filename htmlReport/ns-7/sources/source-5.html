@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > BookingRepository</title>
+  <title>Coverage Report > TokenRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,7 +22,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">org.example.roomrelish.repository</a>
 </div>
 
-<h1>Coverage Summary for Class: BookingRepository (org.example.roomrelish.repository)</h1>
+<h1>Coverage Summary for Class: TokenRepository (org.example.roomrelish.repository)</h1>
 
 <table class="coverageStats">
 
@@ -30,13 +30,13 @@ Current scope:     <a href="../../index.html">all classes</a>
   <th class="name">Class</th>
 </tr>
   <tr>
-    <td class="name">BookingRepository$MockitoMock$Ye0WHfvP</td>
+    <td class="name">TokenRepository$MockitoMock$Z9ovRLsw</td>
   </tr>
   <tr>
-    <td class="name">BookingRepository$MockitoMock$Ye0WHfvP$auxiliary$kQqMPGTP</td>
+    <td class="name">TokenRepository$MockitoMock$Z9ovRLsw$auxiliary$9HtnxJS3</td>
   </tr>
   <tr>
-    <td class="name">BookingRepository$MockitoMock$Ye0WHfvP$auxiliary$tgqVHDMX</td>
+    <td class="name">TokenRepository$MockitoMock$Z9ovRLsw$auxiliary$zkmtSxsA</td>
   </tr>
 <tr>
   <td class="name"><strong>Total</strong></td>
@@ -50,11 +50,16 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.repository;
 &nbsp;
-&nbsp;import org.example.roomrelish.models.Booking;
+&nbsp;import org.example.roomrelish.models.Token;
 &nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;import org.springframework.data.mongodb.repository.MongoRepository;
 &nbsp;
-&nbsp;public interface BookingRepository extends MongoRepository&lt;Booking, String&gt; {
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;public interface TokenRepository extends MongoRepository&lt;Token, String&gt; {
+&nbsp;    List&lt;Token&gt; findAllByCustomerIdAndExpiredIsFalseAndRevokedIsFalse(String customerId);
+&nbsp;    Optional&lt;Token&gt; findByToken(String token);
 &nbsp;}
 </code>
 </pre>
@@ -79,7 +84,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 14:54</div>
+    <div style="float:right;">generated on 2024-04-18 12:37</div>
 </div>
 </body>
 </html>

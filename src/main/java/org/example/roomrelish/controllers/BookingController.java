@@ -45,9 +45,6 @@ public class BookingController {
         catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        catch(AccessDeniedException e){
-            return ResponseEntity.status(403).body("Please login to continue");
-        }
     }
 
 

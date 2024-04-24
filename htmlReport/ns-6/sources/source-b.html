@@ -30,13 +30,13 @@ Current scope:     <a href="../../index.html">all classes</a>
   <th class="name">Class</th>
 </tr>
   <tr>
-    <td class="name">HotelService$MockitoMock$x8VN02pl</td>
+    <td class="name">HotelService$MockitoMock$0bEwzUqr</td>
   </tr>
   <tr>
-    <td class="name">HotelService$MockitoMock$x8VN02pl$auxiliary$ic8HzSfl</td>
+    <td class="name">HotelService$MockitoMock$0bEwzUqr$auxiliary$l6d2TEje</td>
   </tr>
   <tr>
-    <td class="name">HotelService$MockitoMock$x8VN02pl$auxiliary$zX71bEWt</td>
+    <td class="name">HotelService$MockitoMock$0bEwzUqr$auxiliary$Tfaur4uw</td>
   </tr>
 <tr>
   <td class="name"><strong>Total</strong></td>
@@ -55,15 +55,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import org.example.roomrelish.dto.HotelDTO;
 &nbsp;import org.example.roomrelish.dto.ReviewDTO;
 &nbsp;import org.example.roomrelish.dto.RoomDTO;
+&nbsp;import org.example.roomrelish.dto.SearchDTO;
 &nbsp;import org.example.roomrelish.models.GuestReview;
 &nbsp;import org.example.roomrelish.models.Hotel;
 &nbsp;import org.example.roomrelish.models.Room;
-&nbsp;import org.reactivestreams.Publisher;
+&nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;
-&nbsp;
-&nbsp;import java.util.Date;
 &nbsp;import java.util.List;
 &nbsp;
+&nbsp;@TestOnly
 &nbsp;public interface HotelService {
 &nbsp;    List&lt;Hotel&gt; getAllHotels();
 &nbsp;    Hotel findHotelById(String id);
@@ -75,7 +75,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    void deleteHotel(String id);
 &nbsp;    Room addRoom(String id, RoomDTO roomDTO);
 &nbsp;
-&nbsp;    List&lt;Hotel&gt; findHotels(String cityName,Integer rating);
+&nbsp;    List&lt;Hotel&gt; findHotels(SearchDTO searchDTO);
 &nbsp;}
 </code>
 </pre>
@@ -100,7 +100,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 14:54</div>
+    <div style="float:right;">generated on 2024-04-18 12:37</div>
 </div>
 </body>
 </html>

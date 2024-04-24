@@ -34,6 +34,20 @@ public class PaymentController {
             }
     )
     //Confirm booking of the room
+    @Operation(
+            description = "Confirm Payment process",
+            summary = "After booking, this payment API confirms the booking by making a payment",
+            responses = {
+                    @ApiResponse(
+                            description = "Details of Payment",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "No booking details found",
+                            responseCode = "204"
+                    )
+            }
+    )
     @PostMapping("/pay/{_bookingId}")
     public ResponseEntity<?> confirmBooking(@PathVariable String _bookingId){
         try{
@@ -44,6 +58,20 @@ public class PaymentController {
             return ResponseEntity.badRequest().body("No booking details found");
         }
     }
+    @Operation(
+            description = "Bookings of an user",
+            summary = "This API returns the bookings that are drafted without payment",
+            responses = {
+                    @ApiResponse(
+                            description = "List of details of booking",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "No bookings found",
+                            responseCode = "204"
+                    )
+            }
+    )
 
     @Operation(
             description = "Bookings of an user",

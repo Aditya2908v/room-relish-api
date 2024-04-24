@@ -128,6 +128,7 @@ public class HotelServiceImpl implements HotelService {
     public List<Hotel> findHotels(SearchDTO searchDTO) {
         try {
             List<Hotel> filteredHotels = hotelRepository.findByLocationCityName(searchDTO.getCityName());
+            filteredHotels = filteredHotels.stream().filter(hotel -> hotel.getTotalRooms()>searchDTO.getCountOfRooms()).collect(Collectors.toList());
            // System.out.println(searchDTO.getRating()+" "+searchDTO.getCityName()+" "+ searchDTO.getPriceRangeMax()+" "+ searchDTO.getPriceRangeMin()+" "+ searchDTO.getCountOfRooms());
             if(searchDTO.getAmenities()!=null){
                 filteredHotels = filteredHotels.stream().filter(hotel->hotel.getAmenities().containsAll(searchDTO.getAmenities())).collect(Collectors.toList());

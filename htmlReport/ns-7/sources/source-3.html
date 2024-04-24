@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > CustomerRepository</title>
+  <title>Coverage Report > PaymentRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,7 +22,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">org.example.roomrelish.repository</a>
 </div>
 
-<h1>Coverage Summary for Class: CustomerRepository (org.example.roomrelish.repository)</h1>
+<h1>Coverage Summary for Class: PaymentRepository (org.example.roomrelish.repository)</h1>
 
 <table class="coverageStats">
 
@@ -30,13 +30,13 @@ Current scope:     <a href="../../index.html">all classes</a>
   <th class="name">Class</th>
 </tr>
   <tr>
-    <td class="name">CustomerRepository$MockitoMock$2rfBayKw</td>
+    <td class="name">PaymentRepository$MockitoMock$Nhevjyzm</td>
   </tr>
   <tr>
-    <td class="name">CustomerRepository$MockitoMock$2rfBayKw$auxiliary$dCR0Z0a9</td>
+    <td class="name">PaymentRepository$MockitoMock$Nhevjyzm$auxiliary$IXzQdcU7</td>
   </tr>
   <tr>
-    <td class="name">CustomerRepository$MockitoMock$2rfBayKw$auxiliary$I2CcckXR</td>
+    <td class="name">PaymentRepository$MockitoMock$Nhevjyzm$auxiliary$notdxlOb</td>
   </tr>
 <tr>
   <td class="name"><strong>Total</strong></td>
@@ -50,16 +50,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.repository;
 &nbsp;
-&nbsp;import org.example.roomrelish.models.Customer;
+&nbsp;import org.example.roomrelish.models.Payment;
 &nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;import org.springframework.data.mongodb.repository.MongoRepository;
+&nbsp;import org.springframework.data.repository.CrudRepository;
+&nbsp;import org.springframework.stereotype.Repository;
 &nbsp;
+&nbsp;import java.util.List;
 &nbsp;import java.util.Optional;
-&nbsp;
-&nbsp;public interface CustomerRepository extends MongoRepository&lt;Customer, String&gt; {
-&nbsp;    Optional&lt;Customer&gt; findByEmail(String email);
-&nbsp;
-&nbsp;    Optional&lt;Customer&gt; findByPhoneNumber(String phoneNumber);
+&nbsp;@Repository
+&nbsp;public interface PaymentRepository extends CrudRepository&lt;Payment, String&gt; {
+&nbsp;    List&lt;Payment&gt; findAllBy_userId(String _userId);
+&nbsp;    Optional&lt;Payment&gt; findBy_bookingId(String _bookingId);
 &nbsp;}
 </code>
 </pre>
@@ -84,7 +86,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-17 14:54</div>
+    <div style="float:right;">generated on 2024-04-18 12:37</div>
 </div>
 </body>
 </html>
