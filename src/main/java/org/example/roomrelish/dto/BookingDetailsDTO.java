@@ -17,3 +17,4 @@ public class BookingDetailsDTO {
     private int customerRoomCount;
     private int customerDayCount;
 }
+
