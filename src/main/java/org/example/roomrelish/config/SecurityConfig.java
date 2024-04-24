@@ -27,9 +27,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth->auth.requestMatchers(HttpMethod.POST,"/api/v1/customer/register").permitAll()
+        http.cors(Customizer.withDefaults());
+           http.csrf(AbstractHttpConfigurer::disable);
+            http.authorizeHttpRequests(auth->auth.requestMatchers(HttpMethod.POST,"/api/v1/customer/register").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/customer/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/customer/hello").hasAuthority("USER")
                         .requestMatchers(HttpMethod.POST,"/api/v1/customer/addCard").hasAuthority("USER")
@@ -38,7 +38,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/customer/profile-details").hasAuthority("USER")
 
                         //Hotel Controller
-                        .requestMatchers(HttpMethod.GET, "/api/v1/hotels/search/**").hasAuthority("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/hotels/search").permitAll()
 
                         //graphql
                         .requestMatchers("/graphql").permitAll()
