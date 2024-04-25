@@ -60,8 +60,13 @@ public class BookingServiceImpl {
         payment.set_roomId(booking1.get_roomId());
         payment.set_hotelId(booking.get_hotelId());
         payment.set_userId(booking.get_userId());
+        payment.setHotelName(currentHotel.getHotelName());
+        payment.setRoomName(currentRoom.getRoomType());
         payment.setNumOfDays(booking.getNumOfDays());
         payment.setNumOfRooms(booking.getNumOfRooms());
+        payment.setTotalAmount(booking1.getTotalAmount()+ booking1.getGstOfTotalAmount());
+        String image = currentHotel.getImages().getFirst();
+        payment.setHotelImage(image);
         payment.setPaymentStatus(false);
         paymentRepository.save(payment);
         return booking1;
