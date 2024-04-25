@@ -46,7 +46,10 @@ public class PaymentController {
                         return ResponseEntity.badRequest().body("No bookings found");
                 }
         }
-
+        @Operation(description = "Delete Booking", summary = "This API deletes the booking details of the room or cancels the booked room", responses = {
+                @ApiResponse(description = "Deleted successful message", responseCode = "200"),
+                @ApiResponse(description = "No bookings found", responseCode = "204")
+        })
         @DeleteMapping("/deleteMyBooking")
         public ResponseEntity<?> deleteMyBooking(@RequestParam String _bookingId)
         {

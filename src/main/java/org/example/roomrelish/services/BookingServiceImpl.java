@@ -50,6 +50,8 @@ public class BookingServiceImpl {
         booking.set_roomId(bookingDetailsDTO.get_roomId());
         booking.setNumOfRooms(bookingDetailsDTO.getCustomerRoomCount());
         booking.setNumOfDays(bookingDetailsDTO.getCustomerDayCount());
+        booking.setCheckInDate(bookingDetailsDTO.getCheckInDate());
+        booking.setCheckOutDate(bookingDetailsDTO.getCheckOutDate());
         booking.setTotalAmount(bookingDetailsDTO.getCustomerRoomCount() * bookingDetailsDTO.getCustomerDayCount() * currentRoom.getRoomRate());
         booking.setGstOfTotalAmount((booking.getTotalAmount() * 12) / 100);
         Payment payment = new Payment();
