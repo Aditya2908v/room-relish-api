@@ -2,6 +2,7 @@ package org.example.roomrelish.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.roomrelish.dto.BookingDetailsDTO;
 import org.example.roomrelish.models.Booking;

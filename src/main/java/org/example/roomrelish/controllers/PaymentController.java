@@ -46,4 +46,17 @@ public class PaymentController {
                         return ResponseEntity.badRequest().body("No bookings found");
                 }
         }
+
+        @DeleteMapping("/deleteMyBooking")
+        public ResponseEntity<?> deleteMyBooking(@RequestParam String _bookingId)
+        {
+                try{
+                        return ResponseEntity.ok(paymentService.deleteBooking(_bookingId));
+                }
+                catch (IllegalArgumentException ae){
+                        return ResponseEntity.badRequest().body(ae.getMessage());
+                }
+        }
+
+
 }
