@@ -54,7 +54,7 @@ public class PaymentControllerTest {
         assertEquals(errorMessage,response.getBody());
     }
 
-    @Test
+  @Test
     public void testMyBookings_success(){
         String _userId = "123456789";
         List<Payment> paymentList = new ArrayList<>();

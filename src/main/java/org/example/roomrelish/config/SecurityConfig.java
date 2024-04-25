@@ -30,7 +30,7 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
 
-    @Bean
+  /*  @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://127.0.0.1"));
@@ -39,7 +39,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
+    }*/
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -69,6 +69,7 @@ public class SecurityConfig {
                         //Payment Controller
                         .requestMatchers(HttpMethod.POST,"api/v1/payment/pay").hasAuthority("USER")
                         .requestMatchers(HttpMethod.GET,"api/v1/payment/myBookings").hasAuthority("USER")
+                        .requestMatchers(HttpMethod.DELETE,"api/v1/payment/deleteMyBooking").hasAuthority("USER")
                         .anyRequest().authenticated());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

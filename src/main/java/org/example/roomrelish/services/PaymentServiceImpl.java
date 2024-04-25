@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.swing.text.html.Option;
 import java.awt.print.Book;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +64,44 @@ public class PaymentServiceImpl implements PaymentService{
     public List<Payment> getMyBookings(String _userId){
         List<Payment> paymentList = paymentRepository.findAllBy_userId(_userId);
         return paymentList;
+    }
+
+    @Override
+    public String deleteBooking(String _bookingId){
+        System.out.println("Inside deleteBooking");
+        Optional<Payment> payment = paymentRepository.findBy_bookingId(_bookingId);
+        Optional<Booking> booking = bookingRepository.findById(_bookingId);
+        if(payment.isEmpty()||booking.isEmpty()){
+            throw  new IllegalArgumentException("No booking found");
+        }
+        Payment currentPayment = payment.get();
+        Booking currentBooking = booking.get();
+        if(currentPayment.isPaymentStatus()){
+            Optional<Hotel> hotel = hotelRepository.findById(currentPayment.get_hotelId());
+            Hotel currentHotel = new Hotel();
+            if(hotel.isPresent()){
+                currentHotel = hotel.get();
+            }
+            Optional<Room> optionalRoom = currentHotel.getRooms().stream()
+                    .filter(room -> room.getId().equals(currentPayment.get_roomId()))
+                    .findFirst();
+            Room currentRoom = new Room();
+            if(optionalRoom.isPresent()){
+                currentRoom = optionalRoom.get();
+            }
+            currentRoom.setRoomCount(currentRoom.getRoomCount() + currentBooking.getNumOfRooms());
+            currentHotel.setTotalRooms(currentHotel.getTotalRooms() + currentBooking.getNumOfRooms());
+            hotelRepository.save(currentHotel);
+            bookingRepository.delete(currentBooking);
+            paymentRepository.delete(currentPayment);
+            return "Cancelled booking";
+        }
+        else{
+            bookingRepository.delete(currentBooking);
+            paymentRepository.delete(currentPayment);
+            return "Booking details deleted";
+        }
+
     }
 
 }

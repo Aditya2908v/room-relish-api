@@ -8,5 +8,6 @@ import java.util.List;
 public interface PaymentService {
     Payment confirmBook(String _bookingId);
     List<Payment> getMyBookings(String _userId);
+    String deleteBooking(String _bookingId);
 
 }
