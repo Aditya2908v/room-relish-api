@@ -66,6 +66,8 @@ public class BookingServiceImpl {
         payment.setRoomName(currentRoom.getRoomType());
         payment.setNumOfDays(booking.getNumOfDays());
         payment.setNumOfRooms(booking.getNumOfRooms());
+        payment.setCheckInDate(booking.getCheckInDate());
+        payment.setCheckOutDate(booking.getCheckOutDate());
         payment.setTotalAmount(booking1.getTotalAmount()+ booking1.getGstOfTotalAmount());
         String image = currentHotel.getImages().getFirst();
         payment.setHotelImage(image);
