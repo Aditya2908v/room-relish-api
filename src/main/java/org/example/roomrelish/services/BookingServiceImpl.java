@@ -39,10 +39,6 @@ public class BookingServiceImpl {
             throw new IllegalArgumentException("No available rooms");
         }
 
-        // Decrease available room count
-        currentRoom.setRoomCount(currentRoom.getRoomCount() - bookingDetailsDTO.getCustomerRoomCount());
-        hotelRepository.save(currentHotel);
-
         // Create booking
         Booking booking = new Booking();
         booking.set_userId(bookingDetailsDTO.get_customerId());

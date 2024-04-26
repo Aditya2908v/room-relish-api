@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/customer/customers").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/customer/navbar").hasAuthority("USER")
                         .requestMatchers(HttpMethod.GET, "/api/v1/customer/profile-details").hasAuthority("USER")
-
+                        .requestMatchers(HttpMethod.GET,"/api/v1/hotels/totalRooms").permitAll()
                         //Hotel Controller
                         .requestMatchers(HttpMethod.GET, "/api/v1/hotels/search").permitAll()
 
