@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.TestOnly;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +18,7 @@ public class BookingDetailsDTO {
     private String _roomId;
     private int customerRoomCount;
     private int customerDayCount;
+    private Date checkInDate;
+    private Date checkOutDate;
 }
+

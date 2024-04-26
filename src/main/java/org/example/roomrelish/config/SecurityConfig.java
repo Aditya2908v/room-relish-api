@@ -15,6 +15,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @TestOnly
 @Configuration
@@ -25,11 +30,22 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
 
+   @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://127.0.0.1"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth->auth.requestMatchers(HttpMethod.POST,"/api/v1/customer/register").permitAll()
+        http.cors(Customizer.withDefaults());
+           http.csrf(AbstractHttpConfigurer::disable);
+            http.authorizeHttpRequests(auth->auth.requestMatchers(HttpMethod.POST,"/api/v1/customer/register").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/customer/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/customer/hello").hasAuthority("USER")
                         .requestMatchers(HttpMethod.POST,"/api/v1/customer/addCard").hasAuthority("USER")
@@ -38,7 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/customer/profile-details").hasAuthority("USER")
 
                         //Hotel Controller
-                        .requestMatchers(HttpMethod.GET, "/api/v1/hotels/search/**").hasAuthority("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/hotels/search").permitAll()
 
                         //graphql
                         .requestMatchers("/graphql").permitAll()
@@ -53,6 +69,7 @@ public class SecurityConfig {
                         //Payment Controller
                         .requestMatchers(HttpMethod.POST,"api/v1/payment/pay").hasAuthority("USER")
                         .requestMatchers(HttpMethod.GET,"api/v1/payment/myBookings").hasAuthority("USER")
+                        .requestMatchers(HttpMethod.DELETE,"api/v1/payment/deleteMyBooking").hasAuthority("USER")
                         .anyRequest().authenticated());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

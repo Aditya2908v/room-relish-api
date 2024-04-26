@@ -50,6 +50,8 @@ public class BookingServiceImpl {
         booking.set_roomId(bookingDetailsDTO.get_roomId());
         booking.setNumOfRooms(bookingDetailsDTO.getCustomerRoomCount());
         booking.setNumOfDays(bookingDetailsDTO.getCustomerDayCount());
+        booking.setCheckInDate(bookingDetailsDTO.getCheckInDate());
+        booking.setCheckOutDate(bookingDetailsDTO.getCheckOutDate());
         booking.setTotalAmount(bookingDetailsDTO.getCustomerRoomCount() * bookingDetailsDTO.getCustomerDayCount() * currentRoom.getRoomRate());
         booking.setGstOfTotalAmount((booking.getTotalAmount() * 12) / 100);
         Payment payment = new Payment();
@@ -60,8 +62,15 @@ public class BookingServiceImpl {
         payment.set_roomId(booking1.get_roomId());
         payment.set_hotelId(booking.get_hotelId());
         payment.set_userId(booking.get_userId());
+        payment.setHotelName(currentHotel.getHotelName());
+        payment.setRoomName(currentRoom.getRoomType());
         payment.setNumOfDays(booking.getNumOfDays());
         payment.setNumOfRooms(booking.getNumOfRooms());
+        payment.setCheckInDate(booking.getCheckInDate());
+        payment.setCheckOutDate(booking.getCheckOutDate());
+        payment.setTotalAmount(booking1.getTotalAmount()+ booking1.getGstOfTotalAmount());
+        String image = currentHotel.getImages().getFirst();
+        payment.setHotelImage(image);
         payment.setPaymentStatus(false);
         paymentRepository.save(payment);
         return booking1;

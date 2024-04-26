@@ -1,5 +1,8 @@
 package org.example.roomrelish.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.roomrelish.dto.BookingDetailsDTO;
 import org.example.roomrelish.models.Booking;
@@ -20,7 +23,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookingController {
 
     private final BookingServiceImpl bookingService;
-
+    @Operation(
+            description = "Booking Room",
+            summary = "Adds a Booking document in DB with the given details",
+            responses = {
+                    @ApiResponse(
+                            description = "Details of booking",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "No hotels or rooms found , No available rooms",
+                            responseCode = "204"
+                    )
+            }
+    )
     @PostMapping("/bookingDetails")
     public ResponseEntity<?> bookingDetails(@RequestBody BookingDetailsDTO bookingDetailsDTO){
         try{

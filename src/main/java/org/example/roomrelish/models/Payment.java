@@ -8,6 +8,8 @@ import org.jetbrains.annotations.TestOnly;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @TestOnly
 @Data
 @NoArgsConstructor
@@ -17,10 +19,16 @@ public class Payment {
     @Id
     private String id;
     private String _hotelId;
+    private String hotelName;
+    private String hotelImage;
     private String _userId;
     private String _roomId;
+    private String roomName;
     private String _bookingId;
+    private double totalAmount;
     private int numOfRooms;
     private int numOfDays;
     private boolean paymentStatus;
+    private Date checkInDate;
+    private Date checkOutDate;
 }
