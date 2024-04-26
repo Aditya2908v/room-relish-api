@@ -15,4 +15,5 @@ import org.jetbrains.annotations.TestOnly;
 public class AuthResponse {
     @JsonProperty("access_token")
     private String token;
+    private String userId;
 }

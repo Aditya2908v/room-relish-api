@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > CustomerProfile</title>
+  <title>Coverage Report > HotelServiceImpl</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.dto</a>
+    <a href="../index.html">org.example.roomrelish.services</a>
 </div>
 
-<h1>Coverage Summary for Class: CustomerProfile (org.example.roomrelish.dto)</h1>
+<h1>Coverage Summary for Class: HotelServiceImpl (org.example.roomrelish.services)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -37,11 +37,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 <th class="coverageStat 
 ">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
   Line, %
 </th>
 </tr>
 <tr>
-  <td class="name">CustomerProfile</td>
+  <td class="name">HotelServiceImpl</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -52,18 +56,26 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    90.9%
+    76.9%
   </span>
   <span class="absValue">
-    (10/11)
+    (10/13)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    90.9%
+    43.3%
   </span>
   <span class="absValue">
-    (10/11)
+    (13/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    64%
+  </span>
+  <span class="absValue">
+    (55/86)
   </span>
 </td>
 </tr>
@@ -75,31 +87,182 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.dto;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
 &nbsp;
-&nbsp;import com.fasterxml.jackson.annotation.JsonInclude;
-&nbsp;import lombok.AllArgsConstructor;
-&nbsp;import lombok.Data;
-&nbsp;import lombok.NoArgsConstructor;
-&nbsp;import org.jetbrains.annotations.TestOnly;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.bson.types.ObjectId;
+&nbsp;import org.example.roomrelish.dto.HotelDTO;
+&nbsp;import org.example.roomrelish.dto.ReviewDTO;
+&nbsp;import org.example.roomrelish.dto.RoomDTO;
+&nbsp;import org.example.roomrelish.dto.SearchDTO;
+&nbsp;import org.example.roomrelish.models.GuestReview;
+&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.models.Location;
+&nbsp;import org.example.roomrelish.models.Room;
+&nbsp;import org.example.roomrelish.repository.HotelRepository;
+&nbsp;import org.reactivestreams.Publisher;
+&nbsp;import org.springframework.stereotype.Service;
 &nbsp;
-&nbsp;import java.util.Date;
+&nbsp;import java.util.*;
+&nbsp;import java.util.stream.Collectors;
 &nbsp;
-<b class="fc">&nbsp;@Data</b>
-<b class="fc">&nbsp;@NoArgsConstructor</b>
-<b class="nc">&nbsp;@AllArgsConstructor</b>
-&nbsp;@TestOnly
-&nbsp;@JsonInclude(JsonInclude.Include.NON_NULL)
-&nbsp;public class CustomerProfile {
-<b class="fc">&nbsp;    private String id;</b>
-<b class="fc">&nbsp;    private String username;</b>
-<b class="fc">&nbsp;    private String profilePicture;</b>
-<b class="fc">&nbsp;    private String email;</b>
-<b class="fc">&nbsp;    private String phoneNumber;</b>
-<b class="fc">&nbsp;    private String address;</b>
-<b class="fc">&nbsp;    private Date dob;</b>
-<b class="fc">&nbsp;    private String password;</b>
+&nbsp;@Service
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class HotelServiceImpl implements HotelService {
+&nbsp;
+&nbsp;    private final HotelRepository hotelRepository;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Hotel&gt; getAllHotels() {
+<b class="fc">&nbsp;        return hotelRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Hotel findHotelById(String id) {
+<b class="fc">&nbsp;        Optional&lt;Hotel&gt; hotel = hotelRepository.findById(id);</b>
+<b class="fc">&nbsp;        if(hotel.isPresent())</b>
+<b class="fc">&nbsp;            return hotel.get();</b>
+&nbsp;        else
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Invalid Hotel Id&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Hotel createHotel(HotelDTO hotelDTO) {
+<b class="fc">&nbsp;        if(hotelDTO == null)</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Invalid hotel details&quot;);</b>
+<b class="fc">&nbsp;        Hotel hotel = new Hotel();</b>
+<b class="fc">&nbsp;        return hotelRepository.save(setHotel(hotel,hotelDTO));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Hotel updateHotel(String id, HotelDTO hotelDTO) {
+<b class="fc">&nbsp;        if (hotelDTO == null) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Hotel not found&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Hotel hotel = hotelRepository.findById(id)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Hotel not found&quot;));</b>
+&nbsp;
+<b class="fc">&nbsp;        setHotel(hotel, hotelDTO);</b>
+&nbsp;
+<b class="fc">&nbsp;        return hotelRepository.save(hotel);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteHotel(String id) {
+<b class="fc">&nbsp;        Hotel hotel = hotelRepository.findById(id).orElse(null);</b>
+<b class="fc">&nbsp;        if(hotel == null)</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Hotel not found&quot;);</b>
+<b class="fc">&nbsp;        hotelRepository.delete(hotel);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;GuestReview&gt; getReviews(String id) {
+<b class="fc">&nbsp;        Hotel hotel = hotelRepository.findById(id).orElse(null);</b>
+<b class="fc">&nbsp;        if(hotel == null)</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Hotel not found&quot;);</b>
+<b class="fc">&nbsp;        return hotel.getGuestReviews();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public GuestReview addReview(String id, ReviewDTO reviewDTO) {
+<b class="fc">&nbsp;        Hotel hotel = hotelRepository.findById(id)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Hotel not found&quot;));</b>
+<b class="fc">&nbsp;        GuestReview guestReview = new GuestReview();</b>
+<b class="fc">&nbsp;        guestReview.setUser(reviewDTO.getUserid());</b>
+<b class="fc">&nbsp;        guestReview.setGuestRating(reviewDTO.getRating());</b>
+<b class="fc">&nbsp;        guestReview.setComment(reviewDTO.getComment());</b>
+<b class="fc">&nbsp;        List&lt;GuestReview&gt; guestReviews = hotel.getGuestReviews();</b>
+<b class="fc">&nbsp;        guestReviews.add(guestReview);</b>
+<b class="fc">&nbsp;        hotelRepository.save(hotel);</b>
+<b class="fc">&nbsp;        return guestReview;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteReview(String hotelId, String reviewId) {
+<b class="fc">&nbsp;        Hotel hotel = hotelRepository.findById(hotelId)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Hotel not found&quot;));</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;GuestReview&gt; guestReviews = hotel.getGuestReviews();</b>
+<b class="fc">&nbsp;        Optional&lt;GuestReview&gt; reviewToRemove = guestReviews.stream()</b>
+<b class="fc">&nbsp;                .filter(review -&gt; review.get_id().equals(reviewId))</b>
+<b class="fc">&nbsp;                .findFirst();</b>
+&nbsp;
+<b class="pc">&nbsp;        if (reviewToRemove.isPresent()) {</b>
+<b class="nc">&nbsp;            guestReviews.remove(reviewToRemove.get());</b>
+<b class="nc">&nbsp;            hotelRepository.save(hotel);</b>
+&nbsp;        } else {
+&nbsp;            // Review not found, do nothing or log a message
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Room addRoom(String id, RoomDTO roomDTO) {
+<b class="nc">&nbsp;        Hotel hotel = hotelRepository.findById(id).orElse(null);</b>
+<b class="nc">&nbsp;        if(hotel == null)</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Hotel not found&quot;);</b>
+<b class="nc">&nbsp;        Room room = new Room();</b>
+<b class="nc">&nbsp;        room.setId(new ObjectId().toString());</b>
+<b class="nc">&nbsp;        room.setRoomType(roomDTO.getRoomType());</b>
+<b class="nc">&nbsp;        room.setRoomSpecification(roomDTO.getRoomSpecification());</b>
+<b class="nc">&nbsp;        room.setRoomCount(roomDTO.getRoomCount());</b>
+<b class="nc">&nbsp;        room.setRoomRate(roomDTO.getRoomRate());</b>
+<b class="nc">&nbsp;        List&lt;Room&gt; rooms = hotel.getRooms();</b>
+<b class="nc">&nbsp;        rooms.add(room);</b>
+<b class="nc">&nbsp;        hotelRepository.save(hotel);</b>
+<b class="nc">&nbsp;        return room;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Hotel&gt; findHotels(SearchDTO searchDTO) {
+&nbsp;        try {
+<b class="nc">&nbsp;            List&lt;Hotel&gt; filteredHotels = hotelRepository.findByLocationCityName(searchDTO.getCityName());</b>
+&nbsp;           // System.out.println(searchDTO.getRating()+&quot; &quot;+searchDTO.getCityName()+&quot; &quot;+ searchDTO.getPriceRangeMax()+&quot; &quot;+ searchDTO.getPriceRangeMin()+&quot; &quot;+ searchDTO.getCountOfRooms());
+<b class="nc">&nbsp;            if(searchDTO.getAmenities()!=null){</b>
+<b class="nc">&nbsp;                filteredHotels = filteredHotels.stream().filter(hotel-&gt;hotel.getAmenities().containsAll(searchDTO.getAmenities())).collect(Collectors.toList());</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if((searchDTO.getPriceRangeMax()!=0)&amp;&amp;(searchDTO.getPriceRangeMin()!=0)){</b>
+<b class="nc">&nbsp;                Map&lt;Hotel, List&lt;Room&gt;&gt; hotelRoomMap = filteredHotels.stream()</b>
+<b class="nc">&nbsp;                        .flatMap(hotel -&gt; hotel.getRooms().stream()</b>
+<b class="nc">&nbsp;                                .filter(room -&gt; room.getRoomRate() &lt;= searchDTO.getPriceRangeMax() &amp;&amp; room.getRoomRate() &gt;= searchDTO.getPriceRangeMin())</b>
+<b class="nc">&nbsp;                                .map(room -&gt; Map.entry(hotel, room)))</b>
+<b class="nc">&nbsp;                        .collect(Collectors.groupingBy(Map.Entry::getKey,</b>
+<b class="nc">&nbsp;                                Collectors.mapping(Map.Entry::getValue, Collectors.toList())));</b>
+<b class="nc">&nbsp;                filteredHotels = new ArrayList&lt;&gt;(hotelRoomMap.keySet());</b>
+&nbsp;
+&nbsp;            }
+<b class="nc">&nbsp;            if(searchDTO.getRating()&gt;0){</b>
+&nbsp;               // System.out.println(&quot;Inside rating filter&quot;);
+<b class="nc">&nbsp;                filteredHotels=filteredHotels.stream().filter(hotel -&gt; hotel.getRating()&gt;searchDTO.getRating()).collect(Collectors.toList());</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return filteredHotels;</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;An error occurred while searching for hotels.&quot;, e);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //util function
+&nbsp;    public Hotel setHotel(Hotel hotel,HotelDTO hotelDTO){
+<b class="fc">&nbsp;        hotel.setHotelName(hotelDTO.getHotelName());</b>
+<b class="fc">&nbsp;        hotel.setHotelType(hotelDTO.getHotelType());</b>
+<b class="fc">&nbsp;        hotel.setLocation(hotelDTO.getLocation());</b>
+<b class="fc">&nbsp;        hotel.setPriceStartingFrom(hotelDTO.getPriceStartingFrom());</b>
+<b class="fc">&nbsp;        hotel.setOverview(hotelDTO.getOverview());</b>
+<b class="fc">&nbsp;        hotel.setLocationFeatures(hotelDTO.getLocationFeatures());</b>
+<b class="fc">&nbsp;        hotel.setAmenities(hotelDTO.getAmenities());</b>
+<b class="fc">&nbsp;        hotel.setImages(hotelDTO.getImages());</b>
+<b class="fc">&nbsp;        hotel.setRooms(hotelDTO.getRooms());</b>
+<b class="fc">&nbsp;        int totalRooms=0;</b>
+<b class="fc">&nbsp;        for(Room room:hotelDTO.getRooms()){</b>
+<b class="fc">&nbsp;            totalRooms+=room.getRoomCount();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        hotel.setTotalRooms(totalRooms);</b>
+<b class="fc">&nbsp;        return hotel;</b>
+&nbsp;    }
+&nbsp;
 &nbsp;}
+&nbsp;
 </code>
 </pre>
 </div>
@@ -123,7 +286,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:00</div>
+    <div style="float:right;">generated on 2024-04-18 13:16</div>
 </div>
 </body>
 </html>

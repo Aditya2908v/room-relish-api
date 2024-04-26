@@ -57,6 +57,7 @@ public class AuthService {
         saveUserToken(user, jwtToken);
         return AuthResponse.builder()
                 .token(jwtToken)
+                .userId(user.getId())
                 .build();
     }
 

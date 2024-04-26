@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > BookingController</title>
+  <title>Coverage Report > Token</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,18 +19,15 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.controllers</a>
+    <a href="../index.html">org.example.roomrelish.models</a>
 </div>
 
-<h1>Coverage Summary for Class: BookingController (org.example.roomrelish.controllers)</h1>
+<h1>Coverage Summary for Class: Token (org.example.roomrelish.models)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
-<th class="coverageStat 
-">
-  Class, %
-</th>
 <th class="coverageStat 
 ">
   Method, %
@@ -40,8 +37,8 @@ Current scope:     <a href="../../index.html">all classes</a>
   Line, %
 </th>
 </tr>
-<tr>
-  <td class="name">BookingController</td>
+  <tr>
+    <td class="name">Token$TokenBuilder</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -55,7 +52,18 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (2/2)
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
   </span>
 </td>
 <td class="coverageStat">
@@ -63,11 +71,10 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (5/5)
+    (1/1)
   </span>
 </td>
 </tr>
-
 </table>
 
 <br/>
@@ -75,43 +82,30 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.controllers;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.models;
 &nbsp;
-&nbsp;import lombok.RequiredArgsConstructor;
-&nbsp;import org.example.roomrelish.dto.BookingDetailsDTO;
-&nbsp;import org.example.roomrelish.models.Booking;
-&nbsp;import org.example.roomrelish.services.BookingServiceImpl;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Builder;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
 &nbsp;import org.jetbrains.annotations.TestOnly;
-&nbsp;import org.springframework.beans.factory.annotation.Autowired;
-&nbsp;import org.springframework.http.ResponseEntity;
-&nbsp;import org.springframework.security.access.AccessDeniedException;
-&nbsp;import org.springframework.web.bind.annotation.PostMapping;
-&nbsp;import org.springframework.web.bind.annotation.RequestBody;
-&nbsp;import org.springframework.web.bind.annotation.RequestMapping;
-&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;import org.springframework.data.annotation.Id;
+&nbsp;import org.springframework.data.mongodb.core.mapping.Document;
 &nbsp;
-&nbsp;@RestController
-<b class="fc">&nbsp;@RequiredArgsConstructor</b>
-&nbsp;@RequestMapping(&quot;api/v1/booking&quot;)
 &nbsp;@TestOnly
-&nbsp;public class BookingController {
-&nbsp;
-&nbsp;    private final BookingServiceImpl bookingService;
-&nbsp;
-&nbsp;    @PostMapping(&quot;/bookingDetails&quot;)
-&nbsp;    public ResponseEntity&lt;?&gt; bookingDetails(@RequestBody BookingDetailsDTO bookingDetailsDTO){
-&nbsp;        try{
-<b class="fc">&nbsp;            Booking bookingDetails = bookingService.bookRoom(bookingDetailsDTO);</b>
-<b class="fc">&nbsp;            return ResponseEntity.ok(bookingDetails);</b>
-&nbsp;        }
-<b class="fc">&nbsp;        catch (IllegalArgumentException e){</b>
-<b class="fc">&nbsp;            return ResponseEntity.badRequest().body(e.getMessage());</b>
-&nbsp;        }
-&nbsp;    }
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
+&nbsp;@Data
+&nbsp;@NoArgsConstructor
+&nbsp;@AllArgsConstructor
+<b class="fc">&nbsp;@Builder</b>
+&nbsp;@Document(collection = &quot;tokens&quot;)
+&nbsp;public class Token {
+&nbsp;    @Id
+&nbsp;    private String id;
+&nbsp;    private String token;
+&nbsp;    private TokenType tokenType;
+&nbsp;    private boolean expired;
+&nbsp;    private boolean revoked;
+&nbsp;    private String customerId;
 &nbsp;}
 </code>
 </pre>
@@ -136,7 +130,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:00</div>
+    <div style="float:right;">generated on 2024-04-18 13:16</div>
 </div>
 </body>
 </html>
