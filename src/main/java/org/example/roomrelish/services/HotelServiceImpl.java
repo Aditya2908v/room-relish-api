@@ -13,6 +13,7 @@ import org.example.roomrelish.models.Room;
 import org.example.roomrelish.repository.HotelRepository;
 import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -125,27 +126,36 @@ public class HotelServiceImpl implements HotelService {
         return room;
     }
 
-    public List<Hotel> findHotels(SearchDTO searchDTO) {
+    public List<Hotel> findHotels(String cityName,
+                                   Date checkInDate,
+                                   Date checkOutDate,
+                                   int countOfRooms,
+                                   int priceRangeMax,
+                                   int priceRangeMin,
+                                   double rating,
+                                   List<String> amenities) {
         try {
-            List<Hotel> filteredHotels = hotelRepository.findByLocationCityName(searchDTO.getCityName());
-            filteredHotels = filteredHotels.stream().filter(hotel -> hotel.getTotalRooms()>searchDTO.getCountOfRooms()).collect(Collectors.toList());
-           // System.out.println(searchDTO.getRating()+" "+searchDTO.getCityName()+" "+ searchDTO.getPriceRangeMax()+" "+ searchDTO.getPriceRangeMin()+" "+ searchDTO.getCountOfRooms());
-            if(searchDTO.getAmenities()!=null){
-                filteredHotels = filteredHotels.stream().filter(hotel->hotel.getAmenities().containsAll(searchDTO.getAmenities())).collect(Collectors.toList());
+            List<Hotel> filteredHotels = hotelRepository.findByLocationCityName(cityName);
+            filteredHotels = filteredHotels.stream().filter(hotel -> hotel.getTotalRooms()>countOfRooms).collect(Collectors.toList());
+           //System.out.println(rating+" "+cityName+" "+priceRangeMax+" "+ priceRangeMin+" "+ countOfRooms);
+            if(amenities!=null){
+             //   System.out.println("Inside amenities filter");
+                filteredHotels = filteredHotels.stream().filter(hotel-> new HashSet<>(hotel.getAmenities()).containsAll(amenities)).collect(Collectors.toList());
             }
-            if((searchDTO.getPriceRangeMax()!=0)&&(searchDTO.getPriceRangeMin()!=0)){
+            if((priceRangeMax!=0)&&(priceRangeMin!=0)){
+               // System.out.println("Inside price range filter");
                 Map<Hotel, List<Room>> hotelRoomMap = filteredHotels.stream()
                         .flatMap(hotel -> hotel.getRooms().stream()
-                                .filter(room -> room.getRoomRate() <= searchDTO.getPriceRangeMax() && room.getRoomRate() >= searchDTO.getPriceRangeMin())
+                                .filter(room -> room.getRoomRate() <= priceRangeMax && room.getRoomRate() >= priceRangeMin)
                                 .map(room -> Map.entry(hotel, room)))
                         .collect(Collectors.groupingBy(Map.Entry::getKey,
                                 Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
                 filteredHotels = new ArrayList<>(hotelRoomMap.keySet());
 
             }
-            if(searchDTO.getRating()>0){
-               // System.out.println("Inside rating filter");
-                filteredHotels=filteredHotels.stream().filter(hotel -> hotel.getRating()>searchDTO.getRating()).collect(Collectors.toList());
+            if(rating>0){
+                //System.out.println("Inside rating filter");
+                filteredHotels=filteredHotels.stream().filter(hotel -> hotel.getRating()>rating).collect(Collectors.toList());
             }
             return filteredHotels;
         } catch (Exception e) {
