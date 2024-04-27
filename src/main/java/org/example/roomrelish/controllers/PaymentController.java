@@ -24,8 +24,8 @@ public class PaymentController {
                         @ApiResponse(description = "No booking details found", responseCode = "204")
         })
 
-        @PostMapping("/pay/{_bookingId}")
-        public ResponseEntity<?> confirmBooking(@PathVariable String _bookingId) {
+        @PostMapping("/pay")
+        public ResponseEntity<?> confirmBooking(@RequestParam String _bookingId) {
                 try {
                         Payment paymentDetails = paymentService.confirmBook(_bookingId);
                         return ResponseEntity.ok(paymentDetails);

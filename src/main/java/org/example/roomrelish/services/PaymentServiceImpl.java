@@ -82,7 +82,8 @@ public class PaymentServiceImpl implements PaymentService{
             if(hotel.isPresent()){
                 currentHotel = hotel.get();
             }
-            Optional<Room> optionalRoom = currentHotel.getRooms().stream()
+            List<Room> rooms = currentHotel.getRooms();
+            Optional<Room> optionalRoom = rooms.stream()
                     .filter(room -> room.getId().equals(currentPayment.get_roomId()))
                     .findFirst();
             Room currentRoom = new Room();
@@ -90,6 +91,7 @@ public class PaymentServiceImpl implements PaymentService{
                 currentRoom = optionalRoom.get();
             }
             currentRoom.setRoomCount(currentRoom.getRoomCount() + currentBooking.getNumOfRooms());
+            currentHotel.setRooms(rooms);
             currentHotel.setTotalRooms(currentHotel.getTotalRooms() + currentBooking.getNumOfRooms());
             hotelRepository.save(currentHotel);
             bookingRepository.delete(currentBooking);

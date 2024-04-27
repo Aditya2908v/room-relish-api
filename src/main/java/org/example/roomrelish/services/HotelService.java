@@ -26,4 +26,5 @@ public interface HotelService {
     Room addRoom(String id, RoomDTO roomDTO);
 
     List<Hotel> findHotels(SearchDTO searchDTO);
+
 }
