@@ -237,11 +237,6 @@ class CustomerServiceImplTest {
         // Verify result
         assertEquals(customer.getId(), result.getId());
         assertEquals(customer.getUsername(), result.getUsername());
-        assertEquals(customer.getEmail(), result.getEmail());
-        assertEquals(customer.getPhoneNumber(), result.getPhoneNumber());
-        assertEquals(customer.getPassword(), result.getPassword());
-        assertEquals(customer.getDateOfBirth(), result.getDob());
-        assertEquals(customer.getAddress(), result.getAddress());
     }
 
     @Test

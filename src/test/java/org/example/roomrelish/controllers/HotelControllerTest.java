@@ -3,6 +3,7 @@ package org.example.roomrelish.controllers;
 
 import org.example.roomrelish.dto.HotelDTO;
 import org.example.roomrelish.dto.ReviewDTO;
+import org.example.roomrelish.dto.ReviewResponse;
 import org.example.roomrelish.dto.RoomDTO;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
@@ -100,7 +101,7 @@ public class HotelControllerTest {
     @Test
     public void testGetAllReviews_Success() {
         String hotelId = "1";
-        List<GuestReview> reviews = new ArrayList<>();
+        List<ReviewResponse> reviews = new ArrayList<>();
         when(hotelService.getReviews(hotelId)).thenReturn(reviews);
         ResponseEntity<?> response = hotelController.getAllReviews(hotelId);
         assertEquals(HttpStatus.OK, response.getStatusCode());

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.TestOnly;
 
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -17,9 +16,4 @@ public class CustomerProfile {
     private String id;
     private String username;
     private String profilePicture;
-    private String email;
-    private String phoneNumber;
-    private String address;
-    private Date dob;
-    private String password;
 }

@@ -2,6 +2,7 @@ package org.example.roomrelish.services;
 
 import org.example.roomrelish.dto.HotelDTO;
 import org.example.roomrelish.dto.ReviewDTO;
+import org.example.roomrelish.dto.ReviewResponse;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.models.Location;
@@ -159,7 +160,7 @@ public class HotelServiceImplTest {
         hotel.setGuestReviews(expectedReviews);
 
         when(hotelRepository.findById("1")).thenReturn(Optional.of(hotel));
-        List<GuestReview> reviews = hotelService.getReviews("1");
+        List<ReviewResponse> reviews = hotelService.getReviews("1");
         Assertions.assertNotNull(reviews);
 
     }

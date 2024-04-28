@@ -103,11 +103,6 @@ public class CustomerServiceImpl implements CustomerService {
         } else {
             customerProfile.setId(customer.getId());
             customerProfile.setUsername(customer.getUsername());
-            customerProfile.setEmail(customer.getEmail());
-            customerProfile.setPhoneNumber(customer.getPhoneNumber());
-            customerProfile.setPassword(customer.getPassword());
-            customerProfile.setDob(customer.getDateOfBirth());
-            customerProfile.setAddress(customer.getAddress());
         }
         return customerProfile;
     }
@@ -146,6 +141,9 @@ public class CustomerServiceImpl implements CustomerService {
                 throw new IllegalArgumentException("Customer not found");
             }
             List<String> hotelIds = customer.getFavouriteHotels();
+            if(hotelIds == null) {
+                return Collections.emptyList();
+            }
             return hotelIds.stream()
                     .map(hotelRepository::findById)
                     .filter(Optional::isPresent)

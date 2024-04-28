@@ -5,10 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.example.roomrelish.dto.HotelDTO;
-import org.example.roomrelish.dto.ReviewDTO;
-import org.example.roomrelish.dto.RoomDTO;
-import org.example.roomrelish.dto.SearchDTO;
+import org.example.roomrelish.dto.*;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.models.Room;
@@ -113,7 +110,7 @@ public class HotelController {
     @GetMapping("{id}/reviews")
     public ResponseEntity<?> getAllReviews(@PathVariable String id){
         try{
-            List<GuestReview> guestReviews = hotelService.getReviews(id);
+            List<ReviewResponse> guestReviews = hotelService.getReviews(id);
             return ResponseEntity.ok(guestReviews);
         }catch (Exception e){
             return ResponseEntity.notFound().build();

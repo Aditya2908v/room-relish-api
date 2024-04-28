@@ -14,6 +14,8 @@ import org.jetbrains.annotations.TestOnly;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -147,7 +149,7 @@ public class CustomerController {
         try {
             String userEmail = extractUserEmailFromRequest(request);
             if (userEmail == null || userEmail.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+                return ResponseEntity.ok().body(new NavbarResponse(false, null));
             }
             CustomerProfile customerProfile = customerService.getProfileInfo(userEmail, "navbar");
             if (customerProfile == null) {
@@ -257,7 +259,6 @@ public class CustomerController {
 
     //TODO after user searches a hotel add it to recent searches
 
-    //TODO fetch user details by ID along with decrypted card details
     @TestOnly
     //utility function to get JWT token form the request
     public String extractUserEmailFromRequest(HttpServletRequest request) {
@@ -268,6 +269,5 @@ public class CustomerController {
         final String jwtToken = authHeader.substring(7);
         return jwtService.extractUsername(jwtToken);
     }
-
 
 }

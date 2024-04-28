@@ -1,20 +1,21 @@
 package org.example.roomrelish.services;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.bson.types.ObjectId;
-import org.example.roomrelish.dto.HotelDTO;
-import org.example.roomrelish.dto.ReviewDTO;
-import org.example.roomrelish.dto.RoomDTO;
-import org.example.roomrelish.dto.SearchDTO;
+import org.example.roomrelish.dto.*;
+import org.example.roomrelish.models.Customer;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
-import org.example.roomrelish.models.Location;
 import org.example.roomrelish.models.Room;
+import org.example.roomrelish.repository.CustomerRepository;
 import org.example.roomrelish.repository.HotelRepository;
-import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public List<Hotel> getAllHotels() {
@@ -69,11 +71,22 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<GuestReview> getReviews(String id) {
+    public List<ReviewResponse> getReviews(String id) {
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         if(hotel == null)
             throw new IllegalArgumentException("Hotel not found");
-        return hotel.getGuestReviews();
+        List<GuestReview> guestReviews = hotel.getGuestReviews();
+        List<ReviewResponse> reviewResponses = new ArrayList<>();
+        for (GuestReview guestReview : guestReviews) {
+            String customerId = guestReview.getUser();
+            Customer customer = customerRepository.findById(customerId).orElse(null);
+            reviewResponses.add(ReviewResponse.builder()
+                    .user(customer)
+                    .guestRating(guestReview.getGuestRating())
+                    .comment(guestReview.getComment())
+                    .build());
+        }
+        return reviewResponses;
     }
 
     @Override
