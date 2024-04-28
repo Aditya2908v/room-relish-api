@@ -63,12 +63,21 @@ public class HotelController {
             }
     )
     @GetMapping("/search")
-    public ResponseEntity<?> searchHotels(@RequestBody SearchDTO searchDTO){
+    public ResponseEntity<?> searchHotels(
+            @RequestParam String cityName,
+            @RequestParam Date checkInDate,
+            @RequestParam Date checkOutDate,
+            @RequestParam int countOfRooms,
+            @RequestParam int priceRangeMax,
+            @RequestParam int priceRangeMin,
+            @RequestParam double rating,
+            @RequestParam List<String> amenities
+    ){
        // System.out.println("Inside search end api");
         try {
-            List<Hotel> hotels = hotelService.findHotels(searchDTO);
+            List<Hotel> hotels = hotelService.findHotels(cityName,checkInDate,checkOutDate,countOfRooms,priceRangeMax,priceRangeMin,rating,amenities);
             if (hotels.isEmpty()) {
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No hotels found");
             }
             return ResponseEntity.ok(hotels);
         } catch (Exception e) {
@@ -147,7 +156,6 @@ public class HotelController {
             return ResponseEntity.notFound().build();
         }
     }
-
 
 }
 
