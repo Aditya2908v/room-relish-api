@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > CustomerProfile</title>
+  <title>Coverage Report > PaymentController</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.dto</a>
+    <a href="../index.html">org.example.roomrelish.controllers</a>
 </div>
 
-<h1>Coverage Summary for Class: CustomerProfile (org.example.roomrelish.dto)</h1>
+<h1>Coverage Summary for Class: PaymentController (org.example.roomrelish.controllers)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -41,7 +41,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">CustomerProfile</td>
+  <td class="name">PaymentController</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -52,18 +52,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    90.9%
+    75%
   </span>
   <span class="absValue">
-    (10/11)
+    (3/4)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    90.9%
+    50%
   </span>
   <span class="absValue">
-    (10/11)
+    (9/18)
   </span>
 </td>
 </tr>
@@ -75,30 +75,84 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.dto;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.controllers;
 &nbsp;
-&nbsp;import com.fasterxml.jackson.annotation.JsonInclude;
-&nbsp;import lombok.AllArgsConstructor;
-&nbsp;import lombok.Data;
-&nbsp;import lombok.NoArgsConstructor;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import org.example.roomrelish.ExceptionHandler.CustomDataAccessException;
+&nbsp;import org.example.roomrelish.ExceptionHandler.CustomDuplicateBookingException;
+&nbsp;import org.example.roomrelish.ExceptionHandler.CustomMongoSocketException;
+&nbsp;import org.example.roomrelish.ExceptionHandler.GlobalExceptionHandler;
+&nbsp;import org.example.roomrelish.models.Payment;
+&nbsp;import org.example.roomrelish.services.PaymentServiceImpl;
 &nbsp;import org.jetbrains.annotations.TestOnly;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;import org.springframework.web.bind.annotation.*;
 &nbsp;
-&nbsp;import java.util.Date;
-&nbsp;
-<b class="fc">&nbsp;@Data</b>
-<b class="fc">&nbsp;@NoArgsConstructor</b>
-<b class="nc">&nbsp;@AllArgsConstructor</b>
+&nbsp;@Controller
+&nbsp;@RequestMapping(&quot;/api/v1/payment&quot;)
 &nbsp;@TestOnly
-&nbsp;@JsonInclude(JsonInclude.Include.NON_NULL)
-&nbsp;public class CustomerProfile {
-<b class="fc">&nbsp;    private String id;</b>
-<b class="fc">&nbsp;    private String username;</b>
-<b class="fc">&nbsp;    private String profilePicture;</b>
-<b class="fc">&nbsp;    private String email;</b>
-<b class="fc">&nbsp;    private String phoneNumber;</b>
-<b class="fc">&nbsp;    private String address;</b>
-<b class="fc">&nbsp;    private Date dob;</b>
-<b class="fc">&nbsp;    private String password;</b>
+&nbsp;public class PaymentController {
+&nbsp;        private final PaymentServiceImpl paymentService;
+&nbsp;
+&nbsp;        GlobalExceptionHandler globalExceptionHandler;
+&nbsp;
+<b class="fc">&nbsp;        public PaymentController(PaymentServiceImpl paymentService) {</b>
+<b class="fc">&nbsp;                this.paymentService = paymentService;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        @Operation(description = &quot;Confirm Payment process&quot;, summary = &quot;After booking, this payment API confirms the booking by making a payment&quot;, responses = {
+&nbsp;                        @ApiResponse(description = &quot;Details of Payment&quot;, responseCode = &quot;200&quot;),
+&nbsp;                        @ApiResponse(description = &quot;No booking details found&quot;, responseCode = &quot;204&quot;)
+&nbsp;        })
+&nbsp;
+&nbsp;        @PostMapping(&quot;/pay&quot;)
+&nbsp;        public ResponseEntity&lt;?&gt; confirmBooking(@RequestParam String bookingId) {
+&nbsp;                try {
+<b class="fc">&nbsp;                        Payment paymentDetails = paymentService.confirmBook(bookingId);</b>
+<b class="fc">&nbsp;                        return ResponseEntity.ok(paymentDetails);</b>
+<b class="fc">&nbsp;                } catch (IllegalArgumentException e) {</b>
+<b class="fc">&nbsp;                        return ResponseEntity.badRequest().body(&quot;No booking details found&quot;);</b>
+<b class="nc">&nbsp;                } catch (CustomDuplicateBookingException customDuplicateKeyException){</b>
+<b class="nc">&nbsp;                        return globalExceptionHandler.handleCustomDuplicateException(customDuplicateKeyException);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                catch(CustomDataAccessException customDataAccessException){</b>
+<b class="nc">&nbsp;                        return globalExceptionHandler.handleCustomDataAccessException(customDataAccessException);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                catch(CustomMongoSocketException customMongoSocketException){</b>
+<b class="nc">&nbsp;                        return globalExceptionHandler.handleMongoSocketException(customMongoSocketException);</b>
+&nbsp;                }
+&nbsp;        }
+&nbsp;
+&nbsp;        @Operation(description = &quot;Bookings of an user&quot;, summary = &quot;This API returns the bookings that are drafted without payment&quot;, responses = {
+&nbsp;                        @ApiResponse(description = &quot;List of details of booking&quot;, responseCode = &quot;200&quot;),
+&nbsp;                        @ApiResponse(description = &quot;No bookings found&quot;, responseCode = &quot;204&quot;)
+&nbsp;        })
+&nbsp;        @GetMapping(&quot;/myBookings&quot;)
+&nbsp;        public ResponseEntity&lt;?&gt; myBookings(@RequestParam String userId) {
+&nbsp;                try {
+<b class="fc">&nbsp;                        return ResponseEntity.ok(paymentService.getMyBookings(userId));</b>
+<b class="fc">&nbsp;                } catch (IllegalArgumentException e) {</b>
+<b class="fc">&nbsp;                        return ResponseEntity.badRequest().body(&quot;No bookings found&quot;);</b>
+&nbsp;                }
+&nbsp;        }
+&nbsp;        @Operation(description = &quot;Delete Booking&quot;, summary = &quot;This API deletes the booking details of the room or cancels the booked room&quot;, responses = {
+&nbsp;                @ApiResponse(description = &quot;Deleted successful message&quot;, responseCode = &quot;200&quot;),
+&nbsp;                @ApiResponse(description = &quot;No bookings found&quot;, responseCode = &quot;204&quot;)
+&nbsp;        })
+&nbsp;        @DeleteMapping(&quot;/deleteMyBooking&quot;)
+&nbsp;        public ResponseEntity&lt;?&gt; deleteMyBooking(@RequestParam String bookingId)
+&nbsp;        {
+&nbsp;                try{
+<b class="nc">&nbsp;                        return ResponseEntity.ok(paymentService.deleteBooking(bookingId));</b>
+&nbsp;                }
+<b class="nc">&nbsp;                catch (IllegalArgumentException ae){</b>
+<b class="nc">&nbsp;                        return ResponseEntity.badRequest().body(ae.getMessage());</b>
+&nbsp;                }
+&nbsp;        }
+&nbsp;
+&nbsp;
 &nbsp;}
 </code>
 </pre>
@@ -123,7 +177,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
 </div>
 </body>
 </html>

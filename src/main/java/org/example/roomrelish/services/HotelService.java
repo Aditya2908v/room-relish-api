@@ -8,6 +8,7 @@ import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.models.Room;
 import org.jetbrains.annotations.TestOnly;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -23,9 +24,9 @@ public interface HotelService {
     void deleteHotel(String id);
     Room addRoom(String id, RoomDTO roomDTO);
 
-    List<Hotel> findHotels(String cityName,
-                           Date checkInDate,
-                           Date checkOutDate,
+    SearchResultDTO findHotels(String cityName,
+                           LocalDate checkInDate,
+                           LocalDate checkOutDate,
                            int countOfRooms,
                            int priceRangeMax,
                            int priceRangeMin,

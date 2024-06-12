@@ -1,0 +1,305 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > CustomerServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.roomrelish.services</a>
+</div>
+
+<h1>Coverage Summary for Class: CustomerServiceImpl (org.example.roomrelish.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CustomerServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97%
+  </span>
+  <span class="absValue">
+    (97/100)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.example.roomrelish.dto.CardDTO;
+&nbsp;import org.example.roomrelish.dto.CustomerProfile;
+&nbsp;import org.example.roomrelish.dto.UpdateCustomerDTO;
+&nbsp;import org.example.roomrelish.models.Card;
+&nbsp;import org.example.roomrelish.models.Customer;
+&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.repository.CustomerRepository;
+&nbsp;import org.example.roomrelish.repository.HotelRepository;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class CustomerServiceImpl implements CustomerService {
+&nbsp;    private final CustomerRepository customerRepository;
+&nbsp;    private final PasswordEncoder passwordEncoder;
+&nbsp;    private final HotelRepository hotelRepository;
+<b class="fc">&nbsp;    String errorMessageCustomer = &quot;Customer not found&quot;;</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Customer&gt; getAllCustomers() {
+<b class="fc">&nbsp;        return customerRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //TODO add code to encrypt the card details before storing
+&nbsp;    @Override
+&nbsp;    public void addCardToUser(CardDTO cardDTO, String userEmail) {
+<b class="fc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="fc">&nbsp;        if (customer == null) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(errorMessageCustomer);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        Card card = new Card();</b>
+<b class="fc">&nbsp;        card.setCardNumber(cardDTO.getCardNumber());</b>
+<b class="fc">&nbsp;        card.setCardHolder(cardDTO.getCardHolder());</b>
+<b class="fc">&nbsp;        card.setExpirationDate(cardDTO.getExpirationDate());</b>
+<b class="fc">&nbsp;        card.setCvv(cardDTO.getCvv());</b>
+<b class="fc">&nbsp;        card.setCardName(cardDTO.getCardName());</b>
+<b class="fc">&nbsp;        List&lt;Card&gt; cards = customer.getAddedCards();</b>
+<b class="fc">&nbsp;        if (cards == null) {</b>
+<b class="fc">&nbsp;            cards = new ArrayList&lt;&gt;();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        cards.add(card);</b>
+<b class="fc">&nbsp;        customer.setAddedCards(cards);</b>
+<b class="fc">&nbsp;        customerRepository.save(customer);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean updateCustomer(String userEmail, UpdateCustomerDTO updateCustomerDTO) {
+&nbsp;        try {
+<b class="fc">&nbsp;            Optional&lt;Customer&gt; optionalCustomer = customerRepository.findByEmail(userEmail);</b>
+<b class="fc">&nbsp;            if (optionalCustomer.isEmpty()) {</b>
+<b class="fc">&nbsp;                return false;</b>
+&nbsp;            }
+<b class="fc">&nbsp;            Customer customer = optionalCustomer.get();</b>
+&nbsp;
+&nbsp;            //check if the email is being updated and if it&#39;s unique
+<b class="fc">&nbsp;            if (updateCustomerDTO.getEmail() != null &amp;&amp; !updateCustomerDTO.getEmail().equals(customer.getEmail())) {</b>
+<b class="fc">&nbsp;                Optional&lt;Customer&gt; existingCustomer = customerRepository.findByEmail(updateCustomerDTO.getEmail());</b>
+<b class="fc">&nbsp;                if (existingCustomer.isPresent() &amp;&amp; !existingCustomer.get().getId().equals(customer.getId())) {</b>
+<b class="nc">&nbsp;                    return false; // email already in user</b>
+&nbsp;                }
+<b class="fc">&nbsp;                customer.setEmail(updateCustomerDTO.getEmail());</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            //check if phone number is being updated and if it&#39;s unique
+<b class="fc">&nbsp;            if (updateCustomerDTO.getPhoneNumber() != null &amp;&amp; !updateCustomerDTO.getPhoneNumber().equals(customer.getPhoneNumber())) {</b>
+<b class="fc">&nbsp;                Optional&lt;Customer&gt; existingUserWithPhoneNumber = customerRepository.findByPhoneNumber(updateCustomerDTO.getPhoneNumber());</b>
+<b class="fc">&nbsp;                if (existingUserWithPhoneNumber.isPresent() &amp;&amp; !existingUserWithPhoneNumber.get().getId().equals(customer.getId())) {</b>
+<b class="nc">&nbsp;                    return false; // phone number is already in use</b>
+&nbsp;                }
+<b class="fc">&nbsp;                customer.setPhoneNumber(updateCustomerDTO.getPhoneNumber());</b>
+&nbsp;            }
+<b class="fc">&nbsp;            if (updateCustomerDTO.getPassword() != null &amp;&amp; !updateCustomerDTO.getPassword().equals(customer.getPassword())) {</b>
+<b class="fc">&nbsp;                customer.setPassword(passwordEncoder.encode(updateCustomerDTO.getPassword()));</b>
+&nbsp;            }
+<b class="fc">&nbsp;            customerRepository.save(customer);</b>
+<b class="fc">&nbsp;            return true;</b>
+<b class="fc">&nbsp;        } catch (Exception ex) {</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public CustomerProfile getProfileInfo(String userEmail, String detailsFor) {
+<b class="fc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="fc">&nbsp;        if (customer == null) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Customer not found&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        CustomerProfile customerProfile = new CustomerProfile();</b>
+<b class="fc">&nbsp;        if (detailsFor != null &amp;&amp; detailsFor.equals(&quot;navbar&quot;)) {</b>
+<b class="fc">&nbsp;            customerProfile.setId(customer.getId());</b>
+<b class="fc">&nbsp;            customerProfile.setUsername(customer.getUsername());</b>
+<b class="fc">&nbsp;            customerProfile.setProfilePicture(customer.getProfilePicture());</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            customerProfile.setId(customer.getId());</b>
+<b class="fc">&nbsp;            customerProfile.setUsername(customer.getUsername());</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return customerProfile;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String getProfilePicture(String userEmail) {
+<b class="fc">&nbsp;        Optional&lt;Customer&gt; customer = customerRepository.findByEmail(userEmail);</b>
+<b class="fc">&nbsp;        return customer.map(Customer::getProfilePicture).orElse(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //TODO change the file path correctly
+&nbsp;    @Override
+&nbsp;    public boolean uploadImage(String userEmail, String type, String fileName) {
+&nbsp;        try {
+<b class="fc">&nbsp;            Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="fc">&nbsp;            if (customer == null) {</b>
+<b class="fc">&nbsp;                throw new IllegalArgumentException(errorMessageCustomer);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            if (type.equals(&quot;profile&quot;)) {</b>
+<b class="fc">&nbsp;                customer.setProfilePicture(&quot;http://localhost:8081/profiles/&quot; + fileName);</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                customer.setCoverPicture(&quot;http://localhost:8081/profiles/&quot; + fileName);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            customerRepository.save(customer);</b>
+<b class="fc">&nbsp;            return true;</b>
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Hotel&gt; getFavouriteHotels(String userEmail) {
+&nbsp;        try {
+<b class="fc">&nbsp;            Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="fc">&nbsp;            if (customer == null) {</b>
+<b class="fc">&nbsp;                throw new IllegalArgumentException(errorMessageCustomer);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            List&lt;String&gt; hotelIds = customer.getFavouriteHotels();</b>
+<b class="fc">&nbsp;            if(hotelIds == null) {</b>
+<b class="nc">&nbsp;                return Collections.emptyList();</b>
+&nbsp;            }
+<b class="fc">&nbsp;            return hotelIds.stream()</b>
+<b class="fc">&nbsp;                    .map(hotelRepository::findById)</b>
+<b class="fc">&nbsp;                    .filter(Optional::isPresent)</b>
+<b class="fc">&nbsp;                    .map(Optional::get)</b>
+<b class="fc">&nbsp;                    .collect(Collectors.toList());</b>
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void addFavouriteHotel(String userEmail, String hotelId) {
+<b class="fc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="fc">&nbsp;        if (customer == null) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(errorMessageCustomer);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        List&lt;String&gt; favouriteHotelIds = customer.getFavouriteHotels();</b>
+<b class="fc">&nbsp;        if (!favouriteHotelIds.contains(hotelId)) {</b>
+<b class="fc">&nbsp;            favouriteHotelIds.add(hotelId);</b>
+<b class="fc">&nbsp;            customer.setFavouriteHotels(favouriteHotelIds);</b>
+<b class="fc">&nbsp;            customerRepository.save(customer);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteFavouriteHotel(String userEmail, String hotelId) {
+<b class="fc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="fc">&nbsp;        if (customer == null) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(errorMessageCustomer);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        List&lt;String&gt; favouriteHotelIds = customer.getFavouriteHotels();</b>
+<b class="fc">&nbsp;        if (favouriteHotelIds != null &amp;&amp; !favouriteHotelIds.isEmpty() &amp;&amp; favouriteHotelIds.contains(hotelId)) {</b>
+<b class="fc">&nbsp;            favouriteHotelIds.remove(hotelId);</b>
+<b class="fc">&nbsp;            customer.setFavouriteHotels(favouriteHotelIds);</b>
+<b class="fc">&nbsp;            customerRepository.save(customer);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Hotel&gt; findRecentHotels(String userEmail) {
+<b class="fc">&nbsp;        Customer customer = customerRepository.findByEmail(userEmail).orElse(null);</b>
+<b class="fc">&nbsp;        if (customer == null) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(errorMessageCustomer);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        List&lt;String&gt; recentHotelIds = customer.getRecentVisitsOfHotels();</b>
+<b class="fc">&nbsp;        Collections.reverse(recentHotelIds);</b>
+<b class="fc">&nbsp;        return recentHotelIds.stream()</b>
+<b class="fc">&nbsp;                .map(hotelRepository::findById)</b>
+<b class="fc">&nbsp;                .filter(Optional::isPresent)</b>
+<b class="fc">&nbsp;                .map(Optional::get)</b>
+<b class="fc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
+</div>
+</body>
+</html>

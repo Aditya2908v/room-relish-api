@@ -14,8 +14,6 @@ import org.jetbrains.annotations.TestOnly;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -28,6 +26,7 @@ public class CustomerController {
     private final CustomerService customerService;
     private final AuthService authService;
     private final JwtService jwtService;
+    String errorMessageCustomer = "Customer not found";
 
     //demo end point to test the authentication.
     @GetMapping("/hello")
@@ -38,7 +37,7 @@ public class CustomerController {
 
     @QueryMapping("users")
     @TestOnly
-    public List<Customer> getAllCustomers_GraphQL() {
+    public List<Customer> getAllCustomersGraphQL() {
         return customerService.getAllCustomers();
     }
 
@@ -63,9 +62,10 @@ public class CustomerController {
             }
     )
     @PostMapping("/register")
-    public ResponseEntity<?> registerCustomer(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> registerCustomer(@RequestBody RegisterUserDTO request) {
         try{
-            AuthResponse response = authService.registerCustomer(request);
+            RegisterRequest registerRequest = authService.getRegisterRequest(request);
+            AuthResponse response = authService.registerCustomer(registerRequest);
             return ResponseEntity.ok(response);
         }catch (Exception ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
@@ -136,7 +136,7 @@ public class CustomerController {
             if(customerService.updateCustomer(userEmail, updateCustomerDTO)){
                 return ResponseEntity.ok().body("Customer successfully updated");
             }
-            return ResponseEntity.badRequest().body("Customer not found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessageCustomer);
         }catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -153,7 +153,7 @@ public class CustomerController {
             }
             CustomerProfile customerProfile = customerService.getProfileInfo(userEmail, "navbar");
             if (customerProfile == null) {
-                return ResponseEntity.badRequest().body("Customer not found");
+                return ResponseEntity.badRequest().body(errorMessageCustomer);
             }
             return ResponseEntity.ok().body(new NavbarResponse(true, customerProfile));
         } catch (Exception e) {
@@ -168,7 +168,7 @@ public class CustomerController {
             String userEmail = extractUserEmailFromRequest(request);
             CustomerProfile customerProfile = customerService.getProfileInfo(userEmail, "profile");
             if (customerProfile == null) {
-                return ResponseEntity.badRequest().body("Customer not found");
+                return ResponseEntity.badRequest().body(errorMessageCustomer);
             }
             return ResponseEntity.ok().body(customerProfile);
         }catch (Exception e){
@@ -256,8 +256,6 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-
-    //TODO after user searches a hotel add it to recent searches
 
     @TestOnly
     //utility function to get JWT token form the request

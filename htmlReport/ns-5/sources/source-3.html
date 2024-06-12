@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > Customer</title>
+  <title>Coverage Report > CardDTO</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.models</a>
+    <a href="../index.html">org.example.roomrelish.dto</a>
 </div>
 
-<h1>Coverage Summary for Class: Customer (org.example.roomrelish.models)</h1>
+<h1>Coverage Summary for Class: CardDTO (org.example.roomrelish.dto)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -41,7 +41,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">Customer</td>
+  <td class="name">CardDTO</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -52,18 +52,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    58.3%
+    87.5%
   </span>
   <span class="absValue">
-    (14/24)
+    (7/8)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    58.3%
+    87.5%
   </span>
   <span class="absValue">
-    (14/24)
+    (7/8)
   </span>
 </td>
 </tr>
@@ -75,81 +75,33 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.models;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.dto;
 &nbsp;
-&nbsp;
-&nbsp;import org.jetbrains.annotations.TestOnly;
-&nbsp;import org.springframework.data.annotation.Id;
-&nbsp;import org.springframework.data.mongodb.core.mapping.Document;
+&nbsp;import jakarta.validation.constraints.NotEmpty;
+&nbsp;import jakarta.validation.constraints.Pattern;
 &nbsp;import lombok.AllArgsConstructor;
 &nbsp;import lombok.Data;
 &nbsp;import lombok.NoArgsConstructor;
-&nbsp;import org.springframework.security.core.GrantedAuthority;
-&nbsp;import org.springframework.security.core.authority.SimpleGrantedAuthority;
-&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+&nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;
-&nbsp;import java.util.Collection;
-&nbsp;import java.util.Date;
-&nbsp;import java.util.List;
-&nbsp;
-&nbsp;@TestOnly
 <b class="fc">&nbsp;@Data</b>
 <b class="fc">&nbsp;@NoArgsConstructor</b>
 <b class="nc">&nbsp;@AllArgsConstructor</b>
-&nbsp;@Document(collection = &quot;users&quot;)
-&nbsp;public class Customer implements UserDetails {
-&nbsp;    @Id
-<b class="fc">&nbsp;    private String id;</b>
-&nbsp;    private String username;
-<b class="fc">&nbsp;    private String email;</b>
-<b class="nc">&nbsp;    private String googleId;</b>
-<b class="fc">&nbsp;    private List&lt;String&gt; favouriteHotels;</b>
-<b class="fc">&nbsp;    private List&lt;String&gt; recentVisitsOfHotels;</b>
-<b class="fc">&nbsp;    private List&lt;Card&gt; addedCards;</b>
-<b class="nc">&nbsp;    private Date registeredAt;</b>
-<b class="fc">&nbsp;    private Date dateOfBirth;</b>
-<b class="fc">&nbsp;    private String address;</b>
-<b class="fc">&nbsp;    private String phoneNumber;</b>
-<b class="fc">&nbsp;    private String profilePicture;</b>
-<b class="fc">&nbsp;    private String coverPicture;</b>
-&nbsp;    private String password;
-<b class="nc">&nbsp;    private Role role;</b>
-<b class="nc">&nbsp;    private Token token;</b>
-&nbsp;
-&nbsp;    @Override
-&nbsp;    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
-<b class="nc">&nbsp;        return List.of(new SimpleGrantedAuthority(role.name()));</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    @Override
-&nbsp;    public String getPassword() {
-<b class="fc">&nbsp;        return password;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    @Override
-&nbsp;    public String getUsername() {
-<b class="fc">&nbsp;        return email;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    @Override
-&nbsp;    public boolean isAccountNonExpired() {
-<b class="nc">&nbsp;        return true;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    @Override
-&nbsp;    public boolean isAccountNonLocked() {
-<b class="nc">&nbsp;        return true;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    @Override
-&nbsp;    public boolean isCredentialsNonExpired() {
-<b class="nc">&nbsp;        return true;</b>
-&nbsp;    }
-&nbsp;
-&nbsp;    @Override
-&nbsp;    public boolean isEnabled() {
-<b class="nc">&nbsp;        return true;</b>
-&nbsp;    }
+&nbsp;@TestOnly
+&nbsp;public class CardDTO {
+&nbsp;    @NotEmpty(message = &quot;Card number must not be empty&quot;)
+&nbsp;    @Pattern(regexp = &quot;^[0-9]{16}$&quot;, message = &quot;Card number must be 16 digits&quot;)
+<b class="fc">&nbsp;    private String cardNumber;</b>
+&nbsp;    @NotEmpty(message = &quot;Card holder must not be empty&quot;)
+&nbsp;    @Pattern(regexp = &quot;^[A-Za-z\\s]+$&quot;, message = &quot;Card holder must contain only letters and spaces&quot;)
+<b class="fc">&nbsp;    private String cardHolder;</b>
+&nbsp;    @NotEmpty(message = &quot;Expiration date must not be empty&quot;)
+&nbsp;    @Pattern(regexp = &quot;^(0[1-9]|1[0-2])/\\d{2}$&quot;, message = &quot;Expiration date must be in the format MM/YY&quot;)
+<b class="fc">&nbsp;    private String expirationDate;</b>
+&nbsp;    @NotEmpty(message = &quot;CVV must not be empty&quot;)
+&nbsp;    @Pattern(regexp = &quot;^[0-9]{3}$&quot;, message = &quot;CVV must be 3 digits&quot;)
+<b class="fc">&nbsp;    private String cvv;</b>
+<b class="fc">&nbsp;    private String cardName;</b>
 &nbsp;}
 </code>
 </pre>
@@ -174,7 +126,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
 </div>
 </body>
 </html>

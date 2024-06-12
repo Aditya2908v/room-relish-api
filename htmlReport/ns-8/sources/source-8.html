@@ -1,0 +1,113 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > HotelService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.roomrelish.services</a>
+</div>
+
+<h1>Coverage Summary for Class: HotelService (org.example.roomrelish.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">HotelService$MockitoMock$ZJvymyxD</td>
+  </tr>
+  <tr>
+    <td class="name">HotelService$MockitoMock$ZJvymyxD$auxiliary$2LzMCHHQ</td>
+  </tr>
+  <tr>
+    <td class="name">HotelService$MockitoMock$ZJvymyxD$auxiliary$eJ17QNqq</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;import org.example.roomrelish.dto.*;
+&nbsp;import org.example.roomrelish.models.GuestReview;
+&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.models.Room;
+&nbsp;import org.jetbrains.annotations.TestOnly;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.Date;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@TestOnly
+&nbsp;public interface HotelService {
+&nbsp;    List&lt;Hotel&gt; getAllHotels();
+&nbsp;    Hotel findHotelById(String id);
+&nbsp;    Hotel createHotel(HotelDTO hotelDTO);
+&nbsp;    void deleteReview(String hotelId, String reviewId);
+&nbsp;    Hotel updateHotel(String id,HotelDTO hotelDTO);
+&nbsp;    List&lt;ReviewResponse&gt; getReviews(String id);
+&nbsp;    GuestReview addReview(String id, ReviewDTO reviewDTO);
+&nbsp;    void deleteHotel(String id);
+&nbsp;    Room addRoom(String id, RoomDTO roomDTO);
+&nbsp;
+&nbsp;    SearchResultDTO findHotels(String cityName,
+&nbsp;                           LocalDate checkInDate,
+&nbsp;                           LocalDate checkOutDate,
+&nbsp;                           int countOfRooms,
+&nbsp;                           int priceRangeMax,
+&nbsp;                           int priceRangeMin,
+&nbsp;                           double rating,
+&nbsp;                           List&lt;String&gt; amenities);
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
+</div>
+</body>
+</html>

@@ -4,13 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.example.roomrelish.dto.AuthResponse;
 import org.example.roomrelish.dto.LoginRequest;
 import org.example.roomrelish.dto.RegisterRequest;
+import org.example.roomrelish.dto.RegisterUserDTO;
+import org.example.roomrelish.mapper.RegisterUserMapper;
 import org.example.roomrelish.models.Customer;
 import org.example.roomrelish.models.Role;
 import org.example.roomrelish.models.Token;
 import org.example.roomrelish.models.TokenType;
 import org.example.roomrelish.repository.CustomerRepository;
 import org.example.roomrelish.repository.TokenRepository;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,13 +22,14 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService  {
 
     private final PasswordEncoder passwordEncoder;
     private final CustomerRepository customerRepository;
     private final TokenRepository tokenRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
 
     public AuthResponse registerCustomer(RegisterRequest request) {
         Customer customer = new Customer();
@@ -46,6 +48,10 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public RegisterRequest getRegisterRequest(RegisterUserDTO registerUserDTO){
+        return RegisterUserMapper.INSTANCE.registerUserDTOToRegisterRequest(registerUserDTO);
     }
 
     public AuthResponse authenticate(LoginRequest loginRequest) {

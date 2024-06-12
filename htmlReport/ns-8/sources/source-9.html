@@ -1,0 +1,110 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > CustomerService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.roomrelish.services</a>
+</div>
+
+<h1>Coverage Summary for Class: CustomerService (org.example.roomrelish.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">CustomerService$MockitoMock$ZzuwnfaR</td>
+  </tr>
+  <tr>
+    <td class="name">CustomerService$MockitoMock$ZzuwnfaR$auxiliary$rzTMn2xb</td>
+  </tr>
+  <tr>
+    <td class="name">CustomerService$MockitoMock$ZzuwnfaR$auxiliary$WZ3Fu1i2</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
+&nbsp;
+&nbsp;import org.example.roomrelish.dto.CardDTO;
+&nbsp;import org.example.roomrelish.dto.CustomerProfile;
+&nbsp;import org.example.roomrelish.dto.UpdateCustomerDTO;
+&nbsp;import org.example.roomrelish.models.Customer;
+&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.jetbrains.annotations.TestOnly;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@TestOnly
+&nbsp;public interface CustomerService {
+&nbsp;    void addCardToUser(CardDTO cardDTO,String userEmail);
+&nbsp;
+&nbsp;    List&lt;Customer&gt; getAllCustomers();
+&nbsp;
+&nbsp;    boolean updateCustomer(String userEmail, UpdateCustomerDTO updateCustomerDTO);
+&nbsp;
+&nbsp;    CustomerProfile getProfileInfo(String userEmail, String navbar);
+&nbsp;
+&nbsp;    String getProfilePicture(String userEmail);
+&nbsp;
+&nbsp;    boolean uploadImage(String userEmail, String type, String fileName);
+&nbsp;
+&nbsp;    List&lt;Hotel&gt; getFavouriteHotels(String userEmail);
+&nbsp;
+&nbsp;    void addFavouriteHotel(String userEmail, String hotelId);
+&nbsp;
+&nbsp;    void deleteFavouriteHotel(String userEmail, String hotelId);
+&nbsp;
+&nbsp;    List&lt;Hotel&gt; findRecentHotels(String userEmail);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
+</div>
+</body>
+</html>

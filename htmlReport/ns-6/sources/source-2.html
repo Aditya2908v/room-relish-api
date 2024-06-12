@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > BookingServiceImpl</title>
+  <title>Coverage Report > RegisterUserMapperImpl</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.services</a>
+    <a href="../index.html">org.example.roomrelish.mapper</a>
 </div>
 
-<h1>Coverage Summary for Class: BookingServiceImpl (org.example.roomrelish.services)</h1>
+<h1>Coverage Summary for Class: RegisterUserMapperImpl (org.example.roomrelish.mapper)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -41,29 +41,29 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">BookingServiceImpl</td>
+  <td class="name">RegisterUserMapperImpl</td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    0%
   </span>
   <span class="absValue">
-    (1/1)
+    (0/1)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    0%
   </span>
   <span class="absValue">
-    (2/2)
+    (0/2)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    38.2%
+    0%
   </span>
   <span class="absValue">
-    (13/34)
+    (0/14)
   </span>
 </td>
 </tr>
@@ -75,74 +75,42 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.mapper;
 &nbsp;
-&nbsp;import lombok.RequiredArgsConstructor;
-&nbsp;import org.example.roomrelish.dto.BookingDetailsDTO;
-&nbsp;import org.example.roomrelish.models.Booking;
-&nbsp;import org.example.roomrelish.models.Hotel;
-&nbsp;import org.example.roomrelish.models.Payment;
-&nbsp;import org.example.roomrelish.models.Room;
-&nbsp;import org.example.roomrelish.repository.BookingRepository;
-&nbsp;import org.example.roomrelish.repository.HotelRepository;
-&nbsp;import org.example.roomrelish.repository.PaymentRepository;
-&nbsp;import org.springframework.stereotype.Service;
-&nbsp;import java.util.Optional;
+&nbsp;import java.text.ParseException;
+&nbsp;import javax.annotation.processing.Generated;
+&nbsp;import org.example.roomrelish.dto.RegisterRequest;
+&nbsp;import org.example.roomrelish.dto.RegisterUserDTO;
 &nbsp;
-&nbsp;@Service
-<b class="fc">&nbsp;@RequiredArgsConstructor</b>
-&nbsp;public class BookingServiceImpl {
+&nbsp;@Generated(
+&nbsp;    value = &quot;org.mapstruct.ap.MappingProcessor&quot;,
+&nbsp;    date = &quot;2024-05-27T12:43:21+0530&quot;,
+&nbsp;    comments = &quot;version: 1.5.3.Final, compiler: javac, environment: Java 21.0.2 (Oracle Corporation)&quot;
+&nbsp;)
+<b class="nc">&nbsp;public class RegisterUserMapperImpl implements RegisterUserMapper {</b>
 &nbsp;
-&nbsp;    private final HotelRepository hotelRepository;
-&nbsp;    private final BookingRepository bookingRepository;
-&nbsp;    private final PaymentRepository paymentRepository;
-&nbsp;
-&nbsp;    public Booking bookRoom(BookingDetailsDTO bookingDetailsDTO) {
-<b class="fc">&nbsp;        Optional&lt;Hotel&gt; hotelOptional = hotelRepository.findById(bookingDetailsDTO.get_hotelId());</b>
-<b class="fc">&nbsp;        if (hotelOptional.isEmpty()) {</b>
-<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Hotel Not Found&quot;);</b>
-&nbsp;        }
-<b class="fc">&nbsp;        Hotel currentHotel = hotelOptional.get();</b>
-&nbsp;
-<b class="fc">&nbsp;        Optional&lt;Room&gt; optionalRoom = currentHotel.getRooms().stream()</b>
-<b class="fc">&nbsp;                .filter(room -&gt; room.getId().equals(bookingDetailsDTO.get_roomId()))</b>
-<b class="fc">&nbsp;                .findFirst();</b>
-<b class="fc">&nbsp;        if (optionalRoom.isEmpty()) {</b>
-<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Room not found&quot;);</b>
-&nbsp;        }
-<b class="fc">&nbsp;        Room currentRoom = optionalRoom.get();</b>
-&nbsp;
-<b class="fc">&nbsp;        if (currentRoom.getRoomCount() &lt; bookingDetailsDTO.getCustomerRoomCount()) {</b>
-<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;No available rooms&quot;);</b>
+&nbsp;    @Override
+&nbsp;    public RegisterRequest registerUserDTOToRegisterRequest(RegisterUserDTO registerUserDTO) {
+<b class="nc">&nbsp;        if ( registerUserDTO == null ) {</b>
+<b class="nc">&nbsp;            return null;</b>
 &nbsp;        }
 &nbsp;
-&nbsp;        // Decrease available room count
-<b class="nc">&nbsp;        currentRoom.setRoomCount(currentRoom.getRoomCount() - bookingDetailsDTO.getCustomerRoomCount());</b>
-<b class="nc">&nbsp;        hotelRepository.save(currentHotel);</b>
+<b class="nc">&nbsp;        RegisterRequest registerRequest = new RegisterRequest();</b>
 &nbsp;
-&nbsp;        // Create booking
-<b class="nc">&nbsp;        Booking booking = new Booking();</b>
-<b class="nc">&nbsp;        booking.set_userId(bookingDetailsDTO.get_customerId());</b>
-<b class="nc">&nbsp;        booking.set_hotelId(bookingDetailsDTO.get_hotelId());</b>
-<b class="nc">&nbsp;        booking.set_roomId(bookingDetailsDTO.get_roomId());</b>
-<b class="nc">&nbsp;        booking.setNumOfRooms(bookingDetailsDTO.getCustomerRoomCount());</b>
-<b class="nc">&nbsp;        booking.setNumOfDays(bookingDetailsDTO.getCustomerDayCount());</b>
-<b class="nc">&nbsp;        booking.setTotalAmount(bookingDetailsDTO.getCustomerRoomCount() * bookingDetailsDTO.getCustomerDayCount() * currentRoom.getRoomRate());</b>
-<b class="nc">&nbsp;        booking.setGstOfTotalAmount((booking.getTotalAmount() * 12) / 100);</b>
-<b class="nc">&nbsp;        Payment payment = new Payment();</b>
-&nbsp;        // Save booking
-<b class="nc">&nbsp;        Booking booking1 = bookingRepository.save(booking);</b>
-&nbsp;        //Save in payment and set payment status false
-<b class="nc">&nbsp;        payment.set_bookingId(booking1.getId());</b>
-<b class="nc">&nbsp;        payment.set_roomId(booking1.get_roomId());</b>
-<b class="nc">&nbsp;        payment.set_hotelId(booking.get_hotelId());</b>
-<b class="nc">&nbsp;        payment.set_userId(booking.get_userId());</b>
-<b class="nc">&nbsp;        payment.setNumOfDays(booking.getNumOfDays());</b>
-<b class="nc">&nbsp;        payment.setNumOfRooms(booking.getNumOfRooms());</b>
-<b class="nc">&nbsp;        payment.setPaymentStatus(false);</b>
-<b class="nc">&nbsp;        paymentRepository.save(payment);</b>
-<b class="nc">&nbsp;        return booking1;</b>
+<b class="nc">&nbsp;        registerRequest.setUsername( registerUserDTO.getUsername() );</b>
+<b class="nc">&nbsp;        registerRequest.setEmail( registerUserDTO.getEmail() );</b>
+<b class="nc">&nbsp;        registerRequest.setPassword( registerUserDTO.getPassword() );</b>
+<b class="nc">&nbsp;        registerRequest.setPhoneNumber( registerUserDTO.getPhoneNumber() );</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            registerRequest.setDateOfBirth( mapDateOfBirth( registerUserDTO.getDateOfBirth() ) );</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch ( ParseException e ) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException( e );</b>
+<b class="nc">&nbsp;        }</b>
 &nbsp;
+<b class="nc">&nbsp;        registerRequest.setAddress( mapAddress(registerUserDTO.getStreet(),registerUserDTO.getCity(),registerUserDTO.getState()) );</b>
+&nbsp;
+<b class="nc">&nbsp;        return registerRequest;</b>
 &nbsp;    }
 &nbsp;}
 </code>
@@ -168,7 +136,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-04 11:47</div>
 </div>
 </body>
 </html>

@@ -1,0 +1,226 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > BookingServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.roomrelish.services</a>
+</div>
+
+<h1>Coverage Summary for Class: BookingServiceImpl (org.example.roomrelish.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BookingServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (6/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    45.5%
+  </span>
+  <span class="absValue">
+    (25/55)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.services;
+&nbsp;
+&nbsp;import com.mongodb.DuplicateKeyException;
+&nbsp;import com.mongodb.MongoSocketException;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.example.roomrelish.ExceptionHandler.CustomDataAccessException;
+&nbsp;import org.example.roomrelish.ExceptionHandler.CustomDuplicateBookingException;
+&nbsp;import org.example.roomrelish.ExceptionHandler.CustomMongoSocketException;
+&nbsp;import org.example.roomrelish.ExceptionHandler.GlobalExceptionHandler;
+&nbsp;import org.example.roomrelish.dto.BookingDetailsDTO;
+&nbsp;import org.example.roomrelish.models.Booking;
+&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.models.Payment;
+&nbsp;import org.example.roomrelish.models.Room;
+&nbsp;import org.example.roomrelish.repository.BookingRepository;
+&nbsp;import org.example.roomrelish.repository.HotelRepository;
+&nbsp;import org.example.roomrelish.repository.PaymentRepository;
+&nbsp;import org.springframework.dao.DataAccessException;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class BookingServiceImpl {
+&nbsp;
+&nbsp;    private final HotelRepository hotelRepository;
+&nbsp;    private final BookingRepository bookingRepository;
+&nbsp;    private final PaymentRepository paymentRepository;
+&nbsp;    GlobalExceptionHandler globalExceptionHandler;
+&nbsp;
+&nbsp;
+&nbsp;    public Booking bookRoom(BookingDetailsDTO bookingDetailsDTO) throws CustomDataAccessException, CustomDuplicateBookingException, CustomMongoSocketException {
+<b class="fc">&nbsp;        if(bookingDetailsDTO==null){</b>
+<b class="fc">&nbsp;            throw new NullPointerException(&quot;No details provided&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        Optional&lt;Hotel&gt; hotelOptional = hotelRepository.findByHotelByIdAndRoomById(bookingDetailsDTO.get_hotelId(),bookingDetailsDTO.get_roomId());</b>
+<b class="fc">&nbsp;        if (hotelOptional.isEmpty()) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Hotel Not Found&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        Hotel currentHotel = hotelOptional.get();</b>
+&nbsp;
+<b class="nc">&nbsp;       Room currentRoom = currentHotel.getRooms().stream()</b>
+<b class="nc">&nbsp;                .filter(room -&gt; room.getId().equals(bookingDetailsDTO.get_roomId()))</b>
+<b class="nc">&nbsp;                .findFirst().orElseThrow(()-&gt; new IllegalArgumentException(&quot;Room not found&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;       Booking booking = createBooking(bookingDetailsDTO,currentRoom);</b>
+<b class="nc">&nbsp;       Payment payment = createPayment(booking,currentRoom,currentHotel);</b>
+&nbsp;
+<b class="nc">&nbsp;       return saveBookingAndPayment(booking,payment);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private Booking saveBookingAndPayment(Booking booking, Payment payment) throws CustomDuplicateBookingException, CustomDataAccessException, CustomMongoSocketException {
+&nbsp;        try{
+<b class="nc">&nbsp;            Booking savedBooking = bookingRepository.save(booking);</b>
+<b class="nc">&nbsp;            payment.set_bookingId(savedBooking.getId());</b>
+<b class="nc">&nbsp;            paymentRepository.save(payment);</b>
+<b class="nc">&nbsp;            return savedBooking;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch(DuplicateKeyException e){</b>
+<b class="nc">&nbsp;            throw new CustomDuplicateBookingException(e);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (DataAccessException e){</b>
+<b class="nc">&nbsp;            throw new CustomDataAccessException(e);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch(MongoSocketException e){</b>
+<b class="nc">&nbsp;            throw new CustomMongoSocketException(e);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private Payment createPaymentPrivate(Booking booking, Room currentRoom,Hotel currentHotel) {
+<b class="fc">&nbsp;        return Payment.builder()</b>
+<b class="fc">&nbsp;                ._bookingId(booking.getId())</b>
+<b class="fc">&nbsp;                ._userId(booking.get_userId())</b>
+<b class="fc">&nbsp;                ._hotelId(booking.get_hotelId())</b>
+<b class="fc">&nbsp;                ._roomId(booking.get_roomId())</b>
+<b class="fc">&nbsp;                .hotelName(currentHotel.getHotelName())</b>
+<b class="fc">&nbsp;                .roomName(currentRoom.getRoomType())</b>
+<b class="fc">&nbsp;                .numOfDays(booking.getNumOfDays())</b>
+<b class="fc">&nbsp;                .numOfRooms(booking.getNumOfRooms())</b>
+<b class="fc">&nbsp;                .checkInDate(booking.getCheckInDate())</b>
+<b class="fc">&nbsp;                .checkOutDate(booking.getCheckOutDate())</b>
+<b class="fc">&nbsp;                .totalAmount(booking.getTotalAmount()+ booking.getGstOfTotalAmount())</b>
+<b class="fc">&nbsp;                .hotelImage(currentHotel.getImages().getFirst())</b>
+<b class="fc">&nbsp;                .paymentStatus(false)</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Payment createPayment(Booking booking, Room currentRoom, Hotel currentHotel){
+<b class="fc">&nbsp;        return createPaymentPrivate(booking,currentRoom,currentHotel);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Booking createBookingPrivate(BookingDetailsDTO bookingDetailsDTO, Room currentRoom) {
+<b class="nc">&nbsp;        int totalAmount = bookingDetailsDTO.getCustomerRoomCount()*bookingDetailsDTO.getCustomerDayCount()*currentRoom.getRoomRate();</b>
+<b class="nc">&nbsp;        double gstOfTotalAmount = ((double) (totalAmount * 12) /100);</b>
+<b class="nc">&nbsp;        return Booking.builder()</b>
+<b class="nc">&nbsp;                ._userId(bookingDetailsDTO.get_userId())</b>
+<b class="nc">&nbsp;                ._hotelId(bookingDetailsDTO.get_hotelId())</b>
+<b class="nc">&nbsp;                ._roomId(bookingDetailsDTO.get_roomId())</b>
+<b class="nc">&nbsp;                .numOfRooms(bookingDetailsDTO.getCustomerRoomCount())</b>
+<b class="nc">&nbsp;                .numOfDays(bookingDetailsDTO.getCustomerDayCount())</b>
+<b class="nc">&nbsp;                .checkInDate(bookingDetailsDTO.getCheckInDate())</b>
+<b class="nc">&nbsp;                .checkOutDate(bookingDetailsDTO.getCheckOutDate())</b>
+<b class="nc">&nbsp;                .totalAmount(totalAmount)</b>
+<b class="nc">&nbsp;                .gstOfTotalAmount(gstOfTotalAmount).build();</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private void validateRoomAvailabilityPrivate(int roomCount, int customerRoomCount) {
+<b class="fc">&nbsp;        if (roomCount &lt; customerRoomCount) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;No available rooms&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void validateRoomAvailability(int roomCount,int customerRoomCount){
+<b class="fc">&nbsp;        validateRoomAvailabilityPrivate(roomCount,customerRoomCount);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Booking createBooking(BookingDetailsDTO bookingDetailsDTO, Room currentRoom){
+<b class="nc">&nbsp;        return createBookingPrivate(bookingDetailsDTO,currentRoom);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
+</div>
+</body>
+</html>

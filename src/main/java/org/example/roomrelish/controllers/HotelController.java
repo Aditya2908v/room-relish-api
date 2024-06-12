@@ -9,7 +9,6 @@ import org.example.roomrelish.dto.*;
 import org.example.roomrelish.models.GuestReview;
 import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.models.Room;
-import org.example.roomrelish.repository.HotelRepository;
 import org.example.roomrelish.services.HotelService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -17,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -29,19 +28,23 @@ public class HotelController {
 
     private final HotelService hotelService;
 
+    @GetMapping("/hello")
+    public String hello(){
+        return "Hello World";
+    }
+
     //GraphQL endpoints
     @QueryMapping("hotels")
-    public List<Hotel> getAllHotels_GraphQL(){
+    public List<Hotel> getAllHotelsGraphQL(){
         return hotelService.getAllHotels();
     }
 
     @QueryMapping("hotel")
-    public Hotel getHotel_GraphQL(@Argument String id){
+    public Hotel getHotelGraphQL(@Argument String id){
         return hotelService.findHotelById(id);
     }
 
     //search hotel
-    //TODO update search functionality based on checkIn, checkOut, price range and amenities
 
 
     @Operation(
@@ -65,21 +68,17 @@ public class HotelController {
     @GetMapping("/search")
     public ResponseEntity<?> searchHotels(
             @RequestParam String cityName,
-            @RequestParam Date checkInDate,
-            @RequestParam Date checkOutDate,
+            @RequestParam LocalDate checkInDate,
+            @RequestParam LocalDate checkOutDate,
             @RequestParam int countOfRooms,
             @RequestParam int priceRangeMax,
             @RequestParam int priceRangeMin,
             @RequestParam double rating,
             @RequestParam List<String> amenities
     ){
-       // System.out.println("Inside search end api");
         try {
-            List<Hotel> hotels = hotelService.findHotels(cityName,checkInDate,checkOutDate,countOfRooms,priceRangeMax,priceRangeMin,rating,amenities);
-            if (hotels.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No hotels found");
-            }
-            return ResponseEntity.ok(hotels);
+            SearchResultDTO searchResultDTO = hotelService.findHotels(cityName,checkInDate,checkOutDate,countOfRooms,priceRangeMax,priceRangeMin,rating,amenities);
+            return ResponseEntity.ok(searchResultDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the search.");
         }

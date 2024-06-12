@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > OpenApiConfig</title>
+  <title>Coverage Report > CustomMongoSocketException</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.config</a>
+    <a href="../index.html">org.example.roomrelish.ExceptionHandler</a>
 </div>
 
-<h1>Coverage Summary for Class: OpenApiConfig (org.example.roomrelish.config)</h1>
+<h1>Coverage Summary for Class: CustomMongoSocketException (org.example.roomrelish.ExceptionHandler)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -41,7 +41,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">OpenApiConfig</td>
+  <td class="name">CustomMongoSocketException</td>
 <td class="coverageStat">
   <span class="percent">
     0%
@@ -75,50 +75,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.config;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.ExceptionHandler;
 &nbsp;
-&nbsp;import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-&nbsp;import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-&nbsp;import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-&nbsp;import io.swagger.v3.oas.annotations.info.Contact;
-&nbsp;import io.swagger.v3.oas.annotations.info.Info;
-&nbsp;import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-&nbsp;import io.swagger.v3.oas.annotations.security.SecurityScheme;
-&nbsp;import io.swagger.v3.oas.annotations.servers.Server;
-&nbsp;import org.jetbrains.annotations.TestOnly;
+&nbsp;import com.mongodb.DuplicateKeyException;
+&nbsp;import com.mongodb.MongoSocketException;
 &nbsp;
-&nbsp;@TestOnly
-&nbsp;@OpenAPIDefinition(
-&nbsp;        info = @Info(
-&nbsp;                title = &quot;Room Relish Api&quot;,
-&nbsp;                description = &quot;API documentation for the Room Relish Hotel Booking System.&quot;,
-&nbsp;                version = &quot;1.0&quot;,
-&nbsp;                contact = @Contact(
-&nbsp;                        name = &quot;Aditya Reddy&quot;,
-&nbsp;                        email = &quot;aditya.sureshkumarreddy.ciec@skytv.it&quot;
-&nbsp;                )
-&nbsp;        ),
-&nbsp;        servers = {
-&nbsp;                @Server(
-&nbsp;                        url = &quot;http://localhost:8081&quot;,
-&nbsp;                        description = &quot;Local Development Server&quot;
-&nbsp;                )
-&nbsp;        },
-&nbsp;        security = {
-&nbsp;                @SecurityRequirement(
-&nbsp;                        name=&quot;bearerAuth&quot;
-&nbsp;                )
-&nbsp;        }
-&nbsp;)
-&nbsp;@SecurityScheme(
-&nbsp;        name = &quot;bearerAuth&quot;,
-&nbsp;        description = &quot;JWT authentication&quot;,
-&nbsp;        scheme = &quot;bearer&quot;,
-&nbsp;        type = SecuritySchemeType.HTTP,
-&nbsp;        bearerFormat = &quot;JWT&quot;,
-&nbsp;        in = SecuritySchemeIn.HEADER
-&nbsp;)
-<b class="nc">&nbsp;public class OpenApiConfig {</b>
+&nbsp;public class CustomMongoSocketException extends Exception{
+&nbsp;    public CustomMongoSocketException(MongoSocketException e) {
+<b class="nc">&nbsp;        super(e.getMessage());</b>
+&nbsp;    }
 &nbsp;}
 </code>
 </pre>
@@ -143,7 +108,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
 </div>
 </body>
 </html>

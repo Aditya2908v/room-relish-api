@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > Token</title>
+  <title>Coverage Report > ReviewDTO</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,15 +19,18 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.models</a>
+    <a href="../index.html">org.example.roomrelish.dto</a>
 </div>
 
-<h1>Coverage Summary for Class: Token (org.example.roomrelish.models)</h1>
+<h1>Coverage Summary for Class: ReviewDTO (org.example.roomrelish.dto)</h1>
 
 <table class="coverageStats">
-
 <tr>
   <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
 <th class="coverageStat 
 ">
   Method, %
@@ -38,26 +41,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">Token</td>
-<td class="coverageStat">
-  <span class="percent">
-    20%
-  </span>
-  <span class="absValue">
-    (2/10)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    20%
-  </span>
-  <span class="absValue">
-    (2/10)
-  </span>
-</td>
-</tr>
-  <tr>
-    <td class="name">Token$TokenBuilder</td>
+  <td class="name">ReviewDTO</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -68,32 +52,22 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    66.7%
   </span>
   <span class="absValue">
-    (1/1)
-  </span>
-</td>
-  </tr>
-<tr>
-  <td class="name"><strong>Total</strong></td>
-<td class="coverageStat">
-  <span class="percent">
-    27.3%
-  </span>
-  <span class="absValue">
-    (3/11)
+    (4/6)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    27.3%
+    66.7%
   </span>
   <span class="absValue">
-    (3/11)
+    (4/6)
   </span>
 </td>
 </tr>
+
 </table>
 
 <br/>
@@ -101,30 +75,21 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.models;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.dto;
 &nbsp;
 &nbsp;import lombok.AllArgsConstructor;
-&nbsp;import lombok.Builder;
 &nbsp;import lombok.Data;
 &nbsp;import lombok.NoArgsConstructor;
 &nbsp;import org.jetbrains.annotations.TestOnly;
-&nbsp;import org.springframework.data.annotation.Id;
-&nbsp;import org.springframework.data.mongodb.core.mapping.Document;
 &nbsp;
-&nbsp;@TestOnly
 <b class="nc">&nbsp;@Data</b>
-<b class="nc">&nbsp;@NoArgsConstructor</b>
-<b class="fc">&nbsp;@AllArgsConstructor</b>
-<b class="fc">&nbsp;@Builder</b>
-&nbsp;@Document(collection = &quot;tokens&quot;)
-&nbsp;public class Token {
-&nbsp;    @Id
-<b class="nc">&nbsp;    private String id;</b>
-<b class="nc">&nbsp;    private String token;</b>
-<b class="nc">&nbsp;    private TokenType tokenType;</b>
-<b class="nc">&nbsp;    private boolean expired;</b>
-<b class="nc">&nbsp;    private boolean revoked;</b>
-<b class="nc">&nbsp;    private String customerId;</b>
+<b class="fc">&nbsp;@NoArgsConstructor</b>
+<b class="nc">&nbsp;@AllArgsConstructor</b>
+&nbsp;@TestOnly
+&nbsp;public class ReviewDTO {
+<b class="fc">&nbsp;    private String userid;</b>
+<b class="fc">&nbsp;    private double rating;</b>
+<b class="fc">&nbsp;    private String comment;</b>
 &nbsp;}
 </code>
 </pre>
@@ -149,7 +114,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
 </div>
 </body>
 </html>

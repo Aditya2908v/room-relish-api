@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > CardDTO</title>
+  <title>Coverage Report > HotelController</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.dto</a>
+    <a href="../index.html">org.example.roomrelish.controllers</a>
 </div>
 
-<h1>Coverage Summary for Class: CardDTO (org.example.roomrelish.dto)</h1>
+<h1>Coverage Summary for Class: HotelController (org.example.roomrelish.controllers)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -41,7 +41,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">CardDTO</td>
+  <td class="name">HotelController</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -52,18 +52,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    87.5%
+    66.7%
   </span>
   <span class="absValue">
-    (7/8)
+    (8/12)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    87.5%
+    80.6%
   </span>
   <span class="absValue">
-    (7/8)
+    (29/36)
   </span>
 </td>
 </tr>
@@ -75,34 +75,166 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.dto;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.controllers;
 &nbsp;
-&nbsp;import jakarta.validation.constraints.NotEmpty;
-&nbsp;import jakarta.validation.constraints.Pattern;
-&nbsp;import lombok.AllArgsConstructor;
-&nbsp;import lombok.Data;
-&nbsp;import lombok.NoArgsConstructor;
-&nbsp;import org.jetbrains.annotations.TestOnly;
 &nbsp;
-<b class="fc">&nbsp;@Data</b>
-<b class="fc">&nbsp;@NoArgsConstructor</b>
-<b class="nc">&nbsp;@AllArgsConstructor</b>
-&nbsp;@TestOnly
-&nbsp;public class CardDTO {
-&nbsp;    @NotEmpty(message = &quot;Card number must not be empty&quot;)
-&nbsp;    @Pattern(regexp = &quot;^[0-9]{16}$&quot;, message = &quot;Card number must be 16 digits&quot;)
-<b class="fc">&nbsp;    private String cardNumber;</b>
-&nbsp;    @NotEmpty(message = &quot;Card holder must not be empty&quot;)
-&nbsp;    @Pattern(regexp = &quot;^[A-Za-z\\s]+$&quot;, message = &quot;Card holder must contain only letters and spaces&quot;)
-<b class="fc">&nbsp;    private String cardHolder;</b>
-&nbsp;    @NotEmpty(message = &quot;Expiration date must not be empty&quot;)
-&nbsp;    @Pattern(regexp = &quot;^(0[1-9]|1[0-2])/\\d{2}$&quot;, message = &quot;Expiration date must be in the format MM/YY&quot;)
-<b class="fc">&nbsp;    private String expirationDate;</b>
-&nbsp;    @NotEmpty(message = &quot;CVV must not be empty&quot;)
-&nbsp;    @Pattern(regexp = &quot;^[0-9]{3}$&quot;, message = &quot;CVV must be 3 digits&quot;)
-<b class="fc">&nbsp;    private String cvv;</b>
-<b class="fc">&nbsp;    private String cardName;</b>
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.example.roomrelish.dto.*;
+&nbsp;import org.example.roomrelish.models.GuestReview;
+&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.models.Room;
+&nbsp;import org.example.roomrelish.services.HotelService;
+&nbsp;import org.springframework.graphql.data.method.annotation.Argument;
+&nbsp;import org.springframework.graphql.data.method.annotation.QueryMapping;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;@RestController
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;@RequestMapping(&quot;api/v1/hotels&quot;)
+&nbsp;@Tag(name = &quot;Hotel Management&quot;)
+&nbsp;public class HotelController {
+&nbsp;
+&nbsp;    private final HotelService hotelService;
+&nbsp;
+&nbsp;    @GetMapping(&quot;/hello&quot;)
+&nbsp;    public String hello(){
+<b class="nc">&nbsp;        return &quot;Hello World&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //GraphQL endpoints
+&nbsp;    @QueryMapping(&quot;hotels&quot;)
+&nbsp;    public List&lt;Hotel&gt; getAllHotelsGraphQL(){
+<b class="nc">&nbsp;        return hotelService.getAllHotels();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @QueryMapping(&quot;hotel&quot;)
+&nbsp;    public Hotel getHotelGraphQL(@Argument String id){
+<b class="nc">&nbsp;        return hotelService.findHotelById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //search hotel
+&nbsp;
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;            description = &quot;Search Hotels&quot;,
+&nbsp;            summary = &quot;Search hotels by city name and/or rating&quot;,
+&nbsp;            responses = {
+&nbsp;                    @ApiResponse(
+&nbsp;                            description = &quot;List of hotels found&quot;,
+&nbsp;                            responseCode = &quot;200&quot;
+&nbsp;                    ),
+&nbsp;                    @ApiResponse(
+&nbsp;                            description = &quot;No hotels found&quot;,
+&nbsp;                            responseCode = &quot;204&quot;
+&nbsp;                    ),
+&nbsp;                    @ApiResponse(
+&nbsp;                            description = &quot;Internal server error&quot;,
+&nbsp;                            responseCode = &quot;500&quot;
+&nbsp;                    )
+&nbsp;            }
+&nbsp;    )
+&nbsp;    @GetMapping(&quot;/search&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; searchHotels(
+&nbsp;            @RequestParam String cityName,
+&nbsp;            @RequestParam LocalDate checkInDate,
+&nbsp;            @RequestParam LocalDate checkOutDate,
+&nbsp;            @RequestParam int countOfRooms,
+&nbsp;            @RequestParam int priceRangeMax,
+&nbsp;            @RequestParam int priceRangeMin,
+&nbsp;            @RequestParam double rating,
+&nbsp;            @RequestParam List&lt;String&gt; amenities
+&nbsp;    ){
+&nbsp;        try {
+<b class="nc">&nbsp;            SearchResultDTO searchResultDTO = hotelService.findHotels(cityName,checkInDate,checkOutDate,countOfRooms,priceRangeMax,priceRangeMin,rating,amenities);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(searchResultDTO);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;An error occurred while processing the search.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    public ResponseEntity&lt;?&gt; creteHotel(@RequestBody HotelDTO hotelDTO){
+&nbsp;        try{
+<b class="fc">&nbsp;            Hotel hotel = hotelService.createHotel(hotelDTO);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(hotel);</b>
+<b class="fc">&nbsp;        }catch (Exception e){</b>
+<b class="fc">&nbsp;            return ResponseEntity.badRequest().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateHotel(@PathVariable String id,@RequestBody HotelDTO hotelDTO){
+&nbsp;        try{
+<b class="fc">&nbsp;            Hotel hotel = hotelService.updateHotel(id,hotelDTO);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(hotel);</b>
+<b class="fc">&nbsp;        }catch (Exception e){</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; deleteHotel(@PathVariable String id){
+&nbsp;        try{
+<b class="fc">&nbsp;            hotelService.deleteHotel(id);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(&quot;Hotel deleted successfully&quot;);</b>
+<b class="fc">&nbsp;        }catch (Exception ex){</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //Get reviews
+&nbsp;    @GetMapping(&quot;{id}/reviews&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getAllReviews(@PathVariable String id){
+&nbsp;        try{
+<b class="fc">&nbsp;            List&lt;ReviewResponse&gt; guestReviews = hotelService.getReviews(id);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(guestReviews);</b>
+<b class="fc">&nbsp;        }catch (Exception e){</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //add review
+&nbsp;    @PostMapping(&quot;{id}/reviews&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; addReview(@PathVariable String id, @RequestBody ReviewDTO reviewDTO) {
+&nbsp;        try {
+<b class="fc">&nbsp;            GuestReview guestReview = hotelService.addReview(id, reviewDTO);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(guestReview);</b>
+<b class="fc">&nbsp;        } catch (IllegalArgumentException e) {</b>
+<b class="fc">&nbsp;            return ResponseEntity.badRequest().body(e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    //delete review
+&nbsp;    @DeleteMapping(&quot;{hotelId}/reviews/{reviewId}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; deleteReview(@PathVariable String hotelId, @PathVariable String reviewId) {
+&nbsp;        try {
+<b class="fc">&nbsp;            hotelService.deleteReview(hotelId, reviewId);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(&quot;Review deleted successfully&quot;);</b>
+<b class="fc">&nbsp;        } catch (IllegalArgumentException e) {</b>
+<b class="fc">&nbsp;            return ResponseEntity.badRequest().body(e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    //add room
+&nbsp;    @PostMapping(&quot;{id}/rooms&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; addRoom(@PathVariable String id,@RequestBody RoomDTO roomDTO){
+&nbsp;        try{
+<b class="fc">&nbsp;            Room room = hotelService.addRoom(id, roomDTO);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(room);</b>
+<b class="fc">&nbsp;        }catch (Exception e){</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
 &nbsp;}
+&nbsp;
 </code>
 </pre>
 </div>
@@ -126,7 +258,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
 </div>
 </body>
 </html>

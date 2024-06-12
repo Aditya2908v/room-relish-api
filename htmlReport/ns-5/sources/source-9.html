@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > Room</title>
+  <title>Coverage Report > RegisterUserDTO</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.models</a>
+    <a href="../index.html">org.example.roomrelish.dto</a>
 </div>
 
-<h1>Coverage Summary for Class: Room (org.example.roomrelish.models)</h1>
+<h1>Coverage Summary for Class: RegisterUserDTO (org.example.roomrelish.dto)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -41,7 +41,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">Room</td>
+  <td class="name">RegisterUserDTO</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -52,18 +52,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    50%
+    9.1%
   </span>
   <span class="absValue">
-    (4/8)
+    (1/11)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    50%
+    9.1%
   </span>
   <span class="absValue">
-    (4/8)
+    (1/11)
   </span>
 </td>
 </tr>
@@ -75,25 +75,25 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.models;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.dto;
 &nbsp;
 &nbsp;import lombok.AllArgsConstructor;
 &nbsp;import lombok.Data;
 &nbsp;import lombok.NoArgsConstructor;
-&nbsp;import org.jetbrains.annotations.TestOnly;
-&nbsp;import org.springframework.data.annotation.Id;
 &nbsp;
-&nbsp;@TestOnly
-<b class="fc">&nbsp;@Data</b>
+<b class="nc">&nbsp;@Data</b>
 <b class="fc">&nbsp;@NoArgsConstructor</b>
 <b class="nc">&nbsp;@AllArgsConstructor</b>
-&nbsp;public class Room {
-&nbsp;    @Id
-<b class="fc">&nbsp;    private String id;</b>
-<b class="nc">&nbsp;    private String roomType;</b>
-<b class="nc">&nbsp;    private String roomSpecification;</b>
-<b class="nc">&nbsp;    private int roomRate;</b>
-<b class="fc">&nbsp;    private int roomCount;</b>
+&nbsp;public class RegisterUserDTO {
+<b class="nc">&nbsp;    private String username;</b>
+<b class="nc">&nbsp;    private String email;</b>
+<b class="nc">&nbsp;    private String password;</b>
+<b class="nc">&nbsp;    private String dateOfBirth;</b>
+<b class="nc">&nbsp;    private String phoneNumber;</b>
+<b class="nc">&nbsp;    private String street;</b>
+<b class="nc">&nbsp;    private String city;</b>
+<b class="nc">&nbsp;    private String state;</b>
+&nbsp;
 &nbsp;}
 </code>
 </pre>
@@ -118,7 +118,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
 </div>
 </body>
 </html>

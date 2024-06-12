@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > BookingDetailsDTO</title>
+  <title>Coverage Report > CustomerController</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,10 +19,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.dto</a>
+    <a href="../index.html">org.example.roomrelish.controllers</a>
 </div>
 
-<h1>Coverage Summary for Class: BookingDetailsDTO (org.example.roomrelish.dto)</h1>
+<h1>Coverage Summary for Class: CustomerController (org.example.roomrelish.controllers)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -41,7 +41,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">BookingDetailsDTO</td>
+  <td class="name">CustomerController</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -52,18 +52,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    62.5%
+    35.3%
   </span>
   <span class="absValue">
-    (5/8)
+    (6/17)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    62.5%
+    22.6%
   </span>
   <span class="absValue">
-    (5/8)
+    (19/84)
   </span>
 </td>
 </tr>
@@ -75,24 +75,276 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.dto;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.controllers;
 &nbsp;
-&nbsp;import jakarta.validation.constraints.NotNull;
-&nbsp;import lombok.AllArgsConstructor;
-&nbsp;import lombok.Data;
-&nbsp;import lombok.NoArgsConstructor;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.example.roomrelish.dto.*;
+&nbsp;import org.example.roomrelish.models.Customer;
+&nbsp;import org.example.roomrelish.models.Hotel;
+&nbsp;import org.example.roomrelish.services.AuthService;
+&nbsp;import org.example.roomrelish.services.CustomerService;
+&nbsp;import org.example.roomrelish.services.JwtService;
 &nbsp;import org.jetbrains.annotations.TestOnly;
+&nbsp;import org.springframework.graphql.data.method.annotation.QueryMapping;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;import java.util.List;
 &nbsp;
-<b class="fc">&nbsp;@Data</b>
-<b class="nc">&nbsp;@AllArgsConstructor</b>
-<b class="fc">&nbsp;@NoArgsConstructor</b>
-&nbsp;@TestOnly
-&nbsp;public class BookingDetailsDTO {
-<b class="nc">&nbsp;    private String _customerId;</b>
-<b class="fc">&nbsp;    private String _hotelId;</b>
-<b class="fc">&nbsp;    private String _roomId;</b>
-<b class="fc">&nbsp;    private int customerRoomCount;</b>
-<b class="nc">&nbsp;    private int customerDayCount;</b>
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/v1/customer&quot;)
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class CustomerController {
+&nbsp;
+&nbsp;    private final CustomerService customerService;
+&nbsp;    private final AuthService authService;
+&nbsp;    private final JwtService jwtService;
+<b class="fc">&nbsp;    String errorMessageCustomer = &quot;Customer not found&quot;;</b>
+&nbsp;
+&nbsp;    //demo end point to test the authentication.
+&nbsp;    @GetMapping(&quot;/hello&quot;)
+&nbsp;    @TestOnly
+&nbsp;    public String hello() {
+<b class="nc">&nbsp;        return &quot;Hello World&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @QueryMapping(&quot;users&quot;)
+&nbsp;    @TestOnly
+&nbsp;    public List&lt;Customer&gt; getAllCustomersGraphQL() {
+<b class="nc">&nbsp;        return customerService.getAllCustomers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/customers&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getAllCustomers(){
+<b class="fc">&nbsp;        List&lt;Customer&gt; customers = customerService.getAllCustomers();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(customers);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;            description = &quot;User Registration&quot;,
+&nbsp;            summary = &quot;Registers a new Customer&quot;,
+&nbsp;            responses = {
+&nbsp;                    @ApiResponse(
+&nbsp;                            responseCode = &quot;200&quot;,
+&nbsp;                            description = &quot;User Registration Successful&quot;
+&nbsp;                    ),
+&nbsp;                    @ApiResponse(
+&nbsp;                            responseCode = &quot;400&quot;,
+&nbsp;                            description = &quot;Bad request. The request body is invalid or missing required fields&quot;
+&nbsp;                    )
+&nbsp;            }
+&nbsp;    )
+&nbsp;    @PostMapping(&quot;/register&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; registerCustomer(@RequestBody RegisterUserDTO request) {
+&nbsp;        try{
+<b class="fc">&nbsp;            RegisterRequest registerRequest = authService.getRegisterRequest(request);</b>
+<b class="fc">&nbsp;            AuthResponse response = authService.registerCustomer(registerRequest);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(response);</b>
+<b class="fc">&nbsp;        }catch (Exception ex){</b>
+<b class="fc">&nbsp;            return ResponseEntity.badRequest().body(ex.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Operation(
+&nbsp;            description = &quot;User Authentication&quot;,
+&nbsp;            summary = &quot;Authenticates a Customer&quot;,
+&nbsp;            responses = {
+&nbsp;                    @ApiResponse(
+&nbsp;                            responseCode = &quot;200&quot;,
+&nbsp;                            description = &quot;User Authentication Successful&quot;
+&nbsp;                    ),
+&nbsp;                    @ApiResponse(
+&nbsp;                            responseCode = &quot;400&quot;,
+&nbsp;                            description = &quot;User not found or incorrect credentials.&quot;
+&nbsp;                    )
+&nbsp;            }
+&nbsp;    )
+&nbsp;    @PostMapping(&quot;/login&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; loginUser(@RequestBody LoginRequest loginRequest){
+&nbsp;        try{
+<b class="fc">&nbsp;            AuthResponse response = authService.authenticate(loginRequest);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(response);</b>
+<b class="fc">&nbsp;        }catch (Exception ex){</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @TestOnly
+&nbsp;    // add new card details to the added cards field
+&nbsp;    @PostMapping(&quot;/addCard&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; addCardToUser(@RequestBody CardDTO cardDTO, HttpServletRequest request) {
+&nbsp;        try {
+<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            customerService.addCardToUser(cardDTO, userEmail);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok().build();</b>
+<b class="nc">&nbsp;        } catch (Exception ex) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.badRequest().body(ex.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //update user
+&nbsp;    @Operation(
+&nbsp;            description = &quot;Update Customer Details&quot;,
+&nbsp;            summary = &quot;Updates Customer E-Mail, phone number and password&quot;,
+&nbsp;            responses = {
+&nbsp;                    @ApiResponse(
+&nbsp;                            responseCode = &quot;200&quot;,
+&nbsp;                            description = &quot;Customer details updated successfully&quot;
+&nbsp;                    ),
+&nbsp;                    @ApiResponse(
+&nbsp;                            responseCode = &quot;400&quot;,
+&nbsp;                            description = &quot;Customer is not found&quot;
+&nbsp;                    ),
+&nbsp;                    @ApiResponse(
+&nbsp;                            responseCode = &quot;500&quot;,
+&nbsp;                            description = &quot;Internal Server Error&quot;
+&nbsp;                    )
+&nbsp;            }
+&nbsp;    )
+&nbsp;    @TestOnly
+&nbsp;    @PutMapping(&quot;/update&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateUser(@RequestBody UpdateCustomerDTO updateCustomerDTO, HttpServletRequest request) {
+&nbsp;        try{
+<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            if(customerService.updateCustomer(userEmail, updateCustomerDTO)){</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok().body(&quot;Customer successfully updated&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessageCustomer);</b>
+<b class="nc">&nbsp;        }catch (Exception ex){</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;    //specifically for navbar/ to check weather the user is logged in
+&nbsp;    @TestOnly
+&nbsp;    @GetMapping(&quot;/navbar&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getNavbarDetails(HttpServletRequest request) {
+&nbsp;        try {
+<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            if (userEmail == null || userEmail.isEmpty()) {</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok().body(new NavbarResponse(false, null));</b>
+&nbsp;            }
+<b class="nc">&nbsp;            CustomerProfile customerProfile = customerService.getProfileInfo(userEmail, &quot;navbar&quot;);</b>
+<b class="nc">&nbsp;            if (customerProfile == null) {</b>
+<b class="nc">&nbsp;                return ResponseEntity.badRequest().body(errorMessageCustomer);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return ResponseEntity.ok().body(new NavbarResponse(true, customerProfile));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;An error occurred while processing the request&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    //get profile details for profile page
+&nbsp;    @TestOnly
+&nbsp;    @GetMapping(&quot;/profile-details&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getProfileDetails(HttpServletRequest request) {
+&nbsp;        try{
+<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            CustomerProfile customerProfile = customerService.getProfileInfo(userEmail, &quot;profile&quot;);</b>
+<b class="nc">&nbsp;            if (customerProfile == null) {</b>
+<b class="nc">&nbsp;                return ResponseEntity.badRequest().body(errorMessageCustomer);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return ResponseEntity.ok().body(customerProfile);</b>
+<b class="nc">&nbsp;        }catch (Exception e){</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    //get profile picture
+&nbsp;    @TestOnly
+&nbsp;    @GetMapping(&quot;/profilePicture&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getProfilePicture(HttpServletRequest request) {
+&nbsp;        try{
+<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            String profilePicture = customerService.getProfilePicture(userEmail);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok().body(profilePicture);</b>
+<b class="nc">&nbsp;        }catch (Exception ex){</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    // add or update profile or cover picture
+&nbsp;    @TestOnly
+&nbsp;    @PostMapping(&quot;/addProfilePicture&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; addOrUpdateProfilePhoto(@RequestParam(&quot;file&quot;) MultipartFile file, @RequestParam String type, HttpServletRequest request) {
+&nbsp;        try{
+<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            String fileName = file.getOriginalFilename();</b>
+<b class="nc">&nbsp;            if(fileName == null || fileName.isEmpty()){</b>
+<b class="nc">&nbsp;                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;Invalid image format&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            boolean success = customerService.uploadImage(userEmail, type, fileName);</b>
+<b class="nc">&nbsp;            if(success){</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok(&quot;Image uploaded successfully&quot;);</b>
+&nbsp;            }else{
+<b class="nc">&nbsp;                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;An error occurred while processing the request&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        }catch (Exception e){</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    // to view list of favourite hotels
+&nbsp;    @TestOnly
+&nbsp;    @GetMapping(&quot;/favouriteHotels&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getFavouriteHotels(HttpServletRequest request) {
+&nbsp;        try{
+<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            List&lt;Hotel&gt; favouriteHotels = customerService.getFavouriteHotels(userEmail);</b>
+<b class="nc">&nbsp;            if(favouriteHotels.isEmpty())</b>
+<b class="nc">&nbsp;                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Hotels not found&quot;);</b>
+<b class="nc">&nbsp;            else return ResponseEntity.ok(favouriteHotels);</b>
+<b class="nc">&nbsp;        }catch (Exception ex){</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    // to add a hotel to favourite hotels if it is present in hotel collection
+&nbsp;    @TestOnly
+&nbsp;    @PostMapping(&quot;/favouriteHotels/add&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; addFavouriteHotel(@RequestParam String hotelId,HttpServletRequest request) {
+&nbsp;        try{
+<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            customerService.addFavouriteHotel(userEmail, hotelId);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok().body(&quot;Favourite Hotel added successfully&quot;);</b>
+<b class="nc">&nbsp;        }catch (Exception exception){</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    // to remove a hotel from favourite hotels
+&nbsp;    @TestOnly
+&nbsp;    @DeleteMapping(&quot;/favouriteHotels/delete&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; deleteFavouriteHotel(@RequestParam String hotelId,HttpServletRequest request) {
+&nbsp;        try{
+<b class="nc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            customerService.deleteFavouriteHotel(userEmail, hotelId);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok().body(&quot;Favourite Hotel deleted successfully&quot;);</b>
+<b class="nc">&nbsp;        }catch (Exception exception){</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    // recent searches
+&nbsp;    @GetMapping(&quot;/recent&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getRecentHotels(HttpServletRequest request) {
+&nbsp;        try{
+<b class="fc">&nbsp;            String userEmail = extractUserEmailFromRequest(request);</b>
+<b class="nc">&nbsp;            List&lt;Hotel&gt; recentHotels = customerService.findRecentHotels(userEmail);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok().body(recentHotels);</b>
+<b class="fc">&nbsp;        }catch (Exception e){</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @TestOnly
+&nbsp;    //utility function to get JWT token form the request
+&nbsp;    public String extractUserEmailFromRequest(HttpServletRequest request) {
+<b class="fc">&nbsp;        final String authHeader = request.getHeader(&quot;Authorization&quot;);</b>
+<b class="fc">&nbsp;        if (authHeader == null || !authHeader.startsWith(&quot;Bearer &quot;)) {</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Unauthorized&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        final String jwtToken = authHeader.substring(7);</b>
+<b class="nc">&nbsp;        return jwtService.extractUsername(jwtToken);</b>
+&nbsp;    }
+&nbsp;
 &nbsp;}
 </code>
 </pre>
@@ -117,7 +369,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
 </div>
 </body>
 </html>

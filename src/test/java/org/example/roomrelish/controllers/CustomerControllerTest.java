@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.example.roomrelish.dto.AuthResponse;
 import org.example.roomrelish.dto.LoginRequest;
 import org.example.roomrelish.dto.RegisterRequest;
+import org.example.roomrelish.dto.RegisterUserDTO;
 import org.example.roomrelish.models.Customer;
 import org.example.roomrelish.models.Hotel;
 import org.example.roomrelish.services.AuthService;
@@ -55,8 +56,9 @@ class CustomerControllerTest {
     @Test
     void registerCustomer_Success(){
         RegisterRequest request = new RegisterRequest();
+        RegisterUserDTO registerUserDTO = new RegisterUserDTO();
         when(authService.registerCustomer(request)).thenReturn(new AuthResponse());
-        ResponseEntity<?> response = customerController.registerCustomer(request);
+        ResponseEntity<?> response = customerController.registerCustomer(registerUserDTO);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 

@@ -24,6 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final HotelRepository hotelRepository;
+    String errorMessageCustomer = "Customer not found";
 
     @Override
     public List<Customer> getAllCustomers() {
@@ -35,7 +36,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void addCardToUser(CardDTO cardDTO, String userEmail) {
         Customer customer = customerRepository.findByEmail(userEmail).orElse(null);
         if (customer == null) {
-            throw new IllegalArgumentException("Customer not found");
+            throw new IllegalArgumentException(errorMessageCustomer);
         }
         Card card = new Card();
         card.setCardNumber(cardDTO.getCardNumber());
@@ -119,7 +120,7 @@ public class CustomerServiceImpl implements CustomerService {
         try {
             Customer customer = customerRepository.findByEmail(userEmail).orElse(null);
             if (customer == null) {
-                throw new IllegalArgumentException("Customer not found");
+                throw new IllegalArgumentException(errorMessageCustomer);
             }
             if (type.equals("profile")) {
                 customer.setProfilePicture("http://localhost:8081/profiles/" + fileName);
@@ -138,7 +139,7 @@ public class CustomerServiceImpl implements CustomerService {
         try {
             Customer customer = customerRepository.findByEmail(userEmail).orElse(null);
             if (customer == null) {
-                throw new IllegalArgumentException("Customer not found");
+                throw new IllegalArgumentException(errorMessageCustomer);
             }
             List<String> hotelIds = customer.getFavouriteHotels();
             if(hotelIds == null) {
@@ -158,7 +159,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void addFavouriteHotel(String userEmail, String hotelId) {
         Customer customer = customerRepository.findByEmail(userEmail).orElse(null);
         if (customer == null) {
-            throw new IllegalArgumentException("Customer not found");
+            throw new IllegalArgumentException(errorMessageCustomer);
         }
         List<String> favouriteHotelIds = customer.getFavouriteHotels();
         if (!favouriteHotelIds.contains(hotelId)) {
@@ -172,7 +173,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void deleteFavouriteHotel(String userEmail, String hotelId) {
         Customer customer = customerRepository.findByEmail(userEmail).orElse(null);
         if (customer == null) {
-            throw new IllegalArgumentException("Customer not found");
+            throw new IllegalArgumentException(errorMessageCustomer);
         }
         List<String> favouriteHotelIds = customer.getFavouriteHotels();
         if (favouriteHotelIds != null && !favouriteHotelIds.isEmpty() && favouriteHotelIds.contains(hotelId)) {
@@ -187,7 +188,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Hotel> findRecentHotels(String userEmail) {
         Customer customer = customerRepository.findByEmail(userEmail).orElse(null);
         if (customer == null) {
-            throw new IllegalArgumentException("Customer not found");
+            throw new IllegalArgumentException(errorMessageCustomer);
         }
         List<String> recentHotelIds = customer.getRecentVisitsOfHotels();
         Collections.reverse(recentHotelIds);

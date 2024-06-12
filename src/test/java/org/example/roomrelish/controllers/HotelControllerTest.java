@@ -42,7 +42,7 @@ public class HotelControllerTest {
 
 
     @Test
-    public void testCreateHotel_Success() {
+    void testCreateHotel_Success() {
         Hotel hotel = new Hotel();
         HotelDTO hotelDTO = new HotelDTO();
         when(hotelService.createHotel(hotelDTO)).thenReturn(hotel);
@@ -54,7 +54,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testCreateHotel_Exception() {
+    void testCreateHotel_Exception() {
         when(hotelService.createHotel(null)).thenThrow(new IllegalArgumentException("Invalid City name"));
         ResponseEntity<?> response = hotelController.creteHotel(null);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -62,7 +62,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testUpdateHotel_Success() {
+    void testUpdateHotel_Success() {
         Hotel hotel = new Hotel();
         HotelDTO hotelDTO = new HotelDTO();
         when(hotelService.updateHotel("1", hotelDTO)).thenReturn(hotel);
@@ -72,7 +72,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testUpdateHotel_Exception() {
+    void testUpdateHotel_Exception() {
         Hotel hotel = new Hotel();
         HotelDTO hotelDTO = new HotelDTO();
         when(hotelService.updateHotel("1", hotelDTO)).thenThrow(new IllegalArgumentException("Invalid City name"));
@@ -82,7 +82,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testDeleteHotel_Success() {
+    void testDeleteHotel_Success() {
         Hotel hotel = new Hotel();
         doNothing().when(hotelService).deleteHotel("1");
         ResponseEntity<?> response = hotelController.deleteHotel("1");
@@ -91,7 +91,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testDeleteHotel_Exception() {
+    void testDeleteHotel_Exception() {
         doThrow(new IllegalArgumentException("Hotel not found")).when(hotelService).deleteHotel("1");
         ResponseEntity<?> response = hotelController.deleteHotel("1");
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -99,7 +99,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testGetAllReviews_Success() {
+    void testGetAllReviews_Success() {
         String hotelId = "1";
         List<ReviewResponse> reviews = new ArrayList<>();
         when(hotelService.getReviews(hotelId)).thenReturn(reviews);
@@ -109,7 +109,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testGetAllReviews_Exception() {
+    void testGetAllReviews_Exception() {
         String hotelId = "1";
         when(hotelService.getReviews(hotelId)).thenThrow(new IllegalArgumentException("Hotel not found"));
         ResponseEntity<?> response = hotelController.getAllReviews(hotelId);
@@ -118,7 +118,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testAddGuestReview_Success() {
+    void testAddGuestReview_Success() {
         ReviewDTO reviewDTO = new ReviewDTO();
         when(hotelService.addReview("1", reviewDTO)).thenReturn(new GuestReview());
         ResponseEntity<?> response = hotelController.addReview("1", reviewDTO);
@@ -126,7 +126,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testAddGuestReview_Exception() {
+    void testAddGuestReview_Exception() {
         when(hotelService.addReview(null, null)).thenThrow(new IllegalArgumentException("Invalid City name"));
         ResponseEntity<?> response = hotelController.addReview(null, null);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -134,7 +134,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testDeleteGuestReview_Success() {
+    void testDeleteGuestReview_Success() {
         String hotelId = "hotelId";
         String reviewId = "reviewId";
         doNothing().when(hotelService).deleteReview(hotelId, reviewId);
@@ -143,7 +143,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testDeleteGuestReview_Exception() {
+    void testDeleteGuestReview_Exception() {
         String hotelId = "hotelId";
         String reviewId = "reviewId";
         String errorMessage = "Hotel not found";
@@ -160,7 +160,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testAddRoom_Success() {
+    void testAddRoom_Success() {
         String hotelId = "hotelId";
         RoomDTO roomDTO = new RoomDTO();
         when(hotelService.addRoom(hotelId, roomDTO)).thenReturn(new Room());
@@ -169,7 +169,7 @@ public class HotelControllerTest {
     }
 
     @Test
-    public void testAddRoom_Exception() {
+    void testAddRoom_Exception() {
         String hotelId = "hotelId";
         RoomDTO roomDTO = new RoomDTO();
         when(hotelService.addRoom(hotelId, roomDTO)).thenThrow(new IllegalArgumentException("Invalid City name"));

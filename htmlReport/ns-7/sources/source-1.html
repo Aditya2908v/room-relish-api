@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > CustomerRepository</title>
+  <title>Coverage Report > Booking</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,27 +19,80 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.repository</a>
+    <a href="../index.html">org.example.roomrelish.models</a>
 </div>
 
-<h1>Coverage Summary for Class: CustomerRepository (org.example.roomrelish.repository)</h1>
+<h1>Coverage Summary for Class: Booking (org.example.roomrelish.models)</h1>
 
 <table class="coverageStats">
 
 <tr>
   <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Booking</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
 </tr>
   <tr>
-    <td class="name">CustomerRepository$MockitoMock$0KTFLFqF</td>
-  </tr>
-  <tr>
-    <td class="name">CustomerRepository$MockitoMock$0KTFLFqF$auxiliary$I7kR7Tgz</td>
-  </tr>
-  <tr>
-    <td class="name">CustomerRepository$MockitoMock$0KTFLFqF$auxiliary$yoMPpXn9</td>
+    <td class="name">Booking$BookingBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
   </tr>
 <tr>
   <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
 </tr>
 </table>
 
@@ -48,18 +101,35 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.repository;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.models;
 &nbsp;
-&nbsp;import org.example.roomrelish.models.Customer;
+&nbsp;import lombok.*;
 &nbsp;import org.jetbrains.annotations.TestOnly;
-&nbsp;import org.springframework.data.mongodb.repository.MongoRepository;
+&nbsp;import org.springframework.data.annotation.Id;
+&nbsp;import org.springframework.data.mongodb.core.mapping.Document;
 &nbsp;
-&nbsp;import java.util.Optional;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.Date;
 &nbsp;
-&nbsp;public interface CustomerRepository extends MongoRepository&lt;Customer, String&gt; {
-&nbsp;    Optional&lt;Customer&gt; findByEmail(String email);
+&nbsp;@TestOnly
+<b class="fc">&nbsp;@Data</b>
+<b class="fc">&nbsp;@NoArgsConstructor</b>
+<b class="fc">&nbsp;@AllArgsConstructor</b>
+&nbsp;@Document(collection = &quot;bookings&quot;)
+<b class="fc">&nbsp;@Builder</b>
+&nbsp;public class Booking {
+&nbsp;    @Id
+<b class="fc">&nbsp;    private String id;</b>
+<b class="fc">&nbsp;    private String _userId;</b>
+<b class="fc">&nbsp;    private String _hotelId;</b>
+<b class="fc">&nbsp;    private String _roomId;</b>
+<b class="fc">&nbsp;    private int numOfRooms;</b>
+<b class="fc">&nbsp;    private int numOfDays;</b>
+<b class="fc">&nbsp;    private double totalAmount;</b>
+<b class="fc">&nbsp;    private double gstOfTotalAmount;</b>
+<b class="fc">&nbsp;    private LocalDate checkInDate;</b>
+<b class="fc">&nbsp;    private LocalDate checkOutDate;</b>
 &nbsp;
-&nbsp;    Optional&lt;Customer&gt; findByPhoneNumber(String phoneNumber);
 &nbsp;}
 </code>
 </pre>
@@ -84,7 +154,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
 </div>
 </body>
 </html>

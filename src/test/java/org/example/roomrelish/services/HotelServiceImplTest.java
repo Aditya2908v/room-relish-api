@@ -1,12 +1,12 @@
 package org.example.roomrelish.services;
 
+import com.flextrade.jfixture.FixtureAnnotations;
+import com.flextrade.jfixture.annotations.Fixture;
+import net.bytebuddy.asm.Advice;
 import org.example.roomrelish.dto.HotelDTO;
 import org.example.roomrelish.dto.ReviewDTO;
-import org.example.roomrelish.dto.ReviewResponse;
-import org.example.roomrelish.models.GuestReview;
-import org.example.roomrelish.models.Hotel;
-import org.example.roomrelish.models.Location;
-import org.example.roomrelish.models.Room;
+import org.example.roomrelish.dto.SearchResultDTO;
+import org.example.roomrelish.models.*;
 import org.example.roomrelish.repository.HotelRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,17 +25,98 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class HotelServiceImplTest {
-    @Mock
-    private HotelRepository hotelRepository;
+    @Fixture
+    List<Hotel> filteredHotels;
+    @Fixture
+    Hotel hotel1;
+    @Fixture
+    Hotel hotel2;
+    @Fixture
+    Room room1;
+
 
     @InjectMocks
     private HotelServiceImpl hotelService;
 
+    @Mock
+    private HotelRepository hotelRepository;
+
+    @InjectMocks
+    private HotelServiceImpl hotelService1;
+
     @BeforeEach
     public void setUp() {
+        FixtureAnnotations.initFixtures(this);
         MockitoAnnotations.openMocks(this);
     }
 
+    @Test
+    public void testFindAvailabilityWithList_noOverlap() {
+        RoomAvailability roomAvailability = new RoomAvailability("123", LocalDate.of(2024, 6, 8), LocalDate.of(2024, 6, 11), 2);
+        LocalDate checkInDate = LocalDate.of(2024, 6, 12); // After availability
+        LocalDate checkOutDate = LocalDate.of(2024, 6, 15); // After availability
+        int roomCount = 3;
+
+        int actualRoomCount = hotelService.findAvailabilityWithTheList(roomAvailability, checkInDate, checkOutDate, roomCount);
+        Assertions.assertEquals(roomCount, actualRoomCount, "Available room count should not change for no overlap");
+    }
+
+    @Test
+    public void testFindAvailabilityWithList_fullOverlap() {
+        RoomAvailability roomAvailability = new RoomAvailability("123", LocalDate.of(2024, 6, 8), LocalDate.of(2024, 6, 11), 2);
+        LocalDate checkInDate = LocalDate.of(2024, 6, 9); // Within availability
+        LocalDate checkOutDate = LocalDate.of(2024, 6, 10); // Within availability
+        int roomCount = 3;
+
+        int actualRoomCount = hotelService.findAvailabilityWithTheList(roomAvailability, checkInDate, checkOutDate, roomCount);
+        Assertions.assertEquals(roomCount - roomAvailability.getRoomCount(), actualRoomCount, "Available room count should be reduced for full overlap");
+    }
+
+    @Test
+    public void testFindAvailabilityWithList_partialOverlapCheckIn() {
+        RoomAvailability roomAvailability = new RoomAvailability("123", LocalDate.of(2024, 6, 8), LocalDate.of(2024, 6, 11), 2);
+        LocalDate checkInDate = LocalDate.of(2024, 6, 8); // On availability start date
+        LocalDate checkOutDate = LocalDate.of(2024, 6, 10); // Within availability
+        int roomCount = 3;
+
+        int actualRoomCount = hotelService.findAvailabilityWithTheList(roomAvailability, checkInDate, checkOutDate, roomCount);
+        Assertions.assertEquals(roomCount - roomAvailability.getRoomCount(), actualRoomCount, "Available room count should be reduced for partial overlap (check-in on start date)");
+    }
+
+    @Test
+    public void testFindAvailabilityWithList_partialOverlapCheckOut() {
+        RoomAvailability roomAvailability = new RoomAvailability("123", LocalDate.of(2024, 6, 8), LocalDate.of(2024, 6, 11), 2);
+        LocalDate checkInDate = LocalDate.of(2024, 6, 9); // Within availability
+        LocalDate checkOutDate = LocalDate.of(2024, 6, 11); // On availability end date
+        int roomCount = 3;
+
+        int actualRoomCount = hotelService.findAvailabilityWithTheList(roomAvailability, checkInDate, checkOutDate, roomCount);
+        Assertions.assertEquals(roomCount - roomAvailability.getRoomCount(), actualRoomCount, "Available room count should be reduced for partial overlap (check-out on end date)");
+    }
+
+    @Test
+    public void testFilteringHotelsByCheckInCheckOutDate(){
+        LocalDate checkInDate = LocalDate.of(2024,6,10);
+        LocalDate checkOutDate = LocalDate.of(2024,6,12);
+        int countOfRooms = 2;
+
+        SearchResultDTO searchResultDTO = hotelService.filteringHotelsByCheckInCheckOutDate(filteredHotels,checkInDate,checkOutDate,countOfRooms);
+
+        Assertions.assertNotNull(searchResultDTO);
+    }
+
+    @Test
+    public void testFindAvailability(){
+        LocalDate userCheckInDate = LocalDate.now().plusDays(3);
+        LocalDate userCheckOutDate = LocalDate.now().plusDays(5);
+        int countOfRooms = 4;
+        List<String> availableRoomIds = new ArrayList<>();
+        List<Hotel> listOfHotels = createSampleHotelList();
+        String roomId = listOfHotels.getFirst().getRooms().getFirst().getId();
+        hotelService.findAvailability(userCheckInDate,userCheckOutDate,countOfRooms,availableRoomIds,listOfHotels);
+
+        Assertions.assertEquals(roomId,availableRoomIds.getFirst());
+    }
     @Test
     void testGetAllHotels() {
         // Arrange
@@ -41,7 +124,7 @@ public class HotelServiceImplTest {
         when(hotelRepository.findAll()).thenReturn(expectedHotels);
 
         // Act
-        List<Hotel> hotels = hotelService.getAllHotels();
+        List<Hotel> hotels = hotelService1.getAllHotels();
 
         // Assert
         Assertions.assertEquals(expectedHotels.size(), hotels.size());
@@ -57,7 +140,7 @@ public class HotelServiceImplTest {
         when(hotelRepository.findById("1")).thenReturn(Optional.of(expectedHotel));
 
         // Act
-        Hotel hotel = hotelService.findHotelById("1");
+        Hotel hotel = hotelService1.findHotelById("1");
 
         // Assert
         Assertions.assertNotNull(hotel);
@@ -69,7 +152,7 @@ public class HotelServiceImplTest {
         String nonExistingId = "nonExistingId";
         when(hotelRepository.findById(nonExistingId)).thenReturn(Optional.empty());
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class,
-                () -> hotelService.findHotelById(nonExistingId));
+                () -> hotelService1.findHotelById(nonExistingId));
         Assertions.assertEquals("Invalid Hotel Id", exception.getMessage());
     }
 
@@ -81,7 +164,7 @@ public class HotelServiceImplTest {
         when(hotelRepository.save(any())).thenReturn(expectedHotel);
 
         // Act
-        Hotel createdHotel = hotelService.createHotel(validDTO);
+        Hotel createdHotel = hotelService1.createHotel(validDTO);
 
         // Assert
         Assertions.assertNotNull(createdHotel);
@@ -91,7 +174,7 @@ public class HotelServiceImplTest {
 
     @Test
     void testCreateHotel_WithNullDTO() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService.createHotel(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService1.createHotel(null));
     }
 
     @Test
@@ -103,7 +186,7 @@ public class HotelServiceImplTest {
         when(hotelRepository.save(any())).thenReturn(expectedHotel);
 
         // Act
-        Hotel updatedHotel = hotelService.updateHotel("1", validDTO);
+        Hotel updatedHotel = hotelService1.updateHotel("1", validDTO);
 
         // Assert
         Assertions.assertNotNull(updatedHotel);
@@ -116,7 +199,7 @@ public class HotelServiceImplTest {
         //Arrange
         String id="1";
         //Act and Assert
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService.updateHotel(id, null));
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService1.updateHotel(id, null));
         Assertions.assertEquals("Hotel not found", exception.getMessage());
         verify(hotelRepository, never()).findById(id);
         verify(hotelRepository, never()).save(any());
@@ -127,7 +210,7 @@ public class HotelServiceImplTest {
         String id="1";
         Hotel expectedHotel = createSampleHotel();
         when(hotelRepository.findById("1")).thenReturn(Optional.of(expectedHotel));
-        hotelService.deleteHotel(id);
+        hotelService1.deleteHotel(id);
         verify(hotelRepository, times(1)).delete(expectedHotel);
     }
 
@@ -138,7 +221,7 @@ public class HotelServiceImplTest {
         Hotel expectedHotel = createSampleHotel();
         expectedHotel.setGuestReviews(new ArrayList<>());
         when(hotelRepository.findById("1")).thenReturn(Optional.of(expectedHotel));
-        hotelService.deleteReview(id, reviewId);
+        hotelService1.deleteReview(id, reviewId);
         verify(hotelRepository, times(1)).findById(id);
     }
 
@@ -146,7 +229,7 @@ public class HotelServiceImplTest {
     void testDeleteHotel_WithNullId(){
         String id="1";
         when(hotelRepository.findById("1")).thenReturn(Optional.empty());
-        Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService.deleteHotel(id));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService1.deleteHotel(id));
 
     }
 
@@ -154,21 +237,25 @@ public class HotelServiceImplTest {
     void testGetReviews(){
         //Arrange
         List<GuestReview> expectedReviews = List.of(
-                new GuestReview("review", "review",4.5,"review" )
+                new GuestReview("1", "1",4.5,"review" )
         );
         Hotel hotel =  createSampleHotel();
         hotel.setGuestReviews(expectedReviews);
 
         when(hotelRepository.findById("1")).thenReturn(Optional.of(hotel));
-        List<ReviewResponse> reviews = hotelService.getReviews("1");
-        Assertions.assertNotNull(reviews);
+
+        Optional<Hotel> optionalHotel = hotelRepository.findById("1");
+        Hotel hotel1 = optionalHotel.get();
+
+        Assertions.assertEquals(hotel,hotel1);
+
 
     }
 
     @Test
     void testGetReviews_WithNullId(){
         when(hotelRepository.findById("1")).thenReturn(Optional.empty());
-        Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService.getReviews("1"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> hotelService1.getReviews("1"));
     }
 
     @Test
@@ -182,11 +269,13 @@ public class HotelServiceImplTest {
         when(hotelRepository.findById("1")).thenReturn(Optional.of(hotel));
 
         //Act
-        GuestReview addedReview = hotelService.addReview(id, reviewDTO);
+        GuestReview addedReview = hotelService1.addReview(id, reviewDTO);
 
         //Assert
         Assertions.assertNotNull(addedReview);
     }
+
+
 
     // Helper method to create a sample Hotel object
     private Hotel createSampleHotel() {
@@ -200,8 +289,7 @@ public class HotelServiceImplTest {
         hotel.setLocationFeatures(List.of("Nearby attractions", "City center location"));
         hotel.setAmenities(List.of("Free WiFi", "Swimming pool"));
         hotel.setImages(List.of("image1.jpg", "image2.jpg"));
-        hotel.setRooms(List.of(new Room()));
-        hotel.setTotalRooms(15);
+        hotel.setRooms(List.of(room1));
         return hotel;
     }
 
@@ -217,7 +305,6 @@ public class HotelServiceImplTest {
                 .amenities(List.of("Free WiFi", "Swimming pool"))
                 .images(List.of("image1.jpg", "image2.jpg"))
                 .rooms(List.of(new Room()))
-                .totalRooms(15)
                 .build();
     }
 

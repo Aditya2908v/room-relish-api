@@ -1,22 +1,17 @@
 package org.example.roomrelish.services;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.bson.types.ObjectId;
 import org.example.roomrelish.dto.*;
-import org.example.roomrelish.models.Customer;
-import org.example.roomrelish.models.GuestReview;
-import org.example.roomrelish.models.Hotel;
-import org.example.roomrelish.models.Room;
+import org.example.roomrelish.models.*;
 import org.example.roomrelish.repository.CustomerRepository;
 import org.example.roomrelish.repository.HotelRepository;
+import org.example.roomrelish.repository.RoomRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +20,9 @@ public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
     private final CustomerRepository customerRepository;
+    private final RoomRepository roomRepository;
+    String hotelErrorMessage = "Hotel not found";
+
 
     @Override
     public List<Hotel> getAllHotels() {
@@ -51,11 +49,11 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public Hotel updateHotel(String id, HotelDTO hotelDTO) {
         if (hotelDTO == null) {
-            throw new IllegalArgumentException("Hotel not found");
+            throw new IllegalArgumentException(hotelErrorMessage);
         }
 
         Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+                .orElseThrow(() -> new IllegalArgumentException(hotelErrorMessage));
 
         setHotel(hotel, hotelDTO);
 
@@ -67,7 +65,7 @@ public class HotelServiceImpl implements HotelService {
     public void deleteHotel(String id) {
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         if(hotel == null)
-            throw new IllegalArgumentException("Hotel not found");
+            throw new IllegalArgumentException(hotelErrorMessage);
         hotelRepository.delete(hotel);
     }
 
@@ -75,7 +73,7 @@ public class HotelServiceImpl implements HotelService {
     public List<ReviewResponse> getReviews(String id) {
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         if(hotel == null)
-            throw new IllegalArgumentException("Hotel not found");
+            throw new IllegalArgumentException(hotelErrorMessage);
         List<GuestReview> guestReviews = hotel.getGuestReviews();
         List<ReviewResponse> reviewResponses = new ArrayList<>();
         for (GuestReview guestReview : guestReviews) {
@@ -93,7 +91,7 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public GuestReview addReview(String id, ReviewDTO reviewDTO) {
         Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+                .orElseThrow(() -> new IllegalArgumentException(hotelErrorMessage));
         GuestReview guestReview = new GuestReview();
         guestReview.setUser(reviewDTO.getUserid());
         guestReview.setGuestRating(reviewDTO.getRating());
@@ -107,7 +105,7 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public void deleteReview(String hotelId, String reviewId) {
         Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+                .orElseThrow(() -> new IllegalArgumentException(hotelErrorMessage));
 
         List<GuestReview> guestReviews = hotel.getGuestReviews();
         Optional<GuestReview> reviewToRemove = guestReviews.stream()
@@ -126,12 +124,12 @@ public class HotelServiceImpl implements HotelService {
     public Room addRoom(String id, RoomDTO roomDTO) {
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         if(hotel == null)
-            throw new IllegalArgumentException("Hotel not found");
+            throw new IllegalArgumentException(hotelErrorMessage);
         Room room = new Room();
         room.setId(new ObjectId().toString());
         room.setRoomType(roomDTO.getRoomType());
         room.setRoomSpecification(roomDTO.getRoomSpecification());
-        room.setRoomCount(roomDTO.getRoomCount());
+        room.setRoomCountBasic(roomDTO.getRoomCount());
         room.setRoomRate(roomDTO.getRoomRate());
         List<Room> rooms = hotel.getRooms();
         rooms.add(room);
@@ -139,9 +137,9 @@ public class HotelServiceImpl implements HotelService {
         return room;
     }
 
-    public List<Hotel> findHotels(String cityName,
-                                   Date checkInDate,
-                                   Date checkOutDate,
+    public SearchResultDTO findHotels(String cityName,
+                                   LocalDate checkInDate,
+                                   LocalDate checkOutDate,
                                    int countOfRooms,
                                    int priceRangeMax,
                                    int priceRangeMin,
@@ -149,31 +147,95 @@ public class HotelServiceImpl implements HotelService {
                                    List<String> amenities) {
         try {
             List<Hotel> filteredHotels = hotelRepository.findByLocationCityName(cityName);
-            filteredHotels = filteredHotels.stream().filter(hotel -> hotel.getTotalRooms()>countOfRooms).collect(Collectors.toList());
-           //System.out.println(rating+" "+cityName+" "+priceRangeMax+" "+ priceRangeMin+" "+ countOfRooms);
-            if(amenities!=null){
-             //   System.out.println("Inside amenities filter");
-                filteredHotels = filteredHotels.stream().filter(hotel-> new HashSet<>(hotel.getAmenities()).containsAll(amenities)).collect(Collectors.toList());
-            }
-            if((priceRangeMax!=0)&&(priceRangeMin!=0)){
-               // System.out.println("Inside price range filter");
-                Map<Hotel, List<Room>> hotelRoomMap = filteredHotels.stream()
-                        .flatMap(hotel -> hotel.getRooms().stream()
-                                .filter(room -> room.getRoomRate() <= priceRangeMax && room.getRoomRate() >= priceRangeMin)
-                                .map(room -> Map.entry(hotel, room)))
-                        .collect(Collectors.groupingBy(Map.Entry::getKey,
-                                Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
-                filteredHotels = new ArrayList<>(hotelRoomMap.keySet());
+            filteredHotels = filteringHotelsByAmenities(filteredHotels,amenities);
 
-            }
-            if(rating>0){
-                //System.out.println("Inside rating filter");
-                filteredHotels=filteredHotels.stream().filter(hotel -> hotel.getRating()>rating).collect(Collectors.toList());
-            }
-            return filteredHotels;
+        //filteredHotels = filteringHotelsByPriceRange(filteredHotels,priceRangeMax,priceRangeMin);
+
+            filteredHotels = filteringHotelsByRating(filteredHotels,rating);
+
+            return filteringHotelsByCheckInCheckOutDate(filteredHotels,checkInDate,checkOutDate,countOfRooms);
+
+
         } catch (Exception e) {
             throw new IllegalArgumentException("An error occurred while searching for hotels.", e);
         }
+    }
+
+   public SearchResultDTO filteringHotelsByCheckInCheckOutDate(List<Hotel> filteredHotels,LocalDate checkInDate,LocalDate checkOutDate,int countOfRooms) {
+
+        List<String> availableRoomIds = new ArrayList<>();
+        if((checkInDate!=null)&&(checkOutDate!=null)){
+              findAvailability(checkInDate,checkOutDate,countOfRooms,availableRoomIds,filteredHotels);
+        }
+        LinkedHashSet<String> set = new LinkedHashSet<>(availableRoomIds);
+        ArrayList<String> availableRoomIdsList = new ArrayList<>(set);
+        SearchResultDTO searchResultDTO = new SearchResultDTO();
+        searchResultDTO.setHotels(filteredHotels);
+        searchResultDTO.setRoomIds(availableRoomIdsList);
+       System.out.println(availableRoomIdsList.size());
+        return searchResultDTO;
+    }
+
+    public void findAvailability(LocalDate userCheckInDate,LocalDate userCheckOutDate,int countOfRooms,List<String> availableRoomIds,List<Hotel> filteredHotels){
+        availableRoomIds.addAll(
+                filteredHotels.stream().flatMap(hotel -> hotel.getRooms().stream()).filter(room -> {
+                            int initialRoomCount = room.getRoomCountBasic();
+                            int roomCount;
+                            if (room.getRoomAvailabilityList() != null) {
+                                roomCount = room.getRoomAvailabilityList().stream()
+                                        .reduce(initialRoomCount,
+                                                (result, availability) -> findAvailabilityWithTheList(availability, userCheckInDate, userCheckOutDate, result),
+                                                Integer::sum);
+                            } else {
+                                roomCount = initialRoomCount;
+                            }
+                            return room.getRoomAvailabilityList() == null || roomCount > countOfRooms;
+                        }).map(Room::getId).toList()
+        );
+    }
+
+    public int findAvailabilityWithTheList(RoomAvailability availability,LocalDate userCheckInDate,LocalDate userCheckOutDate,int roomCount) {
+        if(((userCheckInDate.isBefore(availability.getCheckOutDate()))||(userCheckInDate.isEqual(availability.getCheckOutDate())))
+                &&((userCheckOutDate.isAfter(availability.getCheckInDate()))||(userCheckInDate.isEqual(availability.getCheckInDate())))){
+                roomCount=roomCount-availability.getRoomCount();
+        }
+        return roomCount;
+    }
+
+
+    private List<Hotel> filteringHotelsByRating(List<Hotel> filteredHotels, double rating) {
+        if(rating>0){
+            System.out.println("Inside rating filter");
+            filteredHotels=filteredHotels.stream().filter(hotel -> hotel.getRating()>rating).collect(Collectors.toList());
+        }
+        System.out.println(filteredHotels.size());
+        return filteredHotels;
+    }
+
+//    private List<Hotel> filteringHotelsByPriceRange(List<Hotel> filteredHotels, int priceRangeMax, int priceRangeMin) {
+//        System.out.println("inside price range filter");
+//        if((priceRangeMax!=0)&&(priceRangeMin!=0)){
+//            System.out.println("price is not null"+priceRangeMax+" "+priceRangeMin);
+//            Map<Hotel, List<Room>> hotelRoomMap = filteredHotels.stream()
+//                    .flatMap(hotel -> hotel.getRooms().stream()
+//                            .filter(room -> room.getRoomRate() <= priceRangeMax && room.getRoomRate() >= priceRangeMin)
+//                            .map(room -> Map.entry(hotel, room)))
+//                            .collect(Collectors.groupingBy(Map.Entry::getKey,
+//                            Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
+//            System.out.println(hotelRoomMap);
+//            filteredHotels = new ArrayList<>(hotelRoomMap.keySet());
+//        }
+//        System.out.println(filteredHotels.size());
+//        return filteredHotels;
+//    }
+
+    private List<Hotel> filteringHotelsByAmenities(List<Hotel> filteredHotels,List<String> amenities) {
+        System.out.println("Inside amenities filter");
+        if(amenities!=null){
+            filteredHotels = filteredHotels.stream().filter(hotel-> new HashSet<>(hotel.getAmenities()).containsAll(amenities)).toList();
+        }
+        System.out.println(filteredHotels.size());
+        return filteredHotels;
     }
 
 
@@ -182,17 +244,16 @@ public class HotelServiceImpl implements HotelService {
         hotel.setHotelName(hotelDTO.getHotelName());
         hotel.setHotelType(hotelDTO.getHotelType());
         hotel.setLocation(hotelDTO.getLocation());
+        hotel.setRating(hotelDTO.getRating());
+        hotel.setOverallReview(hotelDTO.getOverallReview());
+        hotel.setNumReviews(hotel.getNumReviews());
         hotel.setPriceStartingFrom(hotelDTO.getPriceStartingFrom());
         hotel.setOverview(hotelDTO.getOverview());
         hotel.setLocationFeatures(hotelDTO.getLocationFeatures());
         hotel.setAmenities(hotelDTO.getAmenities());
         hotel.setImages(hotelDTO.getImages());
         hotel.setRooms(hotelDTO.getRooms());
-        int totalRooms=0;
-        for(Room room:hotelDTO.getRooms()){
-            totalRooms+=room.getRoomCount();
-        }
-        hotel.setTotalRooms(totalRooms);
+        hotel.setGuestReviews(hotelDTO.getGuestReviews());
         return hotel;
     }
 

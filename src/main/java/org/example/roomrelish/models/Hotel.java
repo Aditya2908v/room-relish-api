@@ -30,6 +30,5 @@ public class Hotel {
     private List<String> images;
     private List<Room> rooms;
     private List<GuestReview> guestReviews;
-    private int totalRooms;
 }
 

@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
-  <title>Coverage Report > TokenType</title>
+  <title>Coverage Report > ReviewResponse</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -19,18 +19,15 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">org.example.roomrelish.models</a>
+    <a href="../index.html">org.example.roomrelish.dto</a>
 </div>
 
-<h1>Coverage Summary for Class: TokenType (org.example.roomrelish.models)</h1>
+<h1>Coverage Summary for Class: ReviewResponse (org.example.roomrelish.dto)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
-<th class="coverageStat 
-">
-  Class, %
-</th>
 <th class="coverageStat 
 ">
   Method, %
@@ -41,33 +38,62 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">TokenType</td>
+  <td class="name">ReviewResponse</td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    0%
   </span>
   <span class="absValue">
-    (1/1)
+    (0/7)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    0%
   </span>
   <span class="absValue">
-    (2/2)
-  </span>
-</td>
-<td class="coverageStat">
-  <span class="percent">
-    100%
-  </span>
-  <span class="absValue">
-    (2/2)
+    (0/7)
   </span>
 </td>
 </tr>
-
+  <tr>
+    <td class="name">ReviewResponse$ReviewResponseBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+</tr>
 </table>
 
 <br/>
@@ -75,13 +101,23 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.models;
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.roomrelish.dto;
 &nbsp;
-&nbsp;import org.jetbrains.annotations.TestOnly;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Builder;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;import org.example.roomrelish.models.Customer;
 &nbsp;
-<b class="fc">&nbsp;@TestOnly</b>
-&nbsp;public enum TokenType {
-<b class="fc">&nbsp;    BEARER</b>
+&nbsp;
+<b class="nc">&nbsp;@Data</b>
+<b class="nc">&nbsp;@NoArgsConstructor</b>
+<b class="nc">&nbsp;@AllArgsConstructor</b>
+<b class="nc">&nbsp;@Builder</b>
+&nbsp;public class ReviewResponse {
+<b class="nc">&nbsp;    private Customer user;</b>
+<b class="nc">&nbsp;    private double guestRating;</b>
+<b class="nc">&nbsp;    private String comment;</b>
 &nbsp;}
 </code>
 </pre>
@@ -106,7 +142,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2024-04-18 12:37</div>
+    <div style="float:right;">generated on 2024-06-11 13:16</div>
 </div>
 </body>
 </html>

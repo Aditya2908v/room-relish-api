@@ -55,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/v1/hotels/totalRooms").permitAll()
                         //Hotel Controller
                         .requestMatchers(HttpMethod.GET, "/api/v1/hotels/search").permitAll()
+                    .requestMatchers(HttpMethod.POST,"/api/v1/hotels").permitAll()
 
                         //graphql
                         .requestMatchers("/graphql").permitAll()
@@ -77,7 +78,7 @@ public class SecurityConfig {
                 .logout(logout -> logout.logoutUrl("/api/v1/customer/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler((
-                                ((request, response, authentication) -> SecurityContextHolder.clearContext())
+                                (request, response, authentication) -> SecurityContextHolder.clearContext()
                                 ))
                 );
         return http.build();

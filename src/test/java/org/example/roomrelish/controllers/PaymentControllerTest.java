@@ -1,5 +1,8 @@
 package org.example.roomrelish.controllers;
 
+import org.example.roomrelish.ExceptionHandler.CustomDataAccessException;
+import org.example.roomrelish.ExceptionHandler.CustomDuplicateBookingException;
+import org.example.roomrelish.ExceptionHandler.CustomMongoSocketException;
 import org.example.roomrelish.models.Payment;
 import org.example.roomrelish.services.PaymentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +34,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void testConfirmBooking_Success(){
+    void testConfirmBooking_Success() throws CustomDataAccessException, CustomDuplicateBookingException, CustomMongoSocketException {
         Payment payment = new Payment();
         String _bookingId = "345682456789987";
         when(paymentServiceImpl.confirmBook(_bookingId)).thenReturn(payment);
@@ -43,7 +46,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void testConfirmBooking_Exception(){
+    void testConfirmBooking_Exception() throws CustomDataAccessException, CustomDuplicateBookingException, CustomMongoSocketException {
         String _bookingId = "23456789876";
         String errorMessage = "No booking details found";
         doThrow(new IllegalArgumentException(errorMessage)).when(paymentServiceImpl).confirmBook(_bookingId);
@@ -55,7 +58,7 @@ public class PaymentControllerTest {
     }
 
   @Test
-    public void testMyBookings_success(){
+  void testMyBookings_success(){
         String _userId = "123456789";
         List<Payment> paymentList = new ArrayList<>();
         when(paymentServiceImpl.getMyBookings(_userId)).thenReturn(paymentList);
@@ -67,7 +70,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void testMyBookings_Exception(){
+    void testMyBookings_Exception(){
         String _userId = "123456789";
         String errorMessage = "No bookings found";
         doThrow(new IllegalArgumentException(errorMessage)).when(paymentServiceImpl).getMyBookings(_userId);

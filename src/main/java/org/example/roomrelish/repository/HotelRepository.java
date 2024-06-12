@@ -3,19 +3,17 @@ package org.example.roomrelish.repository;
 import org.example.roomrelish.models.Hotel;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface HotelRepository extends MongoRepository<Hotel, String> {
-    /*@Query("{ " +
-            "'location.cityName': { $regex: ?0, $options: 'i' }, " + // City name
-            "'availability.rooms': { $gte: ?1 }, " + // Rooms
-            "'rating': { $gte: ?2 }, " + // Rating
-            "'amenities': { $all: ?3 } " + // Amenities
-            "}")*/
-    //@Query("{ 'location.cityName': { $regex: ?0, $options: 'i' }, 'availability.rooms': { $gte: ?1 } }")
-    //List<Hotel> findByLocationCityName(String cityName);
+
+
+    @Query("{'_id':?0, 'rooms._id':?1}")
+    Optional<Hotel> findByHotelByIdAndRoomById(String hotelId, String roomId);
     List<Hotel> findByLocationCityNameAndRatingGreaterThanEqual(
             String location_cityName, double rating);
 
